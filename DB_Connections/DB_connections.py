@@ -1,7 +1,6 @@
 import pyodbc
 import os
 import platform
-import pymssql
 
 
 server = 'sql5088.site4now.net'
