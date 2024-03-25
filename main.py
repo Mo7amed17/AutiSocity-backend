@@ -28,5 +28,5 @@ app.config['SECRET_KEY'] = '654321'
 
 
 if __name__ == '__main__':
-    app.run(debug=False,host='0.0.0.0')
-    # app.run()
+    # app.run(debug=False,host='0.0.0.0')
+    app.run(debug=True)

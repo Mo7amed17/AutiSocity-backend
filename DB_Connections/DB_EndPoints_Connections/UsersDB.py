@@ -7,8 +7,6 @@ from ML.LR3 import doML
 import os
 db = LinkDatabase()
 
-
-
 #========================== REGISTERATION & LOGIN ==================================
 
     ###############    L O G I N     ################
@@ -17,7 +15,7 @@ def login(data):
         
 
         query = me.selectQuery(tableName='vi_Users',where="email = '"+data['email']+"' AND password = '"+data['password']+"'")
-
+        
         
         
         db.cursor.execute(query)
