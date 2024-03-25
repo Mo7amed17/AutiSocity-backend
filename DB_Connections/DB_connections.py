@@ -1,4 +1,6 @@
 import pyodbc
+import os
+import platform
 
 server = 'sql5088.site4now.net'
 database = 'db_aa6e06_autismdb'
@@ -14,6 +16,8 @@ class LinkDatabase:
     # catch هنا بيستقبل الايرور ويقولك في ايرور ويروح يكمل باقي ويقفل نفسه ويروح يكمل باقي الكود عادي بدون مايقف 
     def __init__(self):
         print(pyodbc.drivers())
+        print(os.name)
+        print(platform.system())
         try:
             self.conn = pyodbc.connect(connection_string)            
 
