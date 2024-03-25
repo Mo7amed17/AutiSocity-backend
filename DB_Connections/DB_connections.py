@@ -9,7 +9,7 @@ username = 'db_aa6e06_autismdb_admin'
 password = 'Mo7amedatef17'
 
 
-
+os.environ["ODBCSYSINI"] = "/home/AutiSociety"
 
 # بناء سلسلة الاتصال
 # connection_string = 'DRIVER={SQL SERVER};SERVER=' + server + ';DATABASE=' + database + ';UID=' + username + ';PWD=' + password+';Connection Timeout=30'
@@ -19,7 +19,7 @@ class LinkDatabase:
     # try هيجرب الكود ولو ظبط يكمل ماظبطش يطلع ايرور 
     # catch هنا بيستقبل الايرور ويقولك في ايرور ويروح يكمل باقي ويقفل نفسه ويروح يكمل باقي الكود عادي بدون مايقف 
     def __init__(self):
-        os.environ["ODBCSYSINI"] = "/home/AutiSociety"
+        
         # print(pyodbc.drivers())
         # print(os.name)
         # print(platform.system())
