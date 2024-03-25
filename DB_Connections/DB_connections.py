@@ -13,6 +13,7 @@ class LinkDatabase:
     # try هيجرب الكود ولو ظبط يكمل ماظبطش يطلع ايرور 
     # catch هنا بيستقبل الايرور ويقولك في ايرور ويروح يكمل باقي ويقفل نفسه ويروح يكمل باقي الكود عادي بدون مايقف 
     def __init__(self):
+        print(pyodbc.drivers())
         try:
             self.conn = pyodbc.connect(connection_string)            
 
