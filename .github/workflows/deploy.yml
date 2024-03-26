@@ -15,7 +15,7 @@ jobs:
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
         server: s2.serv00.com
-        username: f10279_AutiSociety
+        username: f10279_AutiSociety17
         password: Mo7amedatef17
         protocol: ftp
         server-dir: /
