@@ -6,7 +6,7 @@ username = 'db_aa6e06_autismdb_admin'
 password = 'Mo7amedatef17'
 
 # بناء سلسلة الاتصال
-connection_string = 'DRIVER={SQL Server};SERVER=' + server + ';DATABASE=' + database + ';UID=' + username + ';PWD=' + password
+connection_string = 'Provider=sqloledb;Data Source=SQL5088.site4now.net ,1433;Initial Catalog=db_aa6e06_autismdb ;User Id=db_aa6e06_autismdb_admin;Password=Mo7amedatef17;'
 
 class LinkDatabase:
     # Try-Catch بنستعملها دايما عشان لو في ايرور الكود يطلع الايرور ويكمل
