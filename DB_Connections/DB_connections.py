@@ -9,10 +9,10 @@ username = 'db_aa6e06_autismdb_admin'
 password = 'Mo7amedatef17'
 
 
-os.environ["ODBCSYSINI"] = "/home/AutiSociety"
+# os.environ["ODBCSYSINI"] = "/home/AutiSociety"
 
 # بناء سلسلة الاتصال
-# connection_string = 'DRIVER={SQL SERVER};SERVER=' + server + ';DATABASE=' + database + ';UID=' + username + ';PWD=' + password+';Connection Timeout=30'
+connection_string = 'DRIVER={SQL SERVER};SERVER=' + server + ';DATABASE=' + database + ';UID=' + username + ';PWD=' + password+';Connection Timeout=30'
 
 class LinkDatabase:
     # Try-Catch بنستعملها دايما عشان لو في ايرور الكود يطلع الايرور ويكمل
@@ -24,8 +24,8 @@ class LinkDatabase:
         # print(os.name)
         # print(platform.system())
         try:
-            # self.conn = pyodbc.connect(connection_string)   
-            self.conn = pyodbc.connect('DSN=sqlserverdatasource;Uid=db_aa6e06_autismdb_admin;Pwd=Mo7amedatef17;Encrypt=yes;Connection Timeout=30;')
+            self.conn = pyodbc.connect(connection_string)   
+            # self.conn = pyodbc.connect('DSN=sqlserverdatasource;Uid=db_aa6e06_autismdb_admin;Pwd=Mo7amedatef17;Encrypt=yes;Connection Timeout=30;')
          
 
             self.conn.setdecoding(pyodbc.SQL_CHAR, encoding='utf-8')
