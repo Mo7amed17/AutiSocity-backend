@@ -7,7 +7,7 @@ password = 'Mo7amedatef17'
 
 # بناء سلسلة الاتصال
 connection_string = 'DRIVER={ODBC Driver 17 for SQL Server};SERVER=' + server + ';DATABASE=' + database + ';UID=' + username + ';PWD=' + password
-
+print(pyodbc.drivers())
 class LinkDatabase:
     # Try-Catch بنستعملها دايما عشان لو في ايرور الكود يطلع الايرور ويكمل
     # try هيجرب الكود ولو ظبط يكمل ماظبطش يطلع ايرور 
