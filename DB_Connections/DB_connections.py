@@ -6,7 +6,7 @@ username = 'db_aa6e06_autismdb_admin'
 password = 'Mo7amedatef17'
 
 # بناء سلسلة الاتصال
-connection_string = 'DRIVER={SQL Server};SERVER=' + server + ';DATABASE=' + database + ';UID=' + username + ';PWD=' + password
+connection_string = 'DRIVER={MySQLServerDSN};SERVER=' + server + ';DATABASE=' + database + ';UID=' + username + ';PWD=' + password
 
 class LinkDatabase:
     # Try-Catch بنستعملها دايما عشان لو في ايرور الكود يطلع الايرور ويكمل
