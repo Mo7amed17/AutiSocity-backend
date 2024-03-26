@@ -1,4 +1,5 @@
 import pyodbc
+import os
 
 server = 'sql5088.site4now.net'
 database = 'db_aa6e06_autismdb'
@@ -6,9 +7,11 @@ username = 'db_aa6e06_autismdb_admin'
 password = 'Mo7amedatef17'
 
 # بناء سلسلة الاتصال
-connection_string = 'DRIVER={ODBC Driver 17 for SQL Server};SERVER=' + server + ';DATABASE=' + database + ';UID=' + username + ';PWD=' + password
+# connection_string = 'DRIVER={ODBC Driver 17 for SQL Server};SERVER=' + server + ';DATABASE=' + database + ';UID=' + username + ';PWD=' + password
+connection_string = 'DSN=sqlserverdatasource;Uid=db_aa6e06_autismdb_admin;Pwd=Mo7amedatef17;Encrypt=yes;Connection Timeout=30;'
 print(pyodbc.drivers())
 class LinkDatabase:
+    os.environ["ODBCSYSINI"] = "/home/AhmedSonbol"
     # Try-Catch بنستعملها دايما عشان لو في ايرور الكود يطلع الايرور ويكمل
     # try هيجرب الكود ولو ظبط يكمل ماظبطش يطلع ايرور 
     # catch هنا بيستقبل الايرور ويقولك في ايرور ويروح يكمل باقي ويقفل نفسه ويروح يكمل باقي الكود عادي بدون مايقف 
