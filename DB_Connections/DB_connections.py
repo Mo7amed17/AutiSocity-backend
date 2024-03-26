@@ -20,9 +20,9 @@ class LinkDatabase:
         try:
             self.conn = pyodbc.connect(connection_string)            
 
-            self.conn.setdecoding(pyodbc.SQL_CHAR, encoding='utf-8')
-            self.conn.setdecoding(pyodbc.SQL_WCHAR, encoding='utf-8')
-            self.conn.setencoding(encoding='utf-8')
+            # self.conn.setdecoding(pyodbc.SQL_CHAR, encoding='utf-8')
+            # self.conn.setdecoding(pyodbc.SQL_WCHAR, encoding='utf-8')
+            # self.conn.setencoding(encoding='utf-8')
 
             self.cursor = self.conn.cursor()
             print("Conected")
