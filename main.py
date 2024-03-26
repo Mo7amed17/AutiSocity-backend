@@ -16,7 +16,6 @@ def index():
 
 CORS(app)
 
-
 app.register_blueprint(usersblp , url_prefix="/api/users")
 app.register_blueprint(postsblp , url_prefix="/api/posts")
 
