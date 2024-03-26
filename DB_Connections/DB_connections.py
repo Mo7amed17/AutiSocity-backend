@@ -1,15 +1,12 @@
 import pyodbc
-import os
 
 server = 'sql5088.site4now.net'
 database = 'db_aa6e06_autismdb'
 username = 'db_aa6e06_autismdb_admin'
 password = 'Mo7amedatef17'
-os.environ["ODBCSYSINI"] = "/home/AhmedSonbol"
 
 # بناء سلسلة الاتصال
-# connection_string = 'DRIVER={ODBC Driver 17 for SQL Server};SERVER=' + server + ';DATABASE=' + database + ';UID=' + username + ';PWD=' + password
-connection_string = 'DSN=sqlserverdatasource;Uid=db_aa6e06_autismdb_admin;Pwd=Mo7amedatef17;Encrypt=yes;Connection Timeout=30;'
+connection_string = 'DRIVER={ODBC Driver 17 for SQL Server};SERVER=' + server + ';DATABASE=' + database + ';UID=' + username + ';PWD=' + password
 print(pyodbc.drivers())
 class LinkDatabase:
     
@@ -20,9 +17,9 @@ class LinkDatabase:
         try:
             self.conn = pyodbc.connect(connection_string)            
 
-            # self.conn.setdecoding(pyodbc.SQL_CHAR, encoding='utf-8')
-            # self.conn.setdecoding(pyodbc.SQL_WCHAR, encoding='utf-8')
-            # self.conn.setencoding(encoding='utf-8')
+            self.conn.setdecoding(pyodbc.SQL_CHAR, encoding='utf-8')
+            self.conn.setdecoding(pyodbc.SQL_WCHAR, encoding='utf-8')
+            self.conn.setencoding(encoding='utf-8')
 
             self.cursor = self.conn.cursor()
             print("Conected")
