@@ -16,7 +16,7 @@ class LinkDatabase:
     def __init__(self):
         try:
             # self.conn = pyodbc.connect(connection_string)            
-            conn = pyodbc.connect('DSN=sqlserverdatasource;Uid=db_aa6e06_autismdb_admin;Pwd=Mo7amedatef17;Encrypt=yes;Connection Timeout=30;')
+            self.conn = pyodbc.connect('DSN=sqlserverdatasource;Uid=db_aa6e06_autismdb_admin;Pwd=Mo7amedatef17;Encrypt=yes;Connection Timeout=30;')
             self.conn.setdecoding(pyodbc.SQL_CHAR, encoding='utf-8')
             self.conn.setdecoding(pyodbc.SQL_WCHAR, encoding='utf-8')
             self.conn.setencoding(encoding='utf-8')
