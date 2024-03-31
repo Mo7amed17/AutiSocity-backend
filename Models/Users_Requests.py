@@ -14,7 +14,7 @@ usersblp = Blueprint("usersblp",__name__,static_folder="static",template_folder=
 @usersblp.route("/login",methods=['POST'])
 def login():
      
-     request_data = request.get_json()
+     request_data = request.form
      if request_data is None or "email" not in  request_data or "password" not in request_data:
           return jsonify({'Message':'email & password are requeired !'}) ,400
      return UsersDB.login(request_data)
@@ -86,7 +86,7 @@ def registerAdmin():
 @usersblp.route("/test",methods=['POST'])
 def autiTest():
      
-     request_data = request.get_json()
+     request_data = request.form
      if request_data is None  or len(request_data) != 15:
           return jsonify({'Message':'Input data are missing !'}) ,400
 
@@ -101,7 +101,7 @@ def autiTest():
 @me.token_required
 def pendingDoctors(token):
      
-     request_data = request.get_json()
+     request_data = request.form
      # if request_data is None or "doctor_id" not in  request_data :
      #      return jsonify({'Message':'doctor_id is missing !'}) 
 
@@ -114,7 +114,7 @@ def pendingDoctors(token):
 @me.token_required
 def confirmDoctor(token):
      
-     request_data = request.get_json()
+     request_data = request.form
      if request_data is None or "doctor_id" not in  request_data :
           return jsonify({'Message':'doctor_id is missing !'}) ,400
 
@@ -129,7 +129,7 @@ def confirmDoctor(token):
 @me.token_required
 def rejectDoctor(token):
      
-     request_data = request.get_json()
+     request_data = request.form
      if request_data is None or "doctor_id" not in  request_data :
           return jsonify({'Message':'doctor_id is missing !'}) ,400
 
@@ -167,7 +167,7 @@ def updateUser(token):
 # @usersblp.route("/doctors/clinic",methods=['POST'])
 # @me.token_required
 # def addClinic(token):
-#      request_data = request.get_json()
+#      request_data = request.form
 #      if request_data is None or "clinic_address" not in  request_data :
 #           return jsonify({'Message':'clinic_address is missing !'}) 
 #      request_data['uid'] = str(token['uid'])
@@ -247,7 +247,7 @@ def getUserByToken(token):
 @me.token_required
 def register(token):
      
-     request_data = request.get_json()
+     request_data = request.form
      if request_data is None or "Name" not in  request_data or "Email" not in  request_data or "Nat_ID" not in  request_data:
           return jsonify({'Message':'Inputs data are missing !'}),400 
 
@@ -261,7 +261,7 @@ def register(token):
 @me.token_required
 def registerPassword(token):
      
-     request_data = request.get_json()
+     request_data = request.form
      if request_data is None or "current_password" not in  request_data or "password" not in  request_data :
           return jsonify({'Message':'password data are missing !'}) 
 
