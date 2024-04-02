@@ -10,8 +10,8 @@ postsblp = Blueprint("postsblp",__name__,static_folder="static",template_folder=
 @me.token_required
 def addPost(token):
      
+    request_data = request.get_json()
     # request_data = request.get_json()
-    request_data = request.form
     if request_data is None or "type" not in  request_data or "content" not in  request_data :
           return jsonify({'Message':'data is missing !'}) ,400
 
@@ -26,7 +26,7 @@ def addPost(token):
 @me.token_required
 def getDoctorsPosts(token):
     request_data = {}
-    # request_data = request.form
+    # request_data = request.get_json()
     # if request_data is None or "type" not in  request_data or "content" not in  request_data or "date" not in  request_data :
     #       return jsonify({'Message':'data is missing !'}) 
     request_data['uid'] = str(token['uid'])
@@ -38,7 +38,7 @@ def getDoctorsPosts(token):
 @me.token_required
 def getPatientsPosts(token):
      
-    # request_data = request.form
+    # request_data = request.get_json()
     request_data = {}
     # if request_data is None or "type" not in  request_data or "content" not in  request_data or "date" not in  request_data :
     #       return jsonify({'Message':'data is missing !'}) 
@@ -51,7 +51,7 @@ def getPatientsPosts(token):
 @me.token_required
 def getUserPosts(token):
      
-    # request_data = request.form
+    # request_data = request.get_json()
     request_data = {}
     # if request_data is None or "type" not in  request_data or "content" not in  request_data or "date" not in  request_data :
     #       return jsonify({'Message':'data is missing !'}) 
@@ -64,7 +64,7 @@ def getUserPosts(token):
 @me.token_required
 def addComment(token):
      
-    request_data = request.form
+    request_data = request.get_json()
     if request_data is None or "post_id" not in  request_data or "content" not in  request_data :
           return jsonify({'Message':'data is missing !'}) ,400
     
@@ -77,7 +77,7 @@ def addComment(token):
 @me.token_required
 def getPostComments(token):
      
-    request_data = request.form
+    request_data = request.get_json()
     if request_data is None or "post_id" not in  request_data :
           return jsonify({'Message':'data is missing !'}) ,400
     
@@ -90,7 +90,7 @@ def getPostComments(token):
 @me.token_required
 def savePost(token):
      
-    request_data = request.form
+    request_data = request.get_json()
     if request_data is None or "post_id" not in  request_data :
           return jsonify({'Message':'post_id is missing !'}) ,400
     
@@ -103,7 +103,7 @@ def savePost(token):
 @me.token_required
 def deletePost(token):
      
-    request_data = request.form
+    request_data = request.get_json()
     if request_data is None or "post_id" not in  request_data :
           return jsonify({'Message':'post_id is missing !'}) ,400
     
@@ -114,7 +114,7 @@ def deletePost(token):
 @me.token_required
 def deleteComment(token):
      
-    request_data = request.form
+    request_data = request.get_json()
     if request_data is None or "comment_id" not in  request_data :
           return jsonify({'Message':'comment_id is missing !'}) ,400
     

@@ -14,7 +14,7 @@ usersblp = Blueprint("usersblp",__name__,static_folder="static",template_folder=
 @usersblp.route("/login",methods=['POST'])
 def login():
      
-     request_data = request.form
+     request_data = request.get_json()
      if request_data is None or "email" not in  request_data or "password" not in request_data:
           return jsonify({'Message':'email & password are requeired !'}) ,400
      return UsersDB.login(request_data)
@@ -86,7 +86,7 @@ def registerAdmin():
 @usersblp.route("/test",methods=['POST'])
 def autiTest():
      
-     request_data = request.form
+     request_data = request.get_json()
      if request_data is None  or len(request_data) != 15:
           return jsonify({'Message':'Input data are missing !'}) ,400
 
@@ -101,7 +101,7 @@ def autiTest():
 @me.token_required
 def pendingDoctors(token):
      
-     request_data = request.form
+     request_data = request.get_json()
      # if request_data is None or "doctor_id" not in  request_data :
      #      return jsonify({'Message':'doctor_id is missing !'}) 
 
@@ -114,7 +114,7 @@ def pendingDoctors(token):
 @me.token_required
 def confirmDoctor(token):
      
-     request_data = request.form
+     request_data = request.get_json()
      if request_data is None or "doctor_id" not in  request_data :
           return jsonify({'Message':'doctor_id is missing !'}) ,400
 
@@ -129,7 +129,7 @@ def confirmDoctor(token):
 @me.token_required
 def rejectDoctor(token):
      
-     request_data = request.form
+     request_data = request.get_json()
      if request_data is None or "doctor_id" not in  request_data :
           return jsonify({'Message':'doctor_id is missing !'}) ,400
 
