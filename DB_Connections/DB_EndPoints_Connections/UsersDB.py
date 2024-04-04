@@ -52,13 +52,14 @@ def registerDoctor(data,files):
         attachmentPath = getAttachmentPath(file= files['attachment'],type=1)
 
         query = me.procQuery(procName='AddNewDoctor',valuesDic={
-             'full_name' : data['full_name'],
+             'name' : data['name'],
              'phone' : data['phone'],
              'email' : data['email'],
              'password' : data['password'],
-             'government_id' : data['government_id'],
-             'specialist':data['specialist'],
-             'deg_of_specialist_id':data['deg_of_specialist_id'],
+             'government' : data['government'],
+             'city' : data['city'],
+            #  'specialist':data['specialist'],
+            #  'deg_of_specialist_id':data['deg_of_specialist_id'],
              'attachment':attachmentPath,
              'image':avatarpath
         })
@@ -77,13 +78,13 @@ def registerDoctor(data,files):
             
         except Exception as ex:
             
-            if 'full_name_U' in ex.args[1]:
+            if 'full_name_U' in str(ex.args[1]):
                 return {'Message':"الأسم موجود بالفعل"},400
             
-            elif 'email_U' in ex.args[1]:
+            elif 'email_U' in str(ex.args[1]):
                 return {'Message':"البريد الألكتروني موجود بالفعل"},400
             
-            elif 'phone_U' in ex.args[1]:
+            elif 'phone_U' in str(ex.args[1]):
                 return {'Message':"رقم الهاتف موجود بالفعل"},400
             
             else:
@@ -105,15 +106,17 @@ def registerPatient(data,files):
 
         # query = me.insertQuery(tableName='users',columnsName=['full_name','email','phone','password','user_type','government_id','profile_status'] , values=[data['full_name'],data['email'],data['phone'],data['password'],data['government_id']])
         query = me.procQuery(procName='AddNewPatient',valuesDic={
-             'full_name' : data['full_name'],
+             'name' : data['name'],
              'phone' : data['phone'],
              'email' : data['email'],
              'password' : data['password'],
-             'government_id' : data['government_id'],
+             'government' : data['government'],
+             'city' : data['city'],
              'address':data['address'],
              'age':data['age'],
              'image':avatarpath
         })
+        # return{'ss':str(query)}
 
         try :
             db.cursor.execute(query)
@@ -123,14 +126,15 @@ def registerPatient(data,files):
                  saveAttachment(attachmentFile= files['avatar'],oldAttachPath='' , newAttachPath=avatarpath )
             
         except Exception as ex:
+            # return{'ss':str(str(ex.args[1]))}
             
-            if 'full_name_U' in ex.args[1]:
+            if 'full_name_U' in str(str(ex.args[1])):
                 return {'Message':"الأسم موجود بالفعل"},400
             
-            elif 'email_U' in ex.args[1]:
+            elif 'email_U' in str(ex.args[1]):
                 return {'Message':"البريد الألكتروني موجود بالفعل"},400
             
-            elif 'phone_U' in ex.args[1]:
+            elif 'phone_U' in str(ex.args[1]):
                 return {'Message':"رقم الهاتف موجود بالفعل"},400
             
             else:
@@ -150,7 +154,7 @@ def registerAdmin(data , files):
 
         
 
-        query = me.insertQuery(tableName='users',columnsName=['full_name','email','phone','password','user_type','image'] , values=[data['full_name'],data['email'],data['phone'],data['password'],'0',avatarpath])
+        query = me.insertQuery(tableName='users',columnsName=['name','email','phone','password','user_type','image'] , values=[data['name'],data['email'],data['phone'],data['password'],'0',avatarpath])
         
 
         try :
@@ -162,13 +166,13 @@ def registerAdmin(data , files):
             
         except Exception as ex:
             
-            if 'full_name_U' in ex.args[1]:
+            if 'full_name_U' in str(ex.args[1]):
                 return {'Message':"الأسم موجود بالفعل"},400
             
-            elif 'email_U' in ex.args[1]:
+            elif 'email_U' in str(ex.args[1]):
                 return {'Message':"البريد الألكتروني موجود بالفعل"},400
             
-            elif 'phone_U' in ex.args[1]:
+            elif 'phone_U' in str(ex.args[1]):
                 return {'Message':"رقم الهاتف موجود بالفعل"},400
             
             else:
@@ -182,9 +186,7 @@ def registerAdmin(data , files):
 ###############     A U T I S M   T E S T    ################
 def autiTest(data):
     #  return {"result":data}
-     for item in data:
-          if item == '' or item is None:
-               return{'message':'رجع البتاع كله !'},400
+     
      return {"result":doML(inputData=data)}
 # [1, 1, 1, 1, 1, 1, 1,0,0,0,28,0,0,0,0,1,0,0,0,0,0,0,1,1,1]
 
@@ -258,20 +260,13 @@ def profile(id):
              'u_id':str(id)
         })
         
-
+        
+        # return{'sss':query}
         result = []
         
         db.cursor.execute(query)
         # result["message"] = "data retrieved succesfully"
         result = profileModel(row=db.cursor.fetchone())
-
-        
-
-        
-
-         
-       
-            
         
         if len(result) == 0 :
             
@@ -299,7 +294,7 @@ def profile(id):
                  
                  result[0]['clinics'] = clnicsResult
 
-            result[0].pop("user_type")
+            # result[0].pop("user_type")
             
             return {'message':'تم إسترجاع البيانات بنجاح !','data':result[0]}
             
@@ -381,8 +376,8 @@ def updateUser(userId,data,imgFile):
     userType = db.cursor.fetchone()[0]
 
     
-    if data is None or 'full_name' not in data or 'phone' not in data or 'password' not in data or 'government_id' not in data or 'profile_status' not in data :
-        return {'message':'Missing data ! (full_name , phone , password , government_id , profile_status)'},400
+    if data is None or 'name' not in data or 'phone' not in data or 'password' not in data or 'government' not in data or 'city' not in data or 'profile_status' not in data :
+        return {'message':'Missing data ! (name , phone , password , government , city , profile_status)'},400
     
 
     oldImgPath = getOldAttachmentPath(userId=userId)
@@ -392,10 +387,11 @@ def updateUser(userId,data,imgFile):
     newImgPath = getAttachmentPath(file=imgFile,type=0)
 
     mainQuery = me.updateQuery(tableName='Users' , valuesDic={
-        "full_name" : data['full_name'],
+        "name" : data['name'],
         "phone":data['phone'],
         "password":data['password'],
-        "government_id":data['government_id'],
+        "government":data['government'],
+        'city' : data['city'],
         "profile_status":data['profile_status'],
         "image":newImgPath
     },where='id ='+userId)
@@ -454,13 +450,13 @@ def updateUser(userId,data,imgFile):
     
     except Exception as ex:
         
-        if 'full_name_U' in ex.args[1]:
+        if 'full_name_U' in str(ex.args[1]):
             return {'Message':"الأسم موجود بالفعل"},400
         
-        elif 'email_U' in ex.args[1]:
+        elif 'email_U' in str(ex.args[1]):
             return {'Message':"البريد الألكتروني موجود بالفعل"},400
         
-        elif 'phone_U' in ex.args[1]:
+        elif 'phone_U' in str(ex.args[1]):
             return {'Message':"رقم الهاتف موجود بالفعل"},400
         
         else:
@@ -530,21 +526,25 @@ def profileModel(row):
 
         item_dic ={}
         # item_dic["id"] = row[0]
-        item_dic["full_name"] = row[1]
+        item_dic["name"] = row[1]
         item_dic["email"] = row[2]
         item_dic["phone"] = row[3]
-        item_dic["government_id"] = row[4]
-        item_dic["profile_status"] = row[5]
-        item_dic["user_type"] = row[6]
+        item_dic["image"] = row[4]
+        item_dic["user_type"] = row[5]
 
-        if int(row[6] == 1):
-             item_dic["specialist"] = row[7]
-             item_dic["doctor_id"] = row[8]
+        if int(row[5]) == 1 or int(row[5]) == 2 :
 
-        elif int(row[6] == 2):
-            item_dic["address"] = row[7]
-            item_dic["age"] = row[8]
-            item_dic["patient_name"] = row[9]
+            item_dic["government"] = row[6]
+            item_dic["city"] = row[7]
+            
+            if int(row[5]) == 1:
+                item_dic["profile_status"] = row[8]
+                item_dic["doctor_id"] = row[9]
+
+            elif int(row[5]) == 2:
+                item_dic["address"] = row[8]
+                item_dic["age"] = row[9]
+                item_dic["patient_name"] = row[10]
 
             
             
@@ -554,238 +554,3 @@ def profileModel(row):
 
 
 #===============================================================================================================
-
-def confirmStudent(id):
-        query = "UPDATE Users Set Confirmed = 1 WHERE ID ="+id
-        
-        db.cursor.execute(query)
-        db.conn.commit()
-        
-        return {"Message":"تم تأكيد الطالب بنجاح"}
-
-def getInstructors():
-        
-        query = "SELECT * FROM Users Where User_type = 'instructor'"
-        
-        result = []
-        db.cursor.execute(query)
-        
-        # result["message"] = "data retrieved succesfully"
-        for row in db.cursor.fetchall():
-            item_dic ={}
-            item_dic["ID"] = row[0]
-            item_dic["Name"] = row[1]
-            item_dic["Email"] = row[2]
-            item_dic["Nat_ID"] = row[3]
-            item_dic["Password"] = row[4]
-            item_dic["user_Type"] = row[5]
-            item_dic["Confirmed"] = row[7]
-            
-            result.append(item_dic)
-        
-        return me.message(message="تم إسترجاع البيانات بنجاح !",data=result)
-
-def getStudents():
-        
-        query = "SELECT * FROM Users Where User_type = 'student'"
-        
-        result = []
-        db.cursor.execute(query)
-        # result["message"] = "data retrieved succesfully"
-        for row in db.cursor.fetchall():
-            item_dic ={}
-            item_dic["ID"] = row[0]
-            item_dic["Name"] = row[1]
-            item_dic["Email"] = row[2]
-            item_dic["Nat_ID"] = row[3]
-            item_dic["Password"] = row[4]
-            item_dic["user_Type"] = row[5]
-            item_dic["Confirmed"] = row[7]
-            item_dic["Department"] = row[8]
-            
-            result.append(item_dic)
-        
-        return me.message(message="تم إسترجاع البيانات بنجاح !",data=result)
-
-def getStudents_confirmed():
-        
-        query = "SELECT * FROM Users Where User_type = 'student' AND Confirmed = 1"
-        
-        result = []
-        db.cursor.execute(query)
-        # result["message"] = "data retrieved succesfully"
-        for row in db.cursor.fetchall():
-            item_dic ={}
-            item_dic["ID"] = row[0]
-            item_dic["Name"] = row[1]
-            item_dic["Email"] = row[2]
-            item_dic["Nat_ID"] = row[3]
-            item_dic["Password"] = row[4]
-            item_dic["user_Type"] = row[5]
-            item_dic["Confirmed"] = row[7]
-            item_dic["Department"] = row[8]
-            item_dic["Semester"] = row[6]
-            
-            result.append(item_dic)
-        
-        return me.message(message="تم إسترجاع البيانات بنجاح !",data=result)
-
-def getStudents_binding():
-        
-        query = "SELECT * FROM Users Where User_type = 'student' AND Confirmed = 0"
-        
-        result = []
-        db.cursor.execute(query)
-        # result["message"] = "data retrieved succesfully"
-        for row in db.cursor.fetchall():
-            item_dic ={}
-            item_dic["ID"] = row[0]
-            item_dic["Name"] = row[1]
-            item_dic["Email"] = row[2]
-            item_dic["Nat_ID"] = row[3]
-            item_dic["Password"] = row[4]
-            item_dic["user_Type"] = row[5]
-            item_dic["Confirmed"] = row[7]
-            item_dic["Department"] = row[8]
-            
-            result.append(item_dic)
-        
-        return me.message(message="تم إسترجاع البيانات بنجاح !",data=result)
-
-
-        
-
-    
-# def updateUser(id,data):
-        query = "UPDATE Users SET Name = '"+data["Name"]+"' ,Email = '"+data["Email"]+"',Nat_ID = '"+data["Nat_ID"]+"' WHERE ID = "+id
-        try:
-            db.cursor.execute(query)
-            db.conn.commit()
-            
-        except Exception as ex:
-            
-            if 'U_Full_Name' in ex.args[1]:
-                return {'Message':"الأسم موجود بالفعل"},400
-            
-            elif 'U_Nat_ID' in ex.args[1]:
-                return {'Message':"رقم الهوية موجود بالفعل"},400
-            
-            elif 'U_Email' in ex.args[1]:
-                return {'Message':"البريد الألكتروني موجود بالفعل"},400
-            
-            else:
-                return {'Message':str(ex)},400
-            
-        
-        
-        return {'Message':"تم تعديل البيانات بنجاح"},200
-
-
-
-
-def updateUserpassword(id,data):
-
-        query = "SELECT * FROM Users WHERE ID ="+id + " AND Password = '"+ data['current_password']+"'"
-        
-        result = []
-        
-        db.cursor.execute(query)
-        
-        for row in db.cursor.fetchall():
-            item_dic ={}
-            item_dic["ID"] = row[0]
-            item_dic["Name"] = row[1]
-            item_dic["Email"] = row[2]
-            item_dic["Nat_ID"] = row[3]
-            item_dic["Password"] = row[4]
-            item_dic["user_Type"] = row[5]
-            item_dic["Semester"] = row[6]
-            item_dic["Confirmed"] = row[7]
-
-            result.append(item_dic)
-
-            
-            
-
-        
-        if len(result) == 0 :
-
-            
-            return   jsonify({'Message':"كلمة السر القديمة غير صحيحة !"}),400
-        else:
-            
-            
-
-
-            query2 = "UPDATE Users SET  Password = '"+data["password"]+"' WHERE ID = "+id
-            
-            try:
-                db.cursor.execute(query2)
-                db.conn.commit()
-            
-            except Exception as ex:
-                
-            
-                return {'Message':str(ex)},400
-            
-      
-        
-        return {'Message':"تم تعديل البيانات بنجاح"},200
-        
-    
-    
-def deleteUser(id):
-        query = "DELETE FROM Users WHERE ID = "+id
-        db.cursor.execute(query)
-        db.conn.commit()
-        
-        return {'Message':"تمت عملية الحذف بنجاح"}
-    
-    
-    
-def rejectStudent(id):
-        query = "DELETE FROM Users WHERE ID ="+id
-        db.cursor.execute(query)
-        db.conn.commit()
-        
-        return {"Message":"تم رفض الطالب بنجاح"}
-
-
-def getInsCount():
-        query = "SELECT COUNT(ID) as users FROM [dbo].[Users] where User_type = 'instructor'"
-        db.cursor.execute(query)
-        
-
-        result = db.cursor.fetchall()[0]
-        
-
-        return jsonify({'Message':'تم استرجاع البيانات بنجاح','Data':result[0]})
-
-def getStuCount():
-        query = "SELECT COUNT(ID) as users FROM [dbo].[Users] where User_type = 'student'"
-        db.cursor.execute(query)
-        
-        result = db.cursor.fetchall()[0]
-        
-
-
-        return jsonify({'Message':'تم استرجاع البيانات بنجاح','Data':result[0]})
-
-
-
-
-
-
-
-
-
-def moveToNextSemster():
-        query = "UPDATE Users SET Semester = Semester + 1 WHERE Semester <> 0"
-        db.cursor.execute(query)
-        db.conn.commit()
-
-        return me.message(message='تم نقل جميع الطلاب الي الصف الدراسي التالي بنجاح')
-        
-
-        
-
