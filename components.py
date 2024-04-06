@@ -123,11 +123,11 @@ class myMethods :
 
             item_dic ={}
             item_dic["id"] = row[0]
-            item_dic["full"] = row[1]
+            item_dic["name"] = row[1]
             item_dic["email"] = row[2]
             item_dic["user_type"] = row[4]
             item_dic["status"] = row[5]
-            item_dic["image"] = row[6]
+            item_dic["image"] = row[6] if  len(str(row[6])) > 0  else None
 
             
             
