@@ -20,10 +20,7 @@ def login(data):
         
         db.cursor.execute(query)
 
-        result = me.usersModel(data=db.cursor.fetchall())
-
-        return{'aa':result}
-        
+        result = me.usersModel(data=db.cursor.fetchall())        
         
         if len(result) == 0 :
             
