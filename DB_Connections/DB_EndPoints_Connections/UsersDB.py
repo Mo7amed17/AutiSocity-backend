@@ -27,9 +27,13 @@ def login(data):
             return   me.message(message="بيانات الدخول غير صحيحة !"),400
         
         else:
-            # if result[0]['Confirmed'] == False and result[0]['user_Type'] == 'student' :
+            if result[0]['status'] == 'pending' and result[0]['user_type'] == 'doctor' :
 
-            #     return me.message(message='في إانتظار موافقة المسؤول !'),400
+                return me.message(message='في إانتظار موافقة المسؤول !'),400
+            
+            if result[0]['status'] == 'rejected' and result[0]['user_type'] == 'doctor' :
+
+                return me.message(message='تم رفض دخولك الي الموقع لعدم موافقة المسؤول !'),400
     
             
             token = jwt.encode({'uid':result[0]["id"] , 'exp':datetime.datetime.utcnow() + datetime.timedelta(weeks=9999)},"654321" )
