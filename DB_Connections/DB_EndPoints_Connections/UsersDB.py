@@ -319,11 +319,11 @@ def getAttachmentPath(file,type):
 
         if type == 0 : # avatar image
         
-            dic = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "uploads",  os.makedirs("avatars", exist_ok=True))
+            dic = os.path.join(os.path.dirname(os.path.abspath(__file__)), "uploads")+"avatars"
         
         else:
              
-             dic = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "uploads", os.makedirs("CVS", exist_ok=True))
+             dic = os.path.join(os.path.dirname(os.path.abspath(__file__)), "uploads")+"CVs"
 
         fullPath = f'{dic}\\{uniq_filename}{file.filename}'
           
