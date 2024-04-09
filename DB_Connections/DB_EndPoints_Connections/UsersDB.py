@@ -322,8 +322,7 @@ def getAttachmentPath(file,type):
         else:
             uploads_folder = "uploads/CVs"
             
-        fullPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), uploads_folder, f'{uniq_filename}_{file.filename}')
-        
+            fullPath = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'uploads', folder_name, f'{uniq_filename}_{file.filename}')        
 
     return fullPath
 
