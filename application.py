@@ -11,7 +11,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return send_from_directory('uploads/avatars', '2024-03-31_21.30.36.503223me2.jpg')
+    return send_from_directory('../', 'public_python\uploads\avatars\2024-04-09_04.55.59.664066Untitled.jpg')
 
 CORS(app)
 
