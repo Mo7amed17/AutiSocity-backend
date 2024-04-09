@@ -317,16 +317,12 @@ def getAttachmentPath(file,type):
 
         uniq_filename = str(datetime.datetime.now().date()) + '_' + str(datetime.datetime.now().time()).replace(':', '.')
 
-        if type == 0 : # avatar image
-        
-            dic = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))+"\\uploads\\avatars"
-        
+        if type == 0:  # avatar image
+            uploads_folder = "uploads/avatars"
         else:
-             
-             dic = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))+"\\uploads\\CVs"
-
-        fullPath = f'{dic}\\{uniq_filename}{file.filename}'
-          
+            uploads_folder = "uploads/CVs"
+            
+        fullPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), uploads_folder, f'{uniq_filename}_{file.filename}')
         
 
     return fullPath
