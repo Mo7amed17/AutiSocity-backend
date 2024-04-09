@@ -9,9 +9,10 @@ from flask_cors import CORS ,cross_origin
 
 app = Flask(__name__)
 
-@app.route('/<filename>')
-def get_image(filename):
-    return send_from_directory('uploads', filename)
+@app.route('/<folder>/<filename>')
+def get_image(folder, filename):
+    directory_path = f'uploads/{folder}'
+    return send_from_directory(directory_path, filename)
 
 CORS(app)
 
