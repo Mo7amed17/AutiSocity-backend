@@ -1,4 +1,4 @@
-from flask import Flask , request , jsonify
+from flask import Flask , request , jsonify , send_from_directory
 import jwt
 import datetime
 from functools import wraps
@@ -11,7 +11,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return 'Welcome'
+    send_from_directory('/uploads/avatars')
 
 CORS(app)
 
