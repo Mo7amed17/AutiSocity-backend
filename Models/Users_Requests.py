@@ -34,8 +34,8 @@ def register():
      # doctor
      if request.form['type'] == "doctor": 
      
-          if 'avatar' not in request.files or 'attachment' not in request.files:
-               return{'message':'avatar and attachment are required even U would not upload it !'},400
+          # if 'avatar' not in request.files or 'attachment' not in request.files:
+          #      return{'message':'avatar and attachment are required even U would not upload it !'},400
      
           if request.form is None or "name" not in  request.form or "email" not in  request.form or "phone" not in  request.form or "password" not in  request.form  or "government" not in request.form or "city" not in request.form :
                return jsonify({'Message':'Input data are missing !'}),400 
@@ -46,8 +46,8 @@ def register():
      # patient
      elif request.form['type'] == "patient": 
 
-          if 'avatar' not in request.files :
-               return{'message':'avatar is required even U would not upload it !'},400
+          # if 'avatar' not in request.files :
+          #      return{'message':'avatar is required even U would not upload it !'},400
 
      
           if request.form is None or "name" not in  request.form or "email" not in  request.form or "phone" not in  request.form or "password" not in  request.form  or "government" not in request.form or "city" not in request.form or "address" not in request.form or "age" not in request.form :
@@ -58,8 +58,8 @@ def register():
      
      # admin
      elif request.form['type'] == "admin":
-          if 'avatar' not in request.files :
-               return{'message':'avatar is required even U would not upload it !'},400
+          # if 'avatar' not in request.files :
+          #      return{'message':'avatar is required even U would not upload it !'},400
      
 
      

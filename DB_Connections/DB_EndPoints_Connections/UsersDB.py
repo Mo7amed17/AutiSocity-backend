@@ -49,10 +49,18 @@ def registerDoctor(data,files):
         # query = "INSERT INTO Users (Name ,Email,Nat_ID,Password,User_type,Semester,Confirmed"+(",Department" if data["Department"] != 'all' else "")+") VALUES('"+data["name"]+"','"+data["email"]+"','"+data["Nat_ID"]+"','"+data["password"]+"', '"+data["user_type"]+"','"+data["semester"]+"', "+ "'"+data["confirmed"]+"'"+ ((",'"+data["Department"]+"'") if data["Department"] != 'all' else "")+    ")"                                                 
         # query = me.insertQuery(tableName='Users',columnsName=['full_name','email','phone','password','user_type','government_id','profile_status'] ,values=[data['full_name'],data['email'],data['phone'],data['password'],data['user_type'],data['government_id'],data['profile_status']])
         avatarpath = ''
-        avatarpath = getAttachmentPath(file= files['avatar'],type=0)
+        cvPath = ''
+        try:
+            avatarpath = getAttachmentPath(file= files['avatar'],type=0)
+            
+            cvPath = getAttachmentPath(file= files['cv'],type=1)
+        except Exception as e:
+            print("no avatar or cv was send:", e)
 
-        attachmentPath = ''
-        attachmentPath = getAttachmentPath(file= files['attachment'],type=1)
+
+        
+
+        
 
         query = me.procQuery(procName='AddNewDoctor',valuesDic={
              'name' : data['name'],
@@ -63,7 +71,7 @@ def registerDoctor(data,files):
              'city' : data['city'],
             #  'specialist':data['specialist'],
             #  'deg_of_specialist_id':data['deg_of_specialist_id'],
-             'attachment':attachmentPath,
+             'attachment':cvPath,
              'image':avatarpath
         })
 
@@ -72,8 +80,8 @@ def registerDoctor(data,files):
             db.cursor.execute(query)
             db.conn.commit()
 
-            if attachmentPath != '':
-                 saveAttachment(attachmentFile= files['attachment'],oldAttachPath='' , newAttachPath=attachmentPath )
+            if cvPath != '':
+                 saveAttachment(attachmentFile= files['cv'],oldAttachPath='' , newAttachPath=cvPath )
 
             if avatarpath != '':
                  saveAttachment(attachmentFile= files['avatar'],oldAttachPath='' , newAttachPath=avatarpath )
@@ -103,8 +111,15 @@ def registerDoctor(data,files):
 
 def registerPatient(data,files):
         
+        
         avatarpath = ''
-        avatarpath = getAttachmentPath(file= files['avatar'],type=0)
+        try:
+            avatarpath = getAttachmentPath(file= files['avatar'],type=0)
+        except Exception as e:
+            print("no avatar was send:", e)
+
+
+
 
 
         # query = me.insertQuery(tableName='users',columnsName=['full_name','email','phone','password','user_type','government_id','profile_status'] , values=[data['full_name'],data['email'],data['phone'],data['password'],data['government_id']])
@@ -153,7 +168,11 @@ def registerPatient(data,files):
 def registerAdmin(data , files):
         
         avatarpath = ''
-        avatarpath = getAttachmentPath(file= files['avatar'],type=0)
+
+        try:
+            avatarpath = getAttachmentPath(file= files['avatar'],type=0)
+        except Exception as e:
+            print("no avatar was send:", e)
 
         
 
