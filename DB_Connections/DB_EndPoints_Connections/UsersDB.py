@@ -130,7 +130,6 @@ def registerPatient(data,files):
              'password' : data['password'],
              'government' : data['government'],
              'city' : data['city'],
-             'address':data['address'],
              'age':data['age'],
              'image':avatarpath
         })
@@ -156,7 +155,7 @@ def registerPatient(data,files):
                 return {'Message':"رقم الهاتف موجود بالفعل"},400
             
             else:
-                return {'Message':str(ex)},400
+                return {'Messageaaa':str(ex)},400
             
         
         
@@ -398,6 +397,8 @@ def updateUser(userId,data,imgFile):
     userType = db.cursor.fetchone()[0]
 
     
+
+
     if data is None or 'name' not in data or 'phone' not in data or 'password' not in data or 'government' not in data or 'city' not in data or 'profile_status' not in data :
         return {'message':'Missing data ! (name , phone , password , government , city , profile_status)'},400
     
