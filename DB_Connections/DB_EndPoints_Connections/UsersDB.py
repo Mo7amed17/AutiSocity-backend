@@ -215,9 +215,11 @@ def autiTest(data):
 
 
 ###############     G E T   P E N D I N G   D O C T O R    ################
-def pendingDoctors(data):
+def pendingDoctors():
      
     query = me.selectQuery(tableName='vi_Users',where="status = '"+"pending"+"'")
+
+    
 
     try :
         db.cursor.execute(query)

@@ -91,13 +91,14 @@ def autiTest():
 @usersblp.route("/doctors/pending",methods=['GET'])
 @me.token_required
 def pendingDoctors(token):
+
      
-     request_data = request.get_json()
+     # request_data = request.get_json()
      # if request_data is None or "doctor_id" not in  request_data :
      #      return jsonify({'Message':'doctor_id is missing !'}) 
 
 
-     return UsersDB.pendingDoctors(request_data)
+     return UsersDB.pendingDoctors()
 
 # ================== CONFORM DOCTOR [POST] =========================\
 
