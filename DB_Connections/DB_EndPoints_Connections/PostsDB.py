@@ -231,22 +231,42 @@ def deleteComment(data):
     return {'Message':'تم حذف التعليق بنجاح'},200
 
 
+
 def getUserPosts(data):
     
-    query = me.deleteQuery(tableName='Comments',where='id = '+str(data['comment_id']))
+
+    query  = me.procQuery(procName='getUserTypeByUid',valuesDic={"userId":data['uid']})
+
+    db.cursor.execute(query)
+
+    userType = db.cursor.fetchone()[0]
+
+    
+
+    query = me.procQuery(procName='getAllPosts' , valuesDic={
+        'user_id' : data['uid'],
+        'user_type' : str(userType)
+    })
 
     try :
         db.cursor.execute(query)
         db.conn.commit()
 
         
+        result = postModel(data=db.cursor.fetchall())
+
+        if len(result) == 0 :
+            
+            return   me.message(message="لا يوجد بيانات !"),400
+        
+        else:
+
+            return {'data':result},200
             
     except Exception as ex:
 
         return {'Message':str(ex)},400
-
-    return {'Message':'تم حذف التعليق بنجاح'},200
-
+   
 
 # Posts Model
 
@@ -258,7 +278,7 @@ def postModel(data):
 
             item_dic ={}
             item_dic["id"] = row[0]
-            item_dic["full_name"] = row[1]
+            item_dic["name"] = row[1]
             item_dic["email"] = row[2]
             item_dic["type"] = row[3]
             item_dic["content"] = row[4]

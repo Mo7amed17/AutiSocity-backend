@@ -34,9 +34,10 @@ def login(data):
             if result[0]['status'] == 'rejected' and result[0]['user_type'] == 'doctor' :
 
                 return me.message(message='تم رفض دخولك الي الموقع لعدم موافقة المسؤول !'),400
-    
             
-            token = jwt.encode({'uid':result[0]["id"] , 'exp':datetime.datetime.utcnow() + datetime.timedelta(weeks=9999)},"654321" )
+            token_text =  str(datetime.datetime.now().time().hour) + '.' + str(datetime.datetime.now().time().minute) +'.' + str(datetime.datetime.now().time().second)+'.' + str(result[0]["id"]) +'.' + str(datetime.datetime.now().time().microsecond)
+            
+            token = jwt.encode({'uid':token_text + str(datetime.datetime.utcnow()) , 'exp':datetime.datetime.utcnow() + datetime.timedelta(weeks=9999)},"654321" )
             result[0].pop("id")
             return ({'message':'تم تسجيل الدخول بنجاح','token':token,'data':result[0]}),200
 
@@ -425,16 +426,16 @@ def updateUser(userId,data,imgFile):
             if 'specialist' not in data  :
                 return {'message':'specialist required !'},400
             
-            query = me.updateQuery(tableName='Doctors' , valuesDic={
-                    "specialist": data['specialist']
-            }, where='doctor_id = '+userId)            
+            # query = me.updateQuery(tableName='Doctors' , valuesDic={
+            #         "specialist": data['specialist']
+            # }, where='doctor_id = '+userId)            
 
 
             db.cursor.execute(mainQuery)
             db.conn.commit()
 
-            db.cursor.execute(query)
-            db.conn.commit()
+            # db.cursor.execute(query)
+            # db.conn.commit()
 
             
             saveAttachment(attachmentFile=imgFile,oldAttachPath=oldImgPath,newAttachPath=newImgPath)
@@ -442,11 +443,10 @@ def updateUser(userId,data,imgFile):
             return{'message':'تم تعديل بيانات الطبيب بنجاح !'},200
         
         elif(userType == 2):
-            if 'address' not in data or 'age' not in data or 'patient_name' not in data  :
-                return {'message':'address , age , patient_name are  required !'},400
+            if  'age' not in data or 'patient_name' not in data  :
+                return {'message':' age , patient_name are  required !'},400
             
             query = me.updateQuery(tableName='Patients' , valuesDic={
-                    "address": data['address'],
                     "age": data['age'],
                     "patient_name": data['patient_name']
             }, where='patient_id = '+userId)
@@ -565,9 +565,8 @@ def profileModel(row):
                 item_dic["doctor_id"] = row[9]
 
             elif int(row[5]) == 2:
-                item_dic["address"] = row[8]
-                item_dic["age"] = row[9]
-                item_dic["patient_name"] = row[10]
+                item_dic["age"] = row[8]
+                item_dic["patient_name"] = row[9]
 
             
             

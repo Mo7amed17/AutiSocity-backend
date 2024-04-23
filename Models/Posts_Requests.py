@@ -9,13 +9,14 @@ postsblp = Blueprint("postsblp",__name__,static_folder="static",template_folder=
 @postsblp.route("",methods=['POST'])
 @me.token_required
 def addPost(token):
-     
+    
     request_data = request.get_json()
     # request_data = request.get_json()
     if request_data is None or "type" not in  request_data or "content" not in  request_data :
+          return{'ss':str(request_data)}
           return jsonify({'Message':'data is missing !'}) ,400
 
-    request_data['uid'] = str(token['uid'])
+    request_data['uid'] = token['uid'].split('.')[3]
 
     return PostsDB.addPost(data=request_data)
 
@@ -29,7 +30,7 @@ def getDoctorsPosts(token):
     # request_data = request.get_json()
     # if request_data is None or "type" not in  request_data or "content" not in  request_data or "date" not in  request_data :
     #       return jsonify({'Message':'data is missing !'}) 
-    request_data['uid'] = str(token['uid'])
+    request_data['uid'] = token['uid'].split('.')[3]
     return PostsDB.getDoctorsPosts(data=request_data)
 
 
@@ -42,7 +43,7 @@ def getPatientsPosts(token):
     request_data = {}
     # if request_data is None or "type" not in  request_data or "content" not in  request_data or "date" not in  request_data :
     #       return jsonify({'Message':'data is missing !'}) 
-    request_data['uid'] = str(token['uid'])
+    request_data['uid'] = token['uid'].split('.')[3]
     return PostsDB.getPatientsPosts(data=request_data)
 
 
@@ -55,7 +56,7 @@ def getUserPosts(token):
     request_data = {}
     # if request_data is None or "type" not in  request_data or "content" not in  request_data or "date" not in  request_data :
     #       return jsonify({'Message':'data is missing !'}) 
-    request_data['uid'] = str(token['uid'])
+    request_data['uid'] = token['uid'].split('.')[3]
     return PostsDB.getUserPosts(data=request_data)
 
 
@@ -68,7 +69,7 @@ def addComment(token):
     if request_data is None or "post_id" not in  request_data or "content" not in  request_data :
           return jsonify({'Message':'data is missing !'}) ,400
     
-    request_data['uid'] = str(token['uid'])
+    request_data['uid'] = token['uid'].split('.')[3]
     return PostsDB.addComment(data=request_data)
 
 
@@ -81,7 +82,7 @@ def getPostComments(token):
     if request_data is None or "post_id" not in  request_data :
           return jsonify({'Message':'data is missing !'}) ,400
     
-    request_data['uid'] = str(token['uid'])
+    request_data['uid'] = token['uid'].split('.')[3]
     return PostsDB.getPostComments(data=request_data)
 
 
@@ -94,7 +95,7 @@ def savePost(token):
     if request_data is None or "post_id" not in  request_data :
           return jsonify({'Message':'post_id is missing !'}) ,400
     
-    request_data['uid'] = str(token['uid'])
+    request_data['uid'] = token['uid'].split('.')[3]
     return PostsDB.savePost(data=request_data)
 
 
@@ -107,7 +108,7 @@ def deletePost(token):
     if request_data is None or "post_id" not in  request_data :
           return jsonify({'Message':'post_id is missing !'}) ,400
     
-    request_data['uid'] = str(token['uid'])
+    request_data['uid'] = token['uid'].split('.')[3]
     return PostsDB.deletePost(data=request_data)
 
 @postsblp.route("/comments",methods=['DELETE'])
@@ -118,5 +119,5 @@ def deleteComment(token):
     if request_data is None or "comment_id" not in  request_data :
           return jsonify({'Message':'comment_id is missing !'}) ,400
     
-    request_data['uid'] = str(token['uid'])
+    request_data['uid'] = token['uid'].split('.')[3]
     return PostsDB.deleteComment(data=request_data)

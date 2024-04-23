@@ -105,6 +105,10 @@ def doML(inputData):
    #oh_train.info()
 
    del_oh_train=x_old.drop(['Sex','Jaundice','Family_mem_with_ASD'],axis=1)
+   # with pd.option_context('display.max_rows', None, 'display.max_columns', None):
+   #    print(del_oh_train)
+
+   print(del_oh_train)
 
    x_old=pd.concat([del_oh_train,x_data],axis=1)
 
@@ -149,6 +153,7 @@ def doML(inputData):
    model.fit(x_train,y_train)
 
    y_predict_LR=model.predict(x_test)
+   
 
 
 

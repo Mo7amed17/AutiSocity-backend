@@ -94,9 +94,9 @@ class myMethods :
 
             Hdata = None
 
-            if 'x-access-token' in request.headers:
+            if 'Authorization' in request.headers:
 
-                Hdata = request.headers['x-access-token']
+                Hdata = request.headers['Authorization']
         
 
             if not Hdata:

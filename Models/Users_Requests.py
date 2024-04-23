@@ -35,7 +35,6 @@ def register():
      if request.form['type'] == "doctor": 
      
           if 'cv' not in request.files :
-               return{'message':str(request.files)},400
                return{'message':'cv is required !'},400
      
           if request.form is None or "name" not in  request.form or "email" not in  request.form or "phone" not in  request.form or "password" not in  request.form  or "government" not in request.form or "city" not in request.form :
@@ -79,6 +78,7 @@ def autiTest():
      
      request_data = request.get_json()
      if request_data is None  or len(request_data) != 15:
+          
           return jsonify({'Message':'Input data are missing !'}) ,400
 
 
@@ -133,8 +133,8 @@ def rejectDoctor(token):
 @usersblp.route("/profile",methods=['GET'])
 @me.token_required
 def profile(token):
-     
-     return UsersDB.profile(id=str(token['uid']))
+
+     return UsersDB.profile(id=token['uid'].split('.')[3])
 
 
 # ================== Update user profile [PUT] =========================
