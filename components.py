@@ -16,7 +16,7 @@ class myMethods :
 
     # DATABASE QUERIES HELPER 
 
-    def selectQuery(tableName , columnsName = ['*'] ,where = ''):
+    def selectQuery(tableName , columnsName = ['*'] ,where = '',orderby = ''):
         columns = ""
 
         for item in columnsName:
@@ -25,7 +25,8 @@ class myMethods :
 
 
         columns = columns[:-1]
-        return "SELECT "+columns+" FROM "+ tableName + ('' if (where == '') else (' Where ' + where))
+        return "SELECT "+columns+" FROM "+ tableName + ('' if (where == '') else (' Where ' + where)) + ('' if (orderby == '') else (' ORDER BY ' + orderby.split(',')[0] + ' ' + orderby.split(',')[1]))
+
 
     def insertQuery(tableName ,values, columnsName = ['']):
         columns = ""
@@ -105,8 +106,11 @@ class myMethods :
             try:
                 token = jwt.decode(Hdata,"654321",algorithms=["HS256"])
                 
-            except:
-            
+                if len(token['uid'].split('.')) != 5:
+                    
+                    return jsonify({"Message":'Token Is Invalid'}),400
+                
+            except:            
                 return jsonify({"Message":'Token Is Invalid'}),400
         
             return f(token,*args,**kwargs)
@@ -128,6 +132,11 @@ class myMethods :
             item_dic["user_type"] = row[4]
             item_dic["status"] = row[5]
             item_dic["image"] = row[6] if  len(str(row[6])) > 0  else None
+
+            if item_dic["user_type"] == 'doctor':
+                item_dic["cv"] = row[7]
+                item_dic["reg_date"] = row[8]
+
 
             
             

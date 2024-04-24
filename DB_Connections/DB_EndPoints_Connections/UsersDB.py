@@ -37,7 +37,7 @@ def login(data):
             
             token_text =  str(datetime.datetime.now().time().hour) + '.' + str(datetime.datetime.now().time().minute) +'.' + str(datetime.datetime.now().time().second)+'.' + str(result[0]["id"]) +'.' + str(datetime.datetime.now().time().microsecond)
             
-            token = jwt.encode({'uid':token_text + str(datetime.datetime.utcnow()) , 'exp':datetime.datetime.utcnow() + datetime.timedelta(weeks=9999)},"654321" )
+            token = jwt.encode({'uid':token_text , 'exp':datetime.datetime.utcnow() + datetime.timedelta(weeks=9999)},"654321" )
             result[0].pop("id")
             return ({'message':'تم تسجيل الدخول بنجاح','token':token,'data':result[0]}),200
 
@@ -215,9 +215,18 @@ def autiTest(data):
 
 
 ###############     G E T   P E N D I N G   D O C T O R    ################
-def pendingDoctors():
-     
-    query = me.selectQuery(tableName='vi_Users',where="status = '"+"pending"+"'")
+def pendingDoctors(uid):
+
+
+    userType = getUserTypeByUserID(uid=uid)
+
+    if userType != 0 :
+        return{'message':'Permission denied ,Only admins allowed !'},403
+
+
+    query = me.selectQuery(tableName='vi_Users',where="status = '"+"pending"+"'" , orderby='reg_date,ASC')
+
+    # return{'ss':query}
 
     
 
@@ -226,17 +235,22 @@ def pendingDoctors():
 
         result = me.usersModel(data=db.cursor.fetchall())
 
-        
+        return{'data':result}
+
             
     except Exception as ex:
 
         return {'Message':str(ex)},400
     
-    return{'data':result}
             
 
 ###############     C O N F I R M   D O C T O R    ################
-def confirmDoctor(docID):
+def confirmDoctor(docID , uid):
+    
+    userType = getUserTypeByUserID(uid=uid)
+
+    if userType != 0 :
+        return{'message':'Permission denied ,Only admins allowed !'},403
      
     query = me.updateQuery(tableName='Doctors',valuesDic={'status':'1'},where='doctor_id = '+"'"+ docID + "'")
     
@@ -254,7 +268,12 @@ def confirmDoctor(docID):
 
 
 ###############     R E J E C T   D O C T O R    ################
-def rejectDoctor(docID):
+def rejectDoctor(docID , uid):
+
+    userType = getUserTypeByUserID(uid=uid)
+
+    if userType != 0 :
+        return{'message':'Permission denied ,Only admins allowed !'},403
      
     query = me.updateQuery(tableName='Doctors',valuesDic={'status':'0'},where='id = '+"'"+ docID + "'")
     
@@ -393,11 +412,7 @@ def updateUser(userId,data,imgFile):
      
     
 
-    query = me.procQuery(procName='getUserTypeByUid',valuesDic={"userId":userId})
-
-    db.cursor.execute(query)
-
-    userType = db.cursor.fetchone()[0]
+    userType = getUserTypeByUserID(uid=userId)
 
     
 
@@ -575,6 +590,28 @@ def profileModel(row):
         result.append(item_dic)
 
         return result
+
+
+def getUserTypeByUserID(uid):
+
+    print('aaaaaaaaaaaaa')
+
+    query = me.procQuery(procName='getUserTypeByUid',valuesDic={"userId":uid})
+
+    db.cursor.execute(query)
+
+    userType = db.cursor.fetchone()[0]
+
+    return userType
+
+
+# def onlyAdminAllowed(uid):
+#     userType = getUserTypeByUserID(uid=uid)
+
+#     print(userType)
+
+#     if userType != 0 :
+#         return{'message':'Permission denied ,Only admins allowed !'},403
 
 
 #===============================================================================================================

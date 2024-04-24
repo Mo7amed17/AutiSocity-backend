@@ -9,12 +9,12 @@ postsblp = Blueprint("postsblp",__name__,static_folder="static",template_folder=
 @postsblp.route("",methods=['POST'])
 @me.token_required
 def addPost(token):
-    
+
     request_data = request.get_json()
     # request_data = request.get_json()
     if request_data is None or "type" not in  request_data or "content" not in  request_data :
-          return{'ss':str(request_data)}
-          return jsonify({'Message':'data is missing !'}) ,400
+        #   return{'ss':str(request_data)}
+        return jsonify({'Message':'data is missing !'}) ,400
 
     request_data['uid'] = token['uid'].split('.')[3]
 
@@ -114,10 +114,13 @@ def deletePost(token):
 @postsblp.route("/comments",methods=['DELETE'])
 @me.token_required
 def deleteComment(token):
+
+    # check if it is my cooment to delete
      
     request_data = request.get_json()
     if request_data is None or "comment_id" not in  request_data :
           return jsonify({'Message':'comment_id is missing !'}) ,400
     
     request_data['uid'] = token['uid'].split('.')[3]
+    
     return PostsDB.deleteComment(data=request_data)

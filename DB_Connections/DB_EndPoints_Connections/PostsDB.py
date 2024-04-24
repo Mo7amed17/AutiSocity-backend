@@ -215,7 +215,7 @@ def deletePost(data):
 
 # ==================  delete comment [POST] =========================
 def deleteComment(data):
-    
+    # check if it is my cooment to delete
     query = me.deleteQuery(tableName='Comments',where='id = '+str(data['comment_id']))
 
     try :

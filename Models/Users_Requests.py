@@ -92,26 +92,28 @@ def autiTest():
 @me.token_required
 def pendingDoctors(token):
 
-     
-     # request_data = request.get_json()
-     # if request_data is None or "doctor_id" not in  request_data :
-     #      return jsonify({'Message':'doctor_id is missing !'}) 
+     uid = token['uid'].split('.')[3]
 
 
-     return UsersDB.pendingDoctors()
+
+     return UsersDB.pendingDoctors(uid=uid)
 
 # ================== CONFORM DOCTOR [POST] =========================\
 
 @usersblp.route("/doctors/confirm",methods=['POST'])
 @me.token_required
 def confirmDoctor(token):
+
+     
      
      request_data = request.get_json()
      if request_data is None or "doctor_id" not in  request_data :
           return jsonify({'Message':'doctor_id is missing !'}) ,400
+     
+     uid = token['uid'].split('.')[3]
 
 
-     return UsersDB.confirmDoctor(request_data["doctor_id"])
+     return UsersDB.confirmDoctor(docID=request_data["doctor_id"],uid=uid)
 
 
 
@@ -125,8 +127,9 @@ def rejectDoctor(token):
      if request_data is None or "doctor_id" not in  request_data :
           return jsonify({'Message':'doctor_id is missing !'}) ,400
 
+     uid = token['uid'].split('.')[3]
 
-     return UsersDB.rejectDoctor(request_data["doctor_id"])
+     return UsersDB.rejectDoctor(docID=request_data["doctor_id"],uid=uid)
 
 
 # ================== GET Current User Data (PROFILE) By Token [GET] =========================
@@ -140,7 +143,7 @@ def profile(token):
 
 # ================== Update user profile [PUT] =========================
 
-@usersblp.route("",methods=['PUT'])
+@usersblp.route("",methods=['POST'])
 @me.token_required
 def updateUser(token):
 
