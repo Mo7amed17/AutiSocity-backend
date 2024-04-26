@@ -224,7 +224,7 @@ def pendingDoctors(uid):
         return{'message':'Permission denied ,Only admins allowed !'},403
 
 
-    query = me.selectQuery(tableName='vi_Users',where="status = '"+"pending"+"'" , orderby='reg_date,ASC')
+    query = me.selectQuery(tableName='vi_Users',where="status = '"+"pending"+"'" , orderby='reg_date,DESC')
 
     # return{'ss':query}
 
