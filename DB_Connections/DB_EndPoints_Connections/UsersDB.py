@@ -318,7 +318,7 @@ def profile(id):
             
             clnicsResult = []
 
-            if int(result[0]['user_type']) == 1:
+            if result[0]['user_type'] == 'doctor':
                 query2 = me.selectQuery(tableName='Clinics',columnsName=['address'],where='doctor_id = '+str(result[0]['doctor_id']))
             
                 result[0].pop("doctor_id")
@@ -408,24 +408,21 @@ def saveAttachment(attachmentFile,oldAttachPath , newAttachPath):
 
 
 
-def updateUser(userId,data,imgFile):
+def updateUser(userId,data,files):
      
     
 
     userType = getUserTypeByUserID(uid=userId)
 
-    
-
-
-    if data is None or 'name' not in data or 'phone' not in data or 'password' not in data or 'government' not in data or 'city' not in data or 'profile_status' not in data :
-        return {'message':'Missing data ! (name , phone , password , government , city , profile_status)'},400
-    
-
     oldImgPath = getOldAttachmentPath(userId=userId)
 
-    
+    newImgPath = ''
+    try:
+            newImgPath = getAttachmentPath(file= files['avatar'],type=0)
 
-    newImgPath = getAttachmentPath(file=imgFile,type=0)
+    except Exception as e:
+            print("no avatar was send:", e)
+
 
     mainQuery = me.updateQuery(tableName='Users' , valuesDic={
         "name" : data['name'],
@@ -433,16 +430,14 @@ def updateUser(userId,data,imgFile):
         "password":data['password'],
         "government":data['government'],
         'city' : data['city'],
-        "profile_status":data['profile_status'],
+        # "profile_status":data['profile_status'],
         "image":newImgPath
     },where='id ='+userId)
 
     try:
 
         if(userType == 1):
-            if 'specialist' not in data  :
-                return {'message':'specialist required !'},400
-            
+        
             # query = me.updateQuery(tableName='Doctors' , valuesDic={
             #         "specialist": data['specialist']
             # }, where='doctor_id = '+userId)            
@@ -565,23 +560,23 @@ def profileModel(row):
         
 
         item_dic ={}
-        # item_dic["id"] = row[0]
+        item_dic["id"] = row[0]
         item_dic["name"] = row[1]
         item_dic["email"] = row[2]
         item_dic["phone"] = row[3]
         item_dic["image"] = row[4]
         item_dic["user_type"] = row[5]
 
-        if int(row[5]) == 1 or int(row[5]) == 2 :
+        if row[5] == 'doctor' or row[5] == 'patient' :
 
             item_dic["government"] = row[6]
             item_dic["city"] = row[7]
             
-            if int(row[5]) == 1:
+            if row[5] == 'doctor':
                 item_dic["profile_status"] = row[8]
                 item_dic["doctor_id"] = row[9]
 
-            elif int(row[5]) == 2:
+            elif row[5] == 'patient':
                 item_dic["age"] = row[8]
                 item_dic["patient_name"] = row[9]
 

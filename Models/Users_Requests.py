@@ -33,8 +33,10 @@ def register():
 
      # doctor
      if request.form['type'] == "doctor": 
+
+          
      
-          if 'cv' not in request.files :
+          if 'cv' not in request.files or str(request.files['cv'].filename) == '':
                return{'message':'cv is required !'},400
      
           if request.form is None or "name" not in  request.form or "email" not in  request.form or "phone" not in  request.form or "password" not in  request.form  or "government" not in request.form or "city" not in request.form :
@@ -147,10 +149,30 @@ def profile(token):
 @me.token_required
 def updateUser(token):
 
-     # if 'avatar' not in request.files:
-     #      return{'message':'avatar is required even U would not upload it !'},400
+     if request.form is None or "type" not in  request.form:
+          
+          return jsonify({'Message':'enter register type , admin ,  doctor ,  patient'}),400 
      
+      # doctor
+     if request.form['type'] == "doctor": 
      
-     # imagePath = UsersDB.uploadImage(request.files)
+          if request.form is None or "name" not in  request.form or "email" not in  request.form or "phone" not in  request.form or "password" not in  request.form  or "government" not in request.form or "city" not in request.form :
+               return jsonify({'Message':'Input data are missing !'}),400 
      
-     return UsersDB.updateUser(userId=str(token['uid']) , data=request.form , imgFile = request.files['avatar'])
+
+      # patient
+     elif request.form['type'] == "patient": 
+
+          if request.form is None or "name" not in  request.form or "email" not in  request.form or "phone" not in  request.form or "password" not in  request.form  or "government" not in request.form or "city" not in request.form or "age" not in request.form :
+               return jsonify({'Message':'Inputs data are missing !'}) ,400
+          
+
+     # Admin
+     elif request.form['type'] == "admin":
+
+     
+          if request.form is None or "name" not in  request.form or "email" not in  request.form or "phone" not in  request.form or "password" not in  request.form :
+               return jsonify({'Message':'Input data are missing !'}) ,400
+
+
+     return UsersDB.updateUser(userId=str(token['uid'].split('.')[3]) , data=request.form , files=request.files)
