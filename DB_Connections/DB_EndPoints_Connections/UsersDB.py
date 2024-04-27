@@ -5,6 +5,7 @@ import jwt
 import datetime
 from ML.LR3 import doML
 import os
+import phonenumbers
 db = LinkDatabase()
 
 #========================== REGISTERATION & LOGIN ==================================
@@ -59,7 +60,12 @@ def registerDoctor(data,files):
             print("no avatar or cv was send:", e)
 
 
-        
+        phone_number = phonenumbers.parse(data['phone'])
+
+        print(phone_number)
+
+        print(phonenumbers.is_possible_number(phone_number))
+
 
         
 
@@ -121,6 +127,12 @@ def registerPatient(data,files):
 
 
 
+        phone_number = phonenumbers.parse('+2' + data['phone'])
+
+        print(phone_number)
+
+        if phonenumbers.is_valid_number(phone_number):
+            return{'message': 'Phone number is invalid !'}
 
 
         # query = me.insertQuery(tableName='users',columnsName=['full_name','email','phone','password','user_type','government_id','profile_status'] , values=[data['full_name'],data['email'],data['phone'],data['password'],data['government_id']])
@@ -224,7 +236,7 @@ def pendingDoctors(uid):
         return{'message':'Permission denied ,Only admins allowed !'},403
 
 
-    query = me.selectQuery(tableName='vi_Users',where="status = '"+"pending"+"'" , orderby='reg_date,DESC')
+    query = me.selectQuery(tableName='vi_Users',where="status = '"+"pending"+"'" , orderby='create_at,DESC')
 
     # return{'ss':query}
 
@@ -251,10 +263,26 @@ def confirmDoctor(docID , uid):
 
     if userType != 0 :
         return{'message':'Permission denied ,Only admins allowed !'},403
-     
-    query = me.updateQuery(tableName='Doctors',valuesDic={'status':'1'},where='doctor_id = '+"'"+ docID + "'")
     
+    whereCond = 'doctor_id = '+str(docID)
+
+    query = me.selectQuery(tableName='Doctors' , columnsName=['status'],where=whereCond)
+
     try :
+        db.cursor.execute(query)
+        data=db.cursor.fetchall()
+
+        if len(data) == 0 :
+
+            return{'message':'no doctors found with this id !'}
+        
+        if data[0][0] == True:
+
+            return{'message':'تم قبول هذا الطبيب من قبل !'}
+            
+
+        query = me.updateQuery(tableName='Doctors',valuesDic={'status':'1'},where='doctor_id = '+"'"+ str(docID) + "'")
+
         db.cursor.execute(query)
         db.conn.commit()
             
@@ -264,7 +292,7 @@ def confirmDoctor(docID , uid):
             
         
         
-    return {'Message':"تم قبول الطبيب بنجاح "},201  
+    return {'Message':"تم قبول الطبيب بنجاح "},200
 
 
 ###############     R E J E C T   D O C T O R    ################
@@ -274,10 +302,26 @@ def rejectDoctor(docID , uid):
 
     if userType != 0 :
         return{'message':'Permission denied ,Only admins allowed !'},403
-     
-    query = me.updateQuery(tableName='Doctors',valuesDic={'status':'0'},where='id = '+"'"+ docID + "'")
-    
+
+
+    whereCond = 'doctor_id = '+str(docID)
+
+    query = me.selectQuery(tableName='Doctors' , columnsName=['status'],where=whereCond)
+
     try :
+        db.cursor.execute(query)
+        data=db.cursor.fetchall()
+
+        if len(data) == 0 :
+
+            return{'message':'no doctors found with this id !'}
+        if data[0][0] == False:
+
+            return{'message':'تم رفض هذا الطبيب من قبل !'}
+
+
+        query = me.updateQuery(tableName='Doctors',valuesDic={'status':'0'},where='doctor_id = '+"'"+ str(docID) + "'")
+    
         db.cursor.execute(query)
         db.conn.commit()
             
@@ -287,7 +331,7 @@ def rejectDoctor(docID , uid):
             
         
         
-    return {'Message':"تم رفض الطبيب بنجاح "},201  
+    return {'Message':"تم رفض الطبيب بنجاح "},200
 
 
 
@@ -588,8 +632,6 @@ def profileModel(row):
 
 
 def getUserTypeByUserID(uid):
-
-    print('aaaaaaaaaaaaa')
 
     query = me.procQuery(procName='getUserTypeByUid',valuesDic={"userId":uid})
 

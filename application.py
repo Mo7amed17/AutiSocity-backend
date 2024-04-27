@@ -7,6 +7,9 @@ from Models.Posts_Requests import postsblp
 
 from flask_cors import CORS ,cross_origin
 
+
+
+
 app = Flask(__name__)
 
 @app.route('/<filename>')

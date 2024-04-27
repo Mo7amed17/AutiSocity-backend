@@ -100,7 +100,7 @@ def pendingDoctors(token):
 
      return UsersDB.pendingDoctors(uid=uid)
 
-# ================== CONFORM DOCTOR [POST] =========================\
+# ================== CONFiRM DOCTOR [POST] =========================\
 
 @usersblp.route("/doctors/confirm",methods=['POST'])
 @me.token_required

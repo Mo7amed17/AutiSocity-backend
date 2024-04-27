@@ -39,7 +39,7 @@ class myMethods :
 
         for item in values:
             
-            item = "'"+item+"'"
+            item = "'"+str(item)+"'"
             getValuesQuery += item + ','
 
 
@@ -75,7 +75,7 @@ class myMethods :
 
         for key , value in valuesDic.items():
             
-            query += '@'+ str(key) + '=' + "'"+value+"'" + ','
+            query += '@'+ str(key) + '=' + "'"+str(value)+"'" + ','
 
         
         query = query[:-1]
@@ -135,7 +135,7 @@ class myMethods :
 
             if item_dic["user_type"] == 'doctor':
                 item_dic["cv"] = row[7]
-                item_dic["reg_date"] = row[8]
+                item_dic["create_at"] = row[8]
 
 
             
