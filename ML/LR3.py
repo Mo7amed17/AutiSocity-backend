@@ -54,7 +54,9 @@ def doML(inputData):
       oh_encoder=OneHotEncoder(handle_unknown='ignore',sparse_output=False)
 
 
-      oh_data=pd.DataFrame(oh_encoder.fit_transform(data[object_cols]))
+      oh_data=pd.DataFrame(oh_encoder.fit_transform(data[object_cols].values))
+
+      
 
 
       
@@ -92,7 +94,7 @@ def doML(inputData):
 
       y=lb_encoder.fit_transform(y)
 
-      y
+      
 
       feature_names=['Sex','Jaundice','Family_mem_with_ASD']
 
@@ -109,7 +111,7 @@ def doML(inputData):
       # with pd.option_context('display.max_rows', None, 'display.max_columns', None):
       #    print(del_oh_train)
 
-      print(del_oh_train)
+      # print(del_oh_train)
 
       x_old=pd.concat([del_oh_train,x_data],axis=1)
 
@@ -205,12 +207,13 @@ def doML(inputData):
 
       # Print the predicted class/ASD value
 
-      print('\n****************************************************\n')
-      print("Predicted Class/ASD for the new data sample:")
+      # print('\n****************************************************\n')
+      # print("Predicted Class/ASD for the new data sample:")
 
       #print(new_data_sample_pred_label[0])
 
-      print(new_data_sample_pred_label)
+#resuuuuuuuuuuuuuuuuuuuuuuult
+      # print(new_data_sample_pred_label)
 
       return new_data_sample_pred_label[0]
 
