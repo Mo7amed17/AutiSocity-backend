@@ -5,7 +5,8 @@ import pandas as pd
 def doML(inputData):
    try:
 
-      data=pd.read_csv(r'ML\\Toddler_dataset.csv')
+      f = open(r"ML\Toddler_dataset.csv")
+      data=pd.read_csv(f)
 
       #data.head()
 
