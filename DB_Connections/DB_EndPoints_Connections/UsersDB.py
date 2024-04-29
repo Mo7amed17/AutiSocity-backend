@@ -224,7 +224,7 @@ def autiTest(data):
      
         return {"result":doML(inputData=data)}
      except Exception as e:
-            print("Error22:", e)
+            return{"Error22:", e}
 # [1, 1, 1, 1, 1, 1, 1,0,0,0,28,0,0,0,0,1,0,0,0,0,0,0,1,1,1]
 
 
