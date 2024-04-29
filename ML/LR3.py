@@ -237,7 +237,7 @@ def doML(inputData):
 
 
    except Exception as e:
-               return{"Error33:", e}
+               return{"Error33:", str(e)}
                
 
 

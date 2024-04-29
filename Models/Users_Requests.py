@@ -87,7 +87,7 @@ def autiTest():
 
           return UsersDB.autiTest(request_data)
      except Exception as e:
-            return{"Error:", e}
+            return{"Error:", str(e)}
 
 
 
