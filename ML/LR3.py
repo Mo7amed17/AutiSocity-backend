@@ -6,7 +6,7 @@ import os
 def doML(inputData):
    try:
 
-      data=pd.read_csv(os.getcwd()+'\ML\Toddler_dataset.csv')
+      data=pd.read_csv(os.getcwd()+'/ML/Toddler_dataset.csv')
 
       #data.head()
 
