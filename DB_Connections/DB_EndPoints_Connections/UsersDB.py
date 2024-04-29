@@ -219,12 +219,11 @@ def registerAdmin(data , files):
 
 ###############     A U T I S M   T E S T    ################
 def autiTest(data):
-     try:
+     
     #  return {"result":data}
      
-        return {"result":str(doML(inputData=data))}
-     except Exception as e:
-            return{"Error22:", str(e)}
+    return {"result":doML(inputData=data)}
+
 # [1, 1, 1, 1, 1, 1, 1,0,0,0,28,0,0,0,0,1,0,0,0,0,0,0,1,1,1]
 
 

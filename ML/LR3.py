@@ -3,9 +3,9 @@ import pandas as pd
 
 
 def doML(inputData):
-   try:
+   # try:
 
-      data=pd.read_csv(r'ML\\Toddler_dataset.csv')
+      data=pd.read_csv(r'ML\Toddler_dataset.csv')
 
       #data.head()
 
@@ -236,8 +236,8 @@ def doML(inputData):
       #print(conf_LR)
 
 
-   except Exception as e:
-               return{"Error33:", str(e)}
+   # except Exception as e:
+   #             return{"Error33:", e}
                
 
 
