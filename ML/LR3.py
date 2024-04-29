@@ -1,12 +1,12 @@
  
 import pandas as pd
+import os
 
 
 def doML(inputData):
    try:
 
-      f = open(r"ML\Toddler_dataset.csv")
-      data=pd.read_csv(f)
+      data=pd.read_csv(os.getcwd()+'\ML\Toddler_dataset.csv')
 
       #data.head()
 
