@@ -220,9 +220,9 @@ def registerAdmin(data , files):
 ###############     A U T I S M   T E S T    ################
 def autiTest(data):
      
-    #  return {"result":data}
+    print()
      
-    return {"result":doML(inputData=data)}
+    return {"result":str(doML(inputData=data))}
 
 # [1, 1, 1, 1, 1, 1, 1,0,0,0,28,0,0,0,0,1,0,0,0,0,0,0,1,1,1]
 

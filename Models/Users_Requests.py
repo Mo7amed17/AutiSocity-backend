@@ -77,17 +77,17 @@ def register():
 
 @usersblp.route("/test",methods=['POST'])
 def autiTest():
+
      
+     request_data = request.get_json()
      
-          request_data = request.get_json()
+     if request_data is None  or len(request_data) != 15:
+          print(len(request_data))
           
-          if request_data is None  or len(request_data) != 15:
-               print(len(request_data))
-               
-               return jsonify({'Message':'Input data are missing !'}) ,400
+          return jsonify({'Message':'Input data are missing !'}) ,400
 
 
-          return UsersDB.autiTest(request_data)
+     return UsersDB.autiTest(request_data)
 
 
 
