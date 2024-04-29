@@ -9,12 +9,10 @@ postsblp = Blueprint("postsblp",__name__,static_folder="static",template_folder=
 @postsblp.route("",methods=['POST'])
 @me.token_required
 def addPost(token):
-
+    
     request_data = request.get_json()
-    # request_data = request.get_json()
     if request_data is None or "type" not in  request_data or "content" not in  request_data :
-        #   return{'ss':str(request_data)}
-        return jsonify({'Message':'data is missing !'}) ,400
+          return jsonify({'Message':'data is missing !'}) ,400
 
     request_data['uid'] = token['uid'].split('.')[3]
 
@@ -124,3 +122,50 @@ def deleteComment(token):
     request_data['uid'] = token['uid'].split('.')[3]
     
     return PostsDB.deleteComment(data=request_data)
+
+@postsblp.route("/report",methods=['POST'])
+@me.token_required
+def reportPost(token):
+     
+    request_data = request.get_json()
+    if request_data is None or "post_id" not in  request_data  or "user_id" not in  request_data   or "complaint" not in  request_data :
+          return jsonify({'Message':'post_id ,user_id , complaint  are missing !'}) ,400
+    
+    request_data['uid'] = token['uid'].split('.')[3]
+    
+    return PostsDB.reportPost(data=request_data)
+
+
+@postsblp.route("/report",methods=['GET'])
+@me.token_required
+def getReportedPosts(token):
+        
+    return PostsDB.getReportedPosts(uid=token['uid'].split('.')[3])
+
+@postsblp.route("/report/approve",methods=['POST'])
+@me.token_required
+def approveReportPost(token):
+        
+    request_data = request.get_json()
+
+    if request_data is None or "report_id" not in  request_data:
+        return jsonify({'Message':'report_id is missing !'}) ,400
+    
+    request_data['uid'] = token['uid'].split('.')[3]
+
+
+    return PostsDB.approveReportPost(data = request_data)
+
+@postsblp.route("/report",methods=['DELETE'])
+@me.token_required
+def deleteReportPost(token):
+        
+    request_data = request.get_json()
+
+    if request_data is None or "report_id" not in  request_data:
+        return jsonify({'Message':'report_id is missing !'}) ,400
+    
+    request_data['uid'] = token['uid'].split('.')[3]
+
+
+    return PostsDB.deleteReportPost(data = request_data)

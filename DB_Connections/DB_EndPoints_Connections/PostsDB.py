@@ -187,7 +187,7 @@ def savePost(data):
 
         return {'Message':str(ex)},400
 
-    return {'Message':'تم حفظ المنشور بنجاح'},201
+    return {'Message':'تم حفظ المنشور بنجاح'},200
         
 
 
@@ -196,26 +196,52 @@ def savePost(data):
 # ==================  delete post [DELETE] =========================
 
 def deletePost(data):
+
+    ## check if admin or user post
+
+    userType = me.getUserTypeByUserID(uid=data['uid'])
     
+    if userType != 0:
+        query = me.selectQuery(tableName='Posts',where='id = '+str(data['post_id']) + ' AND user_id = '+str(data['uid']))
+
+        db.cursor.execute(query)
+        result=db.cursor.fetchall()
+        if len(result) == 0 :
+            return{'message':'لا يمكن حذف المنشور لعدم وجودة او لعدم وجود صلاحية بذلك'},400
+
+    # return{'ss':query}
+
+
+
     query = me.deleteQuery(tableName='Posts',where='id = '+str(data['post_id']))
     # return{'s':query}
     try :
         db.cursor.execute(query)
         db.conn.commit()
 
-        
+        return {'Message':'تم حذف المنشور بنجاح'},200
             
     except Exception as ex:
 
         return {'Message':str(ex)},400
 
-    return {'Message':'تم حذف المنشور بنجاح'},200
+    
 
 
 
 # ==================  delete comment [POST] =========================
 def deleteComment(data):
     # check if it is my cooment to delete
+    query = me.selectQuery(tableName='Comments',where='id = '+str(data['comment_id']) + ' AND user_id = '+str(data['uid']))
+
+    db.cursor.execute(query)
+    result=db.cursor.fetchall()
+
+    # return{'ss':query}
+
+    if len(result) == 0 :
+        return{'message':'لا يمكن حذف التعليق لعد وجودة او لعدم وجود صلاحية بذلك'},400
+
     query = me.deleteQuery(tableName='Comments',where='id = '+str(data['comment_id']))
 
     try :
@@ -267,6 +293,131 @@ def getUserPosts(data):
 
         return {'Message':str(ex)},400
    
+# ==================  report post [POST] =========================
+def reportPost(data):
+
+    query = me.insertQuery(tableName='Posts_Reports',columnsName=['user_id','post_id','complaint'],values=[data['uid'],data['post_id'],data['user_id']])
+    
+    try :
+        db.cursor.execute(query)
+        db.conn.commit()
+
+        return {'Message':'تم تبليغ المنشور الي المسؤولين بنجاح'},200
+            
+    except Exception as ex:
+        if 'U_Report' in str(ex.args[1]):
+
+            return {'Message':"لقد بلغت علي هذا المنشور مسبقا !"},400
+        else:
+
+            return {'Message':str(ex)},400
+
+    
+
+# ==================  Get reported posts [GET] =========================
+def getReportedPosts(uid):
+
+    userType = me.getUserTypeByUserID(uid=uid)
+
+    if userType != 0 :
+        return{'message':'Permission denied ,Only admins allowed !'},403
+
+    query = me.selectQuery(tableName='vi_ReportedPosts', orderby='date,DESC')
+    
+    try :
+        db.cursor.execute(query)
+        
+        result = reportedPostsModel(data=db.cursor.fetchall())
+
+        if len(result) == 0 :
+            
+            return   me.message(message="لا يوجد بيانات !"),400
+        
+        else:
+
+            return {'data':result},200
+
+        
+            
+    except Exception as ex:
+
+        return {'Message':str(ex)},400
+
+
+# ==================  approve report post [POST] =========================
+def approveReportPost(data):
+
+    userType = me.getUserTypeByUserID(uid=data['uid'])
+
+    if userType != 0 :
+        return{'message':'Permission denied ,Only admins allowed !'},403
+
+    
+    query = me.selectQuery(tableName='Posts_Reports',where='id = '+str(data['report_id']))
+    db.cursor.execute(query)
+    result=db.cursor.fetchall()
+
+    if len(result) == 0 :
+
+        return{'message':'تم قبول او رفض هذا المنشور بالفعل !'}
+    
+    query = me.deleteQuery(tableName='Posts_Reports',where='id = '+str(data['report_id']) )
+    
+    try :
+    
+        db.cursor.execute(query)
+        db.conn.commit()
+
+        return {'Message':'تم السماح بالمنشور بنجاح'},200
+            
+    except Exception as ex:
+       
+        return {'message':str(ex)},400
+    
+
+
+
+def deleteReportPost(data):
+
+    userType = me.getUserTypeByUserID(uid=data['uid'])
+
+    if userType != 0 :
+        return{'message':'Permission denied ,Only admins allowed !'},403
+
+    
+    query = me.selectQuery(tableName='Posts_Reports',columnsName=['post_id'],where='id = '+str(data['report_id']))
+    db.cursor.execute(query)
+    result=db.cursor.fetchall()
+    
+
+    if len(result) == 0 :
+
+        return{'message':'تم قبول او رفض هذا المنشور بالفعل !'}
+
+
+    
+    query = me.deleteQuery(tableName='Posts',where='id = '+str(result[0][0]) )
+    
+    try :
+    
+        db.cursor.execute(query)
+        db.conn.commit()
+
+        return {'Message':'تم حذف المنشور بنجاح'},200
+            
+    except Exception as ex:
+       
+        return {'message':str(ex)},400
+
+
+
+
+
+
+
+#################################### Models Section ###################################################
+
+
 
 # Posts Model
 
@@ -286,6 +437,28 @@ def postModel(data):
             item_dic["likes"] = row[7]
             item_dic["comments"] = row[8]
             item_dic["is_saved"] = row[9]
+            
+            
+            result.append(item_dic)
+
+        return result
+
+
+def reportedPostsModel(data):
+
+        result = []
+        
+        for row in data:
+
+            item_dic ={}
+            item_dic["id"] = row[0]
+            item_dic["date"] = row[1]
+            item_dic["content"] = row[2]
+            item_dic["type"] = row[3]
+            item_dic["comp_from"] = row[4]
+            item_dic["comp_to"] = row[5]
+            item_dic["image"] = row[6]
+            item_dic["complaint"] = row[7]
             
             
             result.append(item_dic)

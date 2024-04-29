@@ -230,7 +230,7 @@ def autiTest(data):
 def pendingDoctors(uid):
 
 
-    userType = getUserTypeByUserID(uid=uid)
+    userType = me.getUserTypeByUserID(uid=uid)
 
     if userType != 0 :
         return{'message':'Permission denied ,Only admins allowed !'},403
@@ -259,7 +259,7 @@ def pendingDoctors(uid):
 ###############     C O N F I R M   D O C T O R    ################
 def confirmDoctor(docID , uid):
     
-    userType = getUserTypeByUserID(uid=uid)
+    userType = me.getUserTypeByUserID(uid=uid)
 
     if userType != 0 :
         return{'message':'Permission denied ,Only admins allowed !'},403
@@ -298,7 +298,7 @@ def confirmDoctor(docID , uid):
 ###############     R E J E C T   D O C T O R    ################
 def rejectDoctor(docID , uid):
 
-    userType = getUserTypeByUserID(uid=uid)
+    userType = me.getUserTypeByUserID(uid=uid)
 
     if userType != 0 :
         return{'message':'Permission denied ,Only admins allowed !'},403
@@ -450,13 +450,13 @@ def saveAttachment(attachmentFile,oldAttachPath , newAttachPath):
         
     
 
-
+#aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa edit here
 
 def updateUser(userId,data,files):
      
     
 
-    userType = getUserTypeByUserID(uid=userId)
+    # userType = getUserTypeByUserID(uid=userId)
 
     oldImgPath = getOldAttachmentPath(userId=userId)
 
@@ -478,68 +478,65 @@ def updateUser(userId,data,files):
         "image":newImgPath
     },where='id ='+userId)
 
-    try:
+    # try:
 
-        if(userType == 1):
+        # if(userType == 1):
         
             # query = me.updateQuery(tableName='Doctors' , valuesDic={
             #         "specialist": data['specialist']
             # }, where='doctor_id = '+userId)            
 
 
-            db.cursor.execute(mainQuery)
-            db.conn.commit()
-
-            # db.cursor.execute(query)
+            # db.cursor.execute(mainQuery)
             # db.conn.commit()
 
             
-            saveAttachment(attachmentFile=imgFile,oldAttachPath=oldImgPath,newAttachPath=newImgPath)
+            # saveAttachment(attachmentFile=imgFile,oldAttachPath=oldImgPath,newAttachPath=newImgPath)
             
-            return{'message':'تم تعديل بيانات الطبيب بنجاح !'},200
+            # return{'message':'تم تعديل بيانات الطبيب بنجاح !'},200
         
-        elif(userType == 2):
-            if  'age' not in data or 'patient_name' not in data  :
-                return {'message':' age , patient_name are  required !'},400
+        # elif(userType == 2):
+        #     if  'age' not in data or 'patient_name' not in data  :
+        #         return {'message':' age , patient_name are  required !'},400
             
-            query = me.updateQuery(tableName='Patients' , valuesDic={
-                    "age": data['age'],
-                    "patient_name": data['patient_name']
-            }, where='patient_id = '+userId)
+        #     query = me.updateQuery(tableName='Patients' , valuesDic={
+        #             "age": data['age'],
+        #             "patient_name": data['patient_name']
+        #     }, where='patient_id = '+userId)
 
-            db.cursor.execute(mainQuery)
-            db.conn.commit()
+        #     db.cursor.execute(mainQuery)
+        #     db.conn.commit()
 
-            db.cursor.execute(query)
-            db.conn.commit()
+        #     db.cursor.execute(query)
+        #     db.conn.commit()
 
-            saveAttachment(attachmentFile=imgFile,oldAttachPath=oldImgPath,newAttachPath=newImgPath)
+        #     saveAttachment(attachmentFile=imgFile,oldAttachPath=oldImgPath,newAttachPath=newImgPath)
 
-            return{'message':'تم تعديل بيانات المريض بنجاح !'},200
+        #     return{'message':'تم تعديل بيانات المريض بنجاح !'},200
         
-        else:
-            db.cursor.execute(mainQuery)
-            db.conn.commit()
+        # else:
+        #     db.cursor.execute(mainQuery)
+        #     db.conn.commit()
 
-            saveAttachment(imgFile=imgFile,oldAttachPath=oldImgPath,newAttachPath=newImgPath)
+        #     saveAttachment(imgFile=imgFile,oldAttachPath=oldImgPath,newAttachPath=newImgPath)
 
-            return{'message':'تم تعديل بيانات الأدمن !'},200
+        #     return{'message':'تم تعديل بيانات الأدمن !'},200
          
     
     
-    except Exception as ex:
+    # except Exception as ex:
         
-        if 'full_name_U' in str(ex.args[1]):
-            return {'Message':"الأسم موجود بالفعل"},400
+    #     if 'full_name_U' in str(ex.args[1]):
+    #         return {'Message':"الأسم موجود بالفعل"},400
         
-        elif 'email_U' in str(ex.args[1]):
-            return {'Message':"البريد الألكتروني موجود بالفعل"},400
+    #     elif 'email_U' in str(ex.args[1]):
+    #         return {'Message':"البريد الألكتروني موجود بالفعل"},400
         
-        elif 'phone_U' in str(ex.args[1]):
-            return {'Message':"رقم الهاتف موجود بالفعل"},400
+    #     elif 'phone_U' in str(ex.args[1]):
+    #         return {'Message':"رقم الهاتف موجود بالفعل"},400
         
-        else:
-            return {'Message':str(ex)},400
+    #     else:
+    #         return {'Message':str(ex)},400
     
     
     
@@ -552,7 +549,7 @@ def updateUser(userId,data,files):
 
      
 
-    return{'message':userType}
+    # return{'message':userType}
 
 # def addClinic(data):
 
@@ -631,15 +628,7 @@ def profileModel(row):
         return result
 
 
-def getUserTypeByUserID(uid):
 
-    query = me.procQuery(procName='getUserTypeByUid',valuesDic={"userId":uid})
-
-    db.cursor.execute(query)
-
-    userType = db.cursor.fetchone()[0]
-
-    return userType
 
 
 # def onlyAdminAllowed(uid):

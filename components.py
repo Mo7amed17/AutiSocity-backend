@@ -1,7 +1,9 @@
 from flask import request , jsonify
 import jwt
 from functools import wraps
-# from main import app
+from DB_Connections.DB_connections import LinkDatabase
+db = LinkDatabase()
+
 
 class myMethods :
 
@@ -143,3 +145,13 @@ class myMethods :
             result.append(item_dic)
 
         return result
+    
+    def getUserTypeByUserID(uid):
+
+        query = myMethods.procQuery(procName='getUserTypeByUid',valuesDic={"userId":uid})
+
+        db.cursor.execute(query)
+
+        userType = db.cursor.fetchone()[0]
+
+        return userType
