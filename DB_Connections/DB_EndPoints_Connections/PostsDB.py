@@ -1,16 +1,37 @@
-from DB_Connections.DB_connections import LinkDatabase
+from DB_Connections.DB_connections import linkDB as db
 from flask import jsonify
 from components import myMethods as me
 import jwt
 import datetime
 
-db = LinkDatabase()
+
 
 # ================== Add Post [POST] =========================
 
 def addPost(data):
+
+    type = ''
+
+    userType = me.getUserTypeByUserID(uid=data['uid'])
+
+    if userType == 2:
+        type = '0'
+    else:
+        if 'type' not in data:
+            return{'message':'type is required with doctor\'s posts'}
+
+        if data['type'] == 'question':
+            type = '1'
+
+        elif data['type'] == 'advice':
+            type = '2'
+
+        elif data['type'] == 'information':
+            type = '3'
+        else:
+            return{'message':'choose between question , advice and information type'},400
      
-    query = me.insertQuery(tableName='Posts',columnsName=['user_id','type','[content]','likes','date'],values=[data['uid'],data['type'],data['content'],'0',datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')])
+    query = me.insertQuery(tableName='Posts',columnsName=['user_id','type','[content]','likes','date'],values=[data['uid'],type,data['content'],'0',datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')])
     
     try :
         db.cursor.execute(query)
@@ -376,6 +397,7 @@ def approveReportPost(data):
     
 
 
+# ==================  delete report post [DELETE] =========================
 
 def deleteReportPost(data):
 
@@ -411,6 +433,45 @@ def deleteReportPost(data):
 
 
 
+# ==================  like a post [POST] =========================
+
+def likePost(data):
+
+    
+    query = me.insertQuery(tableName='Post_Likes',columnsName=['post_id','user_id'],values=[int(data['post_id']) , int(data['uid'])])
+    try :
+        db.cursor.execute(query)
+        db.conn.commit()
+        return{'message':'تم عمل لايك بنجاح !'}
+            
+    except Exception as ex:
+        if 'U_Like' in str(ex.args[1]):
+            return {'message':'تم عمل لايك لهذا المنشور من قبل !'},400
+        else:
+            return {'message':str(ex)},400
+    
+
+# ==================  unlike a post [POST] =========================
+def unlikePost(data):
+
+    query = me.selectQuery(tableName='Post_Likes',where='post_id = '+str(data['post_id']) + ' AND user_id = '+str(data['uid']))
+    db.cursor.execute(query)
+    result=db.cursor.fetchall()
+
+    if(len(result) == 0):
+        return{'message':'cannot unlike a post that you are not liked it before !'},400
+
+
+    
+    query = me.deleteQuery(tableName='Post_Likes',where='post_id = '+str(data['post_id']) + ' AND user_id = '+str(data['uid']))
+    try :
+        db.cursor.execute(query)
+        db.conn.commit()
+        return{'message':'تم حذف الايك بنجاح !'},200
+            
+    except Exception as ex:
+       
+        return {'message':str(ex)},400
 
 
 

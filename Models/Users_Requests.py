@@ -136,6 +136,17 @@ def rejectDoctor(token):
      uid = token['uid'].split('.')[3]
 
      return UsersDB.rejectDoctor(docID=request_data["doctor_id"],uid=uid)
+     
+
+
+
+# ================== GET ADMINS [GET] =========================
+
+@usersblp.route("/admins",methods=['GET'])
+@me.token_required
+def getAdmins(token):
+
+     return UsersDB.getAdmins(uid=token['uid'].split('.')[3])
 
 
 # ================== GET Current User Data (PROFILE) By Token [GET] =========================
@@ -180,3 +191,17 @@ def updateUser(token):
 
 
      return UsersDB.updateUser(userId=str(token['uid'].split('.')[3]) , data=request.form , files=request.files)
+
+# ================== DELETE USER [DELETE] =========================
+
+@usersblp.route("",methods=['DELETE'])
+@me.token_required
+def deleteUser(token):
+
+     request_data = request.get_json()
+     if request_data is None or "user_id" not in  request_data :
+          return jsonify({'Message':'user_id is missing !'}) ,400
+
+     request_data['uid'] = token['uid'].split('.')[3]
+
+     return UsersDB.deleteUser(data=request_data)

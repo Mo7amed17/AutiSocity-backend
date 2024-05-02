@@ -29,3 +29,5 @@ class LinkDatabase:
             
         except Exception as e:
             print("Database Error:", e)
+
+linkDB = LinkDatabase()

@@ -1,8 +1,8 @@
 from flask import request , jsonify
 import jwt
 from functools import wraps
-from DB_Connections.DB_connections import LinkDatabase
-db = LinkDatabase()
+from DB_Connections.DB_connections import linkDB as db
+
 
 
 class myMethods :

@@ -1,4 +1,4 @@
-from DB_Connections.DB_connections import LinkDatabase
+from DB_Connections.DB_connections import linkDB as db
 from flask import jsonify
 from components import myMethods as me
 import jwt
@@ -6,7 +6,6 @@ import datetime
 from ML.LR3 import doML
 import os
 import phonenumbers
-db = LinkDatabase()
 
 #========================== REGISTERATION & LOGIN ==================================
 
@@ -132,7 +131,7 @@ def registerPatient(data,files):
         print(phone_number)
 
         if phonenumbers.is_valid_number(phone_number):
-            return{'message': 'Phone number is invalid !'}
+            return{'message': 'Phone number is invalid !'},400
 
 
         # query = me.insertQuery(tableName='users',columnsName=['full_name','email','phone','password','user_type','government_id','profile_status'] , values=[data['full_name'],data['email'],data['phone'],data['password'],data['government_id']])
@@ -168,7 +167,7 @@ def registerPatient(data,files):
                 return {'Message':"رقم الهاتف موجود بالفعل"},400
             
             else:
-                return {'Messageaaa':str(ex)},400
+                return {'Message':str(ex)},400
             
         
         
@@ -224,7 +223,7 @@ def autiTest(data):
      
     return {"result":str(doML(inputData=data))}
 
-# [1, 1, 1, 1, 1, 1, 1,0,0,0,28,0,0,0,0,1,0,0,0,0,0,0,1,1,1]
+
 
 
 
@@ -276,11 +275,11 @@ def confirmDoctor(docID , uid):
 
         if len(data) == 0 :
 
-            return{'message':'no doctors found with this id !'}
+            return{'message':'no doctors found with this id !'},400
         
         if data[0][0] == True:
 
-            return{'message':'تم قبول هذا الطبيب من قبل !'}
+            return{'message':'تم قبول هذا الطبيب من قبل !'},400
             
 
         query = me.updateQuery(tableName='Doctors',valuesDic={'status':'1'},where='doctor_id = '+"'"+ str(docID) + "'")
@@ -316,10 +315,10 @@ def rejectDoctor(docID , uid):
 
         if len(data) == 0 :
 
-            return{'message':'no doctors found with this id !'}
+            return{'message':'no doctors found with this id !'},400
         if data[0][0] == False:
 
-            return{'message':'تم رفض هذا الطبيب من قبل !'}
+            return{'message':'تم رفض هذا الطبيب من قبل !'},400
 
 
         query = me.updateQuery(tableName='Doctors',valuesDic={'status':'0'},where='doctor_id = '+"'"+ str(docID) + "'")
@@ -335,6 +334,44 @@ def rejectDoctor(docID , uid):
         
     return {'Message':"تم رفض الطبيب بنجاح "},200
 
+
+###############      G E T   A D M I N S     ################
+def getAdmins(uid):
+
+    userType = me.getUserTypeByUserID(uid=uid)
+
+    if userType != 0 :
+        return{'message':'Permission denied ,Only admins allowed !'},403
+
+
+
+    query = me.selectQuery(tableName='vi_Users',columnsName=['id' , 'name' , 'email' ,'image','user_type'] ,where='user_type = \'admin\'')
+
+    try :
+        db.cursor.execute(query)
+
+        result = []
+        
+        for row in db.cursor.fetchall():
+            data=profileModel(row=row)
+            result.append(data[0])
+
+        
+
+        if len(result) == 0 :
+
+            return{'message':'no admins found'},400
+        
+        return{'data':result}
+
+            
+    except Exception as ex:
+
+        return {'Message':str(ex)},400
+            
+        
+        
+    return {'Message':"تم رفض الطبيب بنجاح "},200
 
 
 
@@ -359,7 +396,7 @@ def profile(id):
         
         if len(result) == 0 :
             
-            return   me.message(message="لا يوجد بيانات !")
+            return   me.message(message="لا يوجد بيانات !"),400
         else:
             
             clnicsResult = []
@@ -395,59 +432,7 @@ def profile(id):
           
 #         file.save(f'{path}')
 
-def getAttachmentPath(file,type):
 
-    fullPath = ''
-
-    if file.filename != '':
-
-        uniq_filename = str(datetime.datetime.now().date()) + '_' + str(datetime.datetime.now().time()).replace(':', '.')
-
-        if type == 0 : # avatar image
-        
-            dic = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "uploads", "avatars")
-        
-        else:
-             
-             dic = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "uploads", "CVs")
-
-        fullPath = f'{dic}-{uniq_filename}{file.filename}'
-          
-        
-
-    return fullPath
-
-
-def getOldAttachmentPath(userId):
-    query = me.selectQuery(tableName='Users' , columnsName=['image'],where='id = ' +userId)
-
-    db.cursor.execute(query)
-
-    oldImgPath = ''
-
-    oldImgPath = db.cursor.fetchone()[0]
-
-    return oldImgPath
-
-    
-
-def saveAttachment(attachmentFile,oldAttachPath , newAttachPath):
-
-    if oldAttachPath and oldAttachPath != '':
-
-        os.remove(oldAttachPath)
-
-
-
-    fullPath = ''
-
-    fullPath = newAttachPath
-
-    if fullPath and fullPath != '':
-
-       attachmentFile.save(fullPath)
-
-        
 
         
     
@@ -553,6 +538,45 @@ def updateUser(userId,data,files):
 
     # return{'message':userType}
 
+
+
+def deleteUser(data):
+
+    ## check if admin or user post
+
+    userType = me.getUserTypeByUserID(uid=data['uid'])
+
+    if userType != 0 :
+        return{'message':'Permission denied ,Only admins allowed !'},403
+    
+    try :
+    
+        query = me.selectQuery(tableName='Users',columnsName=['user_type'],where='id = '+str(data['user_id']))
+        db.cursor.execute(query)
+        result=db.cursor.fetchall()
+        deletedUserType = result[0][0]
+        print(deletedUserType)
+
+
+        query = me.deleteQuery(tableName='Users',where='id = '+str(data['user_id']))
+        db.cursor.execute(query)
+        db.conn.commit()
+
+        if deletedUserType == 0 :
+            return {'message':'تم حذف المسؤول بنجاح'},200
+        elif deletedUserType == 1 :
+            return {'message':'تم حذف الطبيب بنجاح'},200
+        else:
+            return {'message':'تم حذف المريض بنجاح'},200
+        
+            
+    
+        
+    except Exception as ex:
+        return {'message':str(ex)},400
+        
+
+
 # def addClinic(data):
 
         
@@ -606,20 +630,21 @@ def profileModel(row):
         item_dic["id"] = row[0]
         item_dic["name"] = row[1]
         item_dic["email"] = row[2]
-        item_dic["phone"] = row[3]
-        item_dic["image"] = row[4]
-        item_dic["user_type"] = row[5]
+        item_dic["image"] = row[3]
+        item_dic["user_type"] = row[4]
+        
 
-        if row[5] == 'doctor' or row[5] == 'patient' :
+        if row[4] == 'doctor' or row[4] == 'patient' :
+            item_dic["phone"] = row[5]
 
             item_dic["government"] = row[6]
             item_dic["city"] = row[7]
             
-            if row[5] == 'doctor':
+            if row[4] == 'doctor':
                 item_dic["profile_status"] = row[8]
                 item_dic["doctor_id"] = row[9]
 
-            elif row[5] == 'patient':
+            elif row[4] == 'patient':
                 item_dic["age"] = row[8]
                 item_dic["patient_name"] = row[9]
 
@@ -629,7 +654,59 @@ def profileModel(row):
 
         return result
 
+def getAttachmentPath(file,type):
 
+    fullPath = ''
+
+    if file.filename != '':
+
+        uniq_filename = str(datetime.datetime.now().date()) + '_' + str(datetime.datetime.now().time()).replace(':', '.')
+
+        if type == 0 : # avatar image
+        
+            dic = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "uploads", "avatars")
+        
+        else:
+             
+             dic = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "uploads", "CVs")
+
+        fullPath = f'{dic}-{uniq_filename}{file.filename}'
+          
+        
+
+    return fullPath
+
+
+def getOldAttachmentPath(userId):
+    query = me.selectQuery(tableName='Users' , columnsName=['image'],where='id = ' +userId)
+
+    db.cursor.execute(query)
+
+    oldImgPath = ''
+
+    oldImgPath = db.cursor.fetchone()[0]
+
+    return oldImgPath
+
+    
+
+def saveAttachment(attachmentFile,oldAttachPath , newAttachPath):
+
+    if oldAttachPath and oldAttachPath != '':
+
+        os.remove(oldAttachPath)
+
+
+
+    fullPath = ''
+
+    fullPath = newAttachPath
+
+    if fullPath and fullPath != '':
+
+       attachmentFile.save(fullPath)
+
+        
 
 
 

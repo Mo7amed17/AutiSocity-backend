@@ -11,7 +11,7 @@ postsblp = Blueprint("postsblp",__name__,static_folder="static",template_folder=
 def addPost(token):
     
     request_data = request.get_json()
-    if request_data is None or "type" not in  request_data or "content" not in  request_data :
+    if request_data is None or "content" not in  request_data :
           return jsonify({'Message':'data is missing !'}) ,400
 
     request_data['uid'] = token['uid'].split('.')[3]
@@ -169,3 +169,31 @@ def deleteReportPost(token):
 
 
     return PostsDB.deleteReportPost(data = request_data)
+
+@postsblp.route("/like",methods=['POST'])
+@me.token_required
+def likePost(token):
+        
+    request_data = request.get_json()
+
+    if request_data is None or "post_id" not in  request_data:
+        return jsonify({'Message':'post_id is missing !'}) ,400
+    
+    request_data['uid'] = token['uid'].split('.')[3]
+
+
+    return PostsDB.likePost(data = request_data)
+
+@postsblp.route("/unlike",methods=['POST'])
+@me.token_required
+def unlikePost(token):
+        
+    request_data = request.get_json()
+
+    if request_data is None or "post_id" not in  request_data:
+        return jsonify({'Message':'post_id is missing !'}) ,400
+    
+    request_data['uid'] = token['uid'].split('.')[3]
+
+
+    return PostsDB.unlikePost(data = request_data)
