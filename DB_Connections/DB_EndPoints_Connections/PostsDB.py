@@ -53,7 +53,7 @@ def getDoctorsPosts(data):
 
     query = me.procQuery(procName='getAllPosts' , valuesDic={
         'user_id' : data['uid'],
-        'user_type' : '1'
+        'posts_type' : '1'
     })
 
     # return{'s':query}
@@ -85,7 +85,7 @@ def getPatientsPosts(data):
 
     query = me.procQuery(procName='getAllPosts' , valuesDic={
         'user_id' : data['uid'],
-        'user_type' : '2'
+        'posts_type' : '0'
     })
 
     
@@ -205,12 +205,44 @@ def savePost(data):
         
             
     except Exception as ex:
-
-        return {'Message':str(ex)},400
-
-    return {'Message':'تم حفظ المنشور بنجاح'},200
         
+        if 'U_SavedPost' in str(ex.args[1]):
+            return {'message':'تم حفظ هذا المنشور من قبل !'},400
 
+        return {'message':'No post found with this id !'},400
+        return {'message':str(ex)},400
+
+    return {'message':'تم حفظ المنشور بنجاح'},200
+        
+# ==================  unsave post [POST] =========================
+def unsavePost(data):
+
+    query = me.selectQuery(tableName='Saved_Posts',where='post_id = '+str(data['post_id']) + ' AND user_id = '+str(data['uid']))
+    db.cursor.execute(query)
+    result=db.cursor.fetchall()
+
+    if(len(result) == 0):
+        return{'message':'cannot unsave a post that you did not saved it before !'},400
+
+
+    
+    query = me.deleteQuery(tableName='Saved_Posts',where='post_id = '+str(data['post_id']) + ' AND user_id = '+str(data['uid']))
+    try :
+        db.cursor.execute(query)
+        db.conn.commit()
+        return{'message':'تم إزالة المنشور من المحفوظات بنجاح !'},200
+
+        
+            
+    except Exception as ex:
+        
+        if 'U_SavedPost' in str(ex.args[1]):
+            return {'message':'تم حفظ هذا المنشور من قبل !'},400
+
+        return {'message':'No post found with this id !'},400
+        return {'message':str(ex)},400
+
+    return {'message':'تم حفظ المنشور بنجاح'},200
 
 
 
@@ -459,7 +491,7 @@ def unlikePost(data):
     result=db.cursor.fetchall()
 
     if(len(result) == 0):
-        return{'message':'cannot unlike a post that you are not liked it before !'},400
+        return{'message':'cannot unlike a post that you did not liked it before !'},400
 
 
     
@@ -490,14 +522,20 @@ def postModel(data):
 
             item_dic ={}
             item_dic["id"] = row[0]
-            item_dic["name"] = row[1]
-            item_dic["email"] = row[2]
-            item_dic["type"] = row[3]
-            item_dic["content"] = row[4]
-            item_dic["date"] = row[5]
-            item_dic["likes"] = row[7]
-            item_dic["comments"] = row[8]
-            item_dic["is_saved"] = row[9]
+            item_dic["content"] = row[1]
+            item_dic["date"] = row[2]
+            item_dic["likes"] = row[3]
+            item_dic["isLiked"] = row[4]
+            item_dic["comments"] = row[5]
+            item_dic["saves"] = row[6]
+            item_dic["isSaved"] = row[7]
+            item_dic["type"] = row[8]
+            item_dic["post_user_id"] = row[9]
+            item_dic["name"] = row[10]
+            item_dic["email"] = row[11]
+            item_dic["image"] = row[12]
+            
+            
             
             
             result.append(item_dic)
