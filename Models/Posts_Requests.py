@@ -108,6 +108,13 @@ def unsavePost(token):
     request_data['uid'] = token['uid'].split('.')[3]
     return PostsDB.unsavePost(data=request_data)
 
+# ==================  GET SAVED posts [GET] =========================
+@postsblp.route("/savedPosts",methods=['GET'])
+@me.token_required
+def getSavedPosts(token):
+    
+    return PostsDB.getSavedPosts(uid=token['uid'].split('.')[3])
+
 # ==================  delete a post [DELETE] =========================
 @postsblp.route("",methods=['DELETE'])
 @me.token_required

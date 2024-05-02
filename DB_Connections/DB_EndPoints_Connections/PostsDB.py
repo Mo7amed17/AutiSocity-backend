@@ -245,6 +245,33 @@ def unsavePost(data):
     return {'message':'تم حفظ المنشور بنجاح'},200
 
 
+def getSavedPosts(uid):
+
+    query = me.procQuery(procName='getAllSavedPosts' , valuesDic={
+    'user_id' : uid,
+    })
+
+    # return{'s':query}
+    
+    try :
+        db.cursor.execute(query)
+
+
+        result = postModel(data=db.cursor.fetchall())
+
+        if len(result) == 0 :
+            
+            return   me.message(message="لا يوجد بيانات !"),400
+        
+        else:
+
+            return {'data':result},200
+            
+    except Exception as ex:
+
+        return {'Message':str(ex)},400
+
+
 
 # ==================  delete post [DELETE] =========================
 
