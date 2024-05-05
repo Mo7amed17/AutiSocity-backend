@@ -31,7 +31,7 @@ def addPost(data):
         else:
             return{'message':'choose between question , advice and information type'},400
      
-    query = me.insertQuery(tableName='Posts',columnsName=['user_id','type','[content]','likes','date'],values=[data['uid'],type,data['content'],'0',datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')])
+    query = me.insertQuery(tableName='Posts',columnsName=['user_id','type','[content]','date'],values=[data['uid'],type,data['content'],datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')])
     
     try :
         db.cursor.execute(query)
@@ -66,7 +66,7 @@ def getDoctorsPosts(data):
 
         if len(result) == 0 :
             
-            return   me.message(message="لا يوجد بيانات !"),400
+            return   me.message(message="لا يوجد بيانات !"),200
         
         else:
 
@@ -98,7 +98,7 @@ def getPatientsPosts(data):
 
         if len(result) == 0 :
             
-            return   me.message(message="لا يوجد بيانات !"),400
+            return   me.message(message="لا يوجد بيانات !"),200
         
         else:
 
@@ -261,7 +261,7 @@ def getSavedPosts(uid):
 
         if len(result) == 0 :
             
-            return   me.message(message="لا يوجد بيانات !"),400
+            return   me.message(message="لا يوجد بيانات !"),200
         
         else:
 
@@ -363,7 +363,7 @@ def getUserPosts(data):
 
         if len(result) == 0 :
             
-            return   me.message(message="لا يوجد بيانات !"),400
+            return   me.message(message="لا يوجد بيانات !"),200
         
         else:
 
@@ -411,9 +411,10 @@ def getReportedPosts(uid):
 
         if len(result) == 0 :
             
-            return   me.message(message="لا يوجد بيانات !"),400
+            return   me.message(message="لا يوجد بيانات !"),200
         
         else:
+            result.reverse()
 
             return {'data':result},200
 
@@ -501,7 +502,7 @@ def likePost(data):
     try :
         db.cursor.execute(query)
         db.conn.commit()
-        return{'message':'تم عمل لايك بنجاح !'}
+        return{'message':'تم عمل لايك بنجاح !'},200
             
     except Exception as ex:
         if 'U_Like' in str(ex.args[1]):

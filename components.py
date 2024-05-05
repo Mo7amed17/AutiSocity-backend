@@ -150,8 +150,11 @@ class myMethods :
 
         query = myMethods.procQuery(procName='getUserTypeByUid',valuesDic={"userId":uid})
 
-        db.cursor.execute(query)
+        try:
+            db.cursor.execute(query)
 
-        userType = db.cursor.fetchone()[0]
+            userType = db.cursor.fetchone()[0]
 
-        return userType
+            return userType
+        except :
+            return{'message':'id not found !'},400

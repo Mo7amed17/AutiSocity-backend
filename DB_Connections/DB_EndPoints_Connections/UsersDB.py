@@ -38,7 +38,7 @@ def login(data):
             token_text =  str(datetime.datetime.now().time().hour) + '.' + str(datetime.datetime.now().time().minute) +'.' + str(datetime.datetime.now().time().second)+'.' + str(result[0]["id"]) +'.' + str(datetime.datetime.now().time().microsecond)
             
             token = jwt.encode({'uid':token_text , 'exp':datetime.datetime.utcnow() + datetime.timedelta(weeks=9999)},"654321" )
-            result[0].pop("id")
+            # result[0].pop("id")
             return ({'message':'تم تسجيل الدخول بنجاح','token':token,'data':result[0]}),200
 
 
@@ -345,8 +345,8 @@ def getAdmins(uid):
 
 
 
-    query = me.selectQuery(tableName='vi_Users',columnsName=['id' , 'name' , 'email' ,'image','user_type'] ,where='user_type = \'admin\'')
-
+    query = me.selectQuery(tableName='vi_Users',columnsName=['id' , 'name' , 'email' ,'image','user_type'] ,where='user_type = \'admin\' AND id <> 1')
+    
     try :
         db.cursor.execute(query)
 
@@ -361,6 +361,8 @@ def getAdmins(uid):
         if len(result) == 0 :
 
             return{'message':'no admins found'},400
+        
+        result.reverse()
         
         return{'data':result}
 
@@ -396,7 +398,7 @@ def profile(id):
         
         if len(result) == 0 :
             
-            return   me.message(message="لا يوجد بيانات !"),400
+            return   me.message(message="لا يوجد بيانات !"),200
         else:
             
             clnicsResult = []
@@ -542,12 +544,14 @@ def updateUser(userId,data,files):
 
 def deleteUser(data):
 
-    ## check if admin or user post
+    ## check if admin
 
     userType = me.getUserTypeByUserID(uid=data['uid'])
 
     if userType != 0 :
         return{'message':'Permission denied ,Only admins allowed !'},403
+    
+    
     
     try :
     
@@ -556,6 +560,10 @@ def deleteUser(data):
         result=db.cursor.fetchall()
         deletedUserType = result[0][0]
         print(deletedUserType)
+        
+        
+        if deletedUserType == 0 and  data['uid'] != str(data['uid']):
+            return{'message':'Only super admin can delete admins'},400
 
 
         query = me.deleteQuery(tableName='Users',where='id = '+str(data['user_id']))
@@ -573,7 +581,7 @@ def deleteUser(data):
     
         
     except Exception as ex:
-        return {'message':str(ex)},400
+        return {'message':'no user with this id'},400
         
 
 
