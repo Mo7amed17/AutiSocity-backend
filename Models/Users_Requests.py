@@ -148,6 +148,22 @@ def getAdmins(token):
 
      return UsersDB.getAdmins(uid=token['uid'].split('.')[3])
 
+# ================== GET DOCTORS [GET] =========================
+
+@usersblp.route("/doctors",methods=['GET'])
+@me.token_required
+def getDoctors(token):
+
+     return UsersDB.getDoctors(uid=token['uid'].split('.')[3])
+
+# ================== GET PATIENTS [GET] =========================
+
+@usersblp.route("/patients",methods=['GET'])
+@me.token_required
+def getPatients(token):
+
+     return UsersDB.getPatients(uid=token['uid'].split('.')[3])
+
 
 # ================== GET Current User Data (PROFILE) By Token [GET] =========================
 

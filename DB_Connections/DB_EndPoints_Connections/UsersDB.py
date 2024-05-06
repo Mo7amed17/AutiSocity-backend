@@ -371,10 +371,79 @@ def getAdmins(uid):
 
         return {'Message':str(ex)},400
             
-        
-        
-    return {'Message':"تم رفض الطبيب بنجاح "},200
 
+###############      G E T   D O C T O R S     ################
+def getDoctors(uid):
+
+    userType = me.getUserTypeByUserID(uid=uid)
+
+    if userType != 0 :
+        return{'message':'Permission denied ,Only admins allowed !'},403
+
+
+
+    query = me.selectQuery(tableName='vi_Users',columnsName=['id' , 'name' , 'email' ,'image','user_type'] ,where='user_type = \'doctor\'')
+    
+    try :
+        db.cursor.execute(query)
+
+        result = []
+        
+        for row in db.cursor.fetchall():
+            data=profileModel(row=row , getBasicData=True)
+            result.append(data[0])
+
+        
+
+        if len(result) == 0 :
+
+            return{'message':'no doctors found'},400
+        
+        result.reverse()
+        
+        return{'data':result}
+
+            
+    except Exception as ex:
+
+        return {'Message':str(ex)},400
+    
+
+###############      G E T   P A T I E N T S     ################
+def getPatients(uid):
+
+    userType = me.getUserTypeByUserID(uid=uid)
+
+    if userType != 0 :
+        return{'message':'Permission denied ,Only admins allowed !'},403
+
+
+
+    query = me.selectQuery(tableName='vi_Users',columnsName=['id' , 'name' , 'email' ,'image','user_type'] ,where='user_type = \'patient\' AND id <> 1')
+    
+    try :
+        db.cursor.execute(query)
+
+        result = []
+        
+        for row in db.cursor.fetchall():
+            data=profileModel(row=row , getBasicData=True)
+            result.append(data[0])
+
+        
+
+        if len(result) == 0 :
+
+            return{'message':'no patient found'},400
+        
+        result.reverse()
+        
+        return{'data':result}
+
+            
+    except Exception as ex:
+
+        return {'Message':str(ex)},400
 
 
 ###############     P R O F I L E     ################
@@ -628,7 +697,7 @@ def deleteUser(data):
 
 
 
-def profileModel(row):
+def profileModel(row , getBasicData = False):
 
         result = []
         
@@ -642,7 +711,7 @@ def profileModel(row):
         item_dic["user_type"] = row[4]
         
 
-        if row[4] == 'doctor' or row[4] == 'patient' :
+        if (row[4] == 'doctor' or row[4] == 'patient') and getBasicData == False :
             item_dic["phone"] = row[5]
 
             item_dic["government"] = row[6]
