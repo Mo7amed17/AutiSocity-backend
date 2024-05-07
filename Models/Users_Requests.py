@@ -37,7 +37,7 @@ def register():
           
      
           if 'cv' not in request.files or str(request.files['cv'].filename) == '':
-               return{'essage':'cv is required !'},400
+               return{'message':'cv is required !'},400
      
           if request.form is None or "name" not in  request.form or "email" not in  request.form or "phone" not in  request.form or "password" not in  request.form  or "government" not in request.form or "city" not in request.form :
                return jsonify({'message':'Input data are missing !'}),400 
