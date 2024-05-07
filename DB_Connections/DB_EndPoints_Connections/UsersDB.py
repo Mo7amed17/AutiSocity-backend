@@ -96,20 +96,20 @@ def registerDoctor(data,files):
         except Exception as ex:
             
             if 'full_name_U' in str(ex.args[1]):
-                return {'Message':"الأسم موجود بالفعل"},400
+                return {'message':"الأسم موجود بالفعل"},400
             
             elif 'email_U' in str(ex.args[1]):
-                return {'Message':"البريد الألكتروني موجود بالفعل"},400
+                return {'message':"البريد الألكتروني موجود بالفعل"},400
             
             elif 'phone_U' in str(ex.args[1]):
-                return {'Message':"رقم الهاتف موجود بالفعل"},400
+                return {'message':"رقم الهاتف موجود بالفعل"},400
             
             else:
-                return {'Message':str(ex)},400
+                return {'message':str(ex)},400
             
         
         
-        return {'Message':"تم تسجيل الطبيب بنجاح , في انتظار موافقة المسؤول"},201        
+        return {'message':"تم تسجيل الطبيب بنجاح , في انتظار موافقة المسؤول"},201        
 
 
 
@@ -158,20 +158,20 @@ def registerPatient(data,files):
             # return{'ss':str(str(ex.args[1]))}
             
             if 'full_name_U' in str(str(ex.args[1])):
-                return {'Message':"الأسم موجود بالفعل"},400
+                return {'message':"الأسم موجود بالفعل"},400
             
             elif 'email_U' in str(ex.args[1]):
-                return {'Message':"البريد الألكتروني موجود بالفعل"},400
+                return {'message':"البريد الألكتروني موجود بالفعل"},400
             
             elif 'phone_U' in str(ex.args[1]):
-                return {'Message':"رقم الهاتف موجود بالفعل"},400
+                return {'message':"رقم الهاتف موجود بالفعل"},400
             
             else:
-                return {'Message':str(ex)},400
+                return {'message':str(ex)},400
             
         
         
-        return {'Message':"تم تسجيل المريض بنجاح "},201  
+        return {'message':"تم تسجيل المريض بنجاح "},201  
 
 
 ###############    R E G I S T E R   A D M I N    ################
@@ -200,20 +200,20 @@ def registerAdmin(data , files):
         except Exception as ex:
             
             if 'full_name_U' in str(ex.args[1]):
-                return {'Message':"الأسم موجود بالفعل"},400
+                return {'message':"الأسم موجود بالفعل"},400
             
             elif 'email_U' in str(ex.args[1]):
-                return {'Message':"البريد الألكتروني موجود بالفعل"},400
+                return {'message':"البريد الألكتروني موجود بالفعل"},400
             
             elif 'phone_U' in str(ex.args[1]):
-                return {'Message':"رقم الهاتف موجود بالفعل"},400
+                return {'message':"رقم الهاتف موجود بالفعل"},400
             
             else:
-                return {'Message':str(ex)},400
+                return {'message':str(ex)},400
             
         
         
-        return {'Message':"تم تسجيل الأدمن بنجاح "},201  
+        return {'message':"تم تسجيل الأدمن بنجاح "},201  
 
 
 ###############     A U T I S M   T E S T    ################
@@ -253,7 +253,7 @@ def pendingDoctors(uid):
             
     except Exception as ex:
 
-        return {'Message':str(ex)},400
+        return {'message':str(ex)},400
     
             
 
@@ -289,11 +289,11 @@ def confirmDoctor(docID , uid):
             
     except Exception as ex:
 
-        return {'Message':str(ex)},400
+        return {'message':str(ex)},400
             
         
         
-    return {'Message':"تم قبول الطبيب بنجاح "},200
+    return {'message':"تم قبول الطبيب بنجاح "},200
 
 
 ###############     R E J E C T   D O C T O R    ################
@@ -328,11 +328,11 @@ def rejectDoctor(docID , uid):
             
     except Exception as ex:
 
-        return {'Message':str(ex)},400
+        return {'message':str(ex)},400
             
         
         
-    return {'Message':"تم رفض الطبيب بنجاح "},200
+    return {'message':"تم رفض الطبيب بنجاح "},200
 
 
 ###############      G E T   A D M I N S     ################
@@ -369,7 +369,7 @@ def getAdmins(uid):
             
     except Exception as ex:
 
-        return {'Message':str(ex)},400
+        return {'message':str(ex)},400
             
 
 ###############      G E T   D O C T O R S     ################
@@ -406,7 +406,7 @@ def getDoctors(uid):
             
     except Exception as ex:
 
-        return {'Message':str(ex)},400
+        return {'message':str(ex)},400
     
 
 ###############      G E T   P A T I E N T S     ################
@@ -443,7 +443,7 @@ def getPatients(uid):
             
     except Exception as ex:
 
-        return {'Message':str(ex)},400
+        return {'message':str(ex)},400
 
 
 ###############     P R O F I L E     ################
@@ -585,16 +585,16 @@ def updateUser(userId,data,files):
     # except Exception as ex:
         
     #     if 'full_name_U' in str(ex.args[1]):
-    #         return {'Message':"الأسم موجود بالفعل"},400
+    #         return {'message':"الأسم موجود بالفعل"},400
         
     #     elif 'email_U' in str(ex.args[1]):
-    #         return {'Message':"البريد الألكتروني موجود بالفعل"},400
+    #         return {'message':"البريد الألكتروني موجود بالفعل"},400
         
     #     elif 'phone_U' in str(ex.args[1]):
-    #         return {'Message':"رقم الهاتف موجود بالفعل"},400
+    #         return {'message':"رقم الهاتف موجود بالفعل"},400
         
     #     else:
-    #         return {'Message':str(ex)},400
+    #         return {'message':str(ex)},400
     
     
     
@@ -667,9 +667,9 @@ def deleteUser(data):
             
 #         except Exception as ex:
 
-#             return {'Message':str(ex)},400
+#             return {'message':str(ex)},400
             
-#         return {'Message':'تم إضافة عنوان عيادة جديدة بنجاح !'},201
+#         return {'message':'تم إضافة عنوان عيادة جديدة بنجاح !'},201
 
 
 
@@ -683,9 +683,9 @@ def deleteUser(data):
             
 #         except Exception as ex:
 
-#             return {'Message':str(ex)},400
+#             return {'message':str(ex)},400
             
-#         return {'Message':'تم إضافة عنوان عيادة جديدة بنجاح !'},201
+#         return {'message':'تم إضافة عنوان عيادة جديدة بنجاح !'},201
 
 
 

@@ -12,7 +12,7 @@ def addPost(token):
     
     request_data = request.get_json()
     if request_data is None or "content" not in  request_data :
-          return jsonify({'Message':'data is missing !'}) ,400
+          return jsonify({'message':'data is missing !'}) ,400
 
     request_data['uid'] = token['uid'].split('.')[3]
 
@@ -27,7 +27,7 @@ def getDoctorsPosts(token):
     request_data = {}
     # request_data = request.get_json()
     # if request_data is None or "type" not in  request_data or "content" not in  request_data or "date" not in  request_data :
-    #       return jsonify({'Message':'data is missing !'}) 
+    #       return jsonify({'message':'data is missing !'}) 
     request_data['uid'] = token['uid'].split('.')[3]
     return PostsDB.getDoctorsPosts(data=request_data)
 
@@ -40,7 +40,7 @@ def getPatientsPosts(token):
     # request_data = request.get_json()
     request_data = {}
     # if request_data is None or "type" not in  request_data or "content" not in  request_data or "date" not in  request_data :
-    #       return jsonify({'Message':'data is missing !'}) 
+    #       return jsonify({'message':'data is missing !'}) 
     request_data['uid'] = token['uid'].split('.')[3]
     return PostsDB.getPatientsPosts(data=request_data)
 
@@ -53,7 +53,7 @@ def getUserPosts(token):
     # request_data = request.get_json()
     request_data = {}
     # if request_data is None or "type" not in  request_data or "content" not in  request_data or "date" not in  request_data :
-    #       return jsonify({'Message':'data is missing !'}) 
+    #       return jsonify({'message':'data is missing !'}) 
     request_data['uid'] = token['uid'].split('.')[3]
     return PostsDB.getUserPosts(data=request_data)
 
@@ -65,7 +65,7 @@ def addComment(token):
      
     request_data = request.get_json()
     if request_data is None or "post_id" not in  request_data or "content" not in  request_data :
-          return jsonify({'Message':'data is missing !'}) ,400
+          return jsonify({'message':'data is missing !'}) ,400
     
     request_data['uid'] = token['uid'].split('.')[3]
     return PostsDB.addComment(data=request_data)
@@ -78,7 +78,7 @@ def getPostComments(token):
      
     request_data = request.get_json()
     if request_data is None or "post_id" not in  request_data :
-          return jsonify({'Message':'data is missing !'}) ,400
+          return jsonify({'message':'data is missing !'}) ,400
     
     request_data['uid'] = token['uid'].split('.')[3]
     return PostsDB.getPostComments(data=request_data)
@@ -91,7 +91,7 @@ def savePost(token):
      
     request_data = request.get_json()
     if request_data is None or "post_id" not in  request_data :
-          return jsonify({'Message':'post_id is missing !'}) ,400
+          return jsonify({'message':'post_id is missing !'}) ,400
     
     request_data['uid'] = token['uid'].split('.')[3]
     return PostsDB.savePost(data=request_data)
@@ -103,7 +103,7 @@ def unsavePost(token):
      
     request_data = request.get_json()
     if request_data is None or "post_id" not in  request_data :
-          return jsonify({'Message':'post_id is missing !'}) ,400
+          return jsonify({'message':'post_id is missing !'}) ,400
     
     request_data['uid'] = token['uid'].split('.')[3]
     return PostsDB.unsavePost(data=request_data)
@@ -122,7 +122,7 @@ def deletePost(token):
      
     request_data = request.get_json()
     if request_data is None or "post_id" not in  request_data :
-          return jsonify({'Message':'post_id is missing !'}) ,400
+          return jsonify({'message':'post_id is missing !'}) ,400
     
     request_data['uid'] = token['uid'].split('.')[3]
     return PostsDB.deletePost(data=request_data)
@@ -135,7 +135,7 @@ def deleteComment(token):
      
     request_data = request.get_json()
     if request_data is None or "comment_id" not in  request_data :
-          return jsonify({'Message':'comment_id is missing !'}) ,400
+          return jsonify({'message':'comment_id is missing !'}) ,400
     
     request_data['uid'] = token['uid'].split('.')[3]
     
@@ -147,7 +147,7 @@ def reportPost(token):
      
     request_data = request.get_json()
     if request_data is None or "post_id" not in  request_data  or "user_id" not in  request_data   or "complaint" not in  request_data :
-          return jsonify({'Message':'post_id ,user_id , complaint  are missing !'}) ,400
+          return jsonify({'message':'post_id ,user_id , complaint  are missing !'}) ,400
     
     request_data['uid'] = token['uid'].split('.')[3]
     
@@ -167,7 +167,7 @@ def approveReportPost(token):
     request_data = request.get_json()
 
     if request_data is None or "report_id" not in  request_data:
-        return jsonify({'Message':'report_id is missing !'}) ,400
+        return jsonify({'message':'report_id is missing !'}) ,400
     
     request_data['uid'] = token['uid'].split('.')[3]
 
@@ -181,7 +181,7 @@ def deleteReportPost(token):
     request_data = request.get_json()
 
     if request_data is None or "report_id" not in  request_data:
-        return jsonify({'Message':'report_id is missing !'}) ,400
+        return jsonify({'message':'report_id is missing !'}) ,400
     
     request_data['uid'] = token['uid'].split('.')[3]
 
@@ -195,7 +195,7 @@ def likePost(token):
     request_data = request.get_json()
 
     if request_data is None or "post_id" not in  request_data:
-        return jsonify({'Message':'post_id is missing !'}) ,400
+        return jsonify({'message':'post_id is missing !'}) ,400
     
     request_data['uid'] = token['uid'].split('.')[3]
 
@@ -209,7 +209,7 @@ def unlikePost(token):
     request_data = request.get_json()
 
     if request_data is None or "post_id" not in  request_data:
-        return jsonify({'Message':'post_id is missing !'}) ,400
+        return jsonify({'message':'post_id is missing !'}) ,400
     
     request_data['uid'] = token['uid'].split('.')[3]
 

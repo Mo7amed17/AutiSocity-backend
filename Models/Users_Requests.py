@@ -16,7 +16,7 @@ def login():
      
      request_data = request.get_json()
      if request_data is None or "email" not in  request_data or "password" not in request_data:
-          return jsonify({'Message':'email & password are requeired !'}) ,400
+          return jsonify({'message':'email & password are requeired !'}) ,400
      return UsersDB.login(request_data)
      
 
@@ -28,7 +28,7 @@ def register():
      
      if request.form is None or "type" not in  request.form:
           
-          return jsonify({'Message':'enter register type , admin ,  doctor ,  patient'}),400 
+          return jsonify({'message':'enter register type , admin ,  doctor ,  patient'}),400 
      
 
      # doctor
@@ -37,10 +37,10 @@ def register():
           
      
           if 'cv' not in request.files or str(request.files['cv'].filename) == '':
-               return{'message':'cv is required !'},400
+               return{'essage':'cv is required !'},400
      
           if request.form is None or "name" not in  request.form or "email" not in  request.form or "phone" not in  request.form or "password" not in  request.form  or "government" not in request.form or "city" not in request.form :
-               return jsonify({'Message':'Input data are missing !'}),400 
+               return jsonify({'message':'Input data are missing !'}),400 
 
 
           return UsersDB.registerDoctor(data= request.form, files=request.files)
@@ -53,7 +53,7 @@ def register():
 
      
           if request.form is None or "name" not in  request.form or "email" not in  request.form or "phone" not in  request.form or "password" not in  request.form  or "government" not in request.form or "city" not in request.form or "age" not in request.form :
-               return jsonify({'Message':'Inputs data are missing !'}) ,400
+               return jsonify({'message':'Inputs data are missing !'}) ,400
 
 
           return UsersDB.registerPatient(data=request.form , files= request.files)
@@ -66,12 +66,12 @@ def register():
 
      
           if request.form is None or "name" not in  request.form or "email" not in  request.form or "phone" not in  request.form or "password" not in  request.form :
-               return jsonify({'Message':'Input data are missing !'}) ,400
+               return jsonify({'message':'Input data are missing !'}) ,400
      
           return UsersDB.registerAdmin(data=request.form , files=request.files)
      
      else:
-          return jsonify({'Message':'enter  admin ,  doctor , patient ... not ' + request.form['type']}),400 
+          return jsonify({'message':'enter  admin ,  doctor , patient ... not ' + request.form['type']}),400 
 
 # ================== Autism Test [POST] =========================
 
@@ -84,7 +84,7 @@ def autiTest():
      if request_data is None  or len(request_data) != 15:
           print(len(request_data))
           
-          return jsonify({'Message':'Input data are missing !'}) ,400
+          return jsonify({'message':'Input data are missing !'}) ,400
 
 
      return UsersDB.autiTest(request_data)
@@ -114,7 +114,7 @@ def confirmDoctor(token):
      
      request_data = request.get_json()
      if request_data is None or "doctor_id" not in  request_data :
-          return jsonify({'Message':'doctor_id is missing !'}) ,400
+          return jsonify({'message':'doctor_id is missing !'}) ,400
      
      uid = token['uid'].split('.')[3]
 
@@ -131,7 +131,7 @@ def rejectDoctor(token):
      
      request_data = request.get_json()
      if request_data is None or "doctor_id" not in  request_data :
-          return jsonify({'Message':'doctor_id is missing !'}) ,400
+          return jsonify({'message':'doctor_id is missing !'}) ,400
 
      uid = token['uid'].split('.')[3]
 
@@ -182,20 +182,20 @@ def updateUser(token):
 
      if request.form is None or "type" not in  request.form:
           
-          return jsonify({'Message':'enter register type , admin ,  doctor ,  patient'}),400 
+          return jsonify({'message':'enter register type , admin ,  doctor ,  patient'}),400 
      
       # doctor
      if request.form['type'] == "doctor": 
      
           if request.form is None or "name" not in  request.form or "email" not in  request.form or "phone" not in  request.form or "password" not in  request.form  or "government" not in request.form or "city" not in request.form :
-               return jsonify({'Message':'Input data are missing !'}),400 
+               return jsonify({'message':'Input data are missing !'}),400 
      
 
       # patient
      elif request.form['type'] == "patient": 
 
           if request.form is None or "name" not in  request.form or "email" not in  request.form or "phone" not in  request.form or "password" not in  request.form  or "government" not in request.form or "city" not in request.form or "age" not in request.form :
-               return jsonify({'Message':'Inputs data are missing !'}) ,400
+               return jsonify({'message':'Inputs data are missing !'}) ,400
           
 
      # Admin
@@ -203,7 +203,7 @@ def updateUser(token):
 
      
           if request.form is None or "name" not in  request.form or "email" not in  request.form or "phone" not in  request.form or "password" not in  request.form :
-               return jsonify({'Message':'Input data are missing !'}) ,400
+               return jsonify({'message':'Input data are missing !'}) ,400
 
 
      return UsersDB.updateUser(userId=str(token['uid'].split('.')[3]) , data=request.form , files=request.files)
@@ -216,7 +216,7 @@ def deleteUser(token):
 
      request_data = request.get_json()
      if request_data is None or "user_id" not in  request_data :
-          return jsonify({'Message':'user_id is missing !'}) ,400
+          return jsonify({'message':'user_id is missing !'}) ,400
 
      request_data['uid'] = token['uid'].split('.')[3]
 

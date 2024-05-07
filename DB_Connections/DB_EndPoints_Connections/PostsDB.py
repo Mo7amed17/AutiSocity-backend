@@ -39,11 +39,11 @@ def addPost(data):
             
     except Exception as ex:
 
-        return {'Message':str(ex)},400
+        return {'message':str(ex)},400
             
         
         
-    return {'Message':"تم إضافة منشور بنجاح "},201 
+    return {'message':"تم إضافة منشور بنجاح "},201 
 
 # ================== Get Doctors Posts [GET] =========================
 
@@ -74,7 +74,7 @@ def getDoctorsPosts(data):
             
     except Exception as ex:
 
-        return {'Message':str(ex)},400
+        return {'message':str(ex)},400
             
 
 # ================== Get Patients Posts [GET] =========================
@@ -106,7 +106,7 @@ def getPatientsPosts(data):
             
     except Exception as ex:
 
-        return {'Message':str(ex)},400
+        return {'message':str(ex)},400
     
 
 # ================== Get User Posts [GET] =========================
@@ -138,7 +138,7 @@ def getPatientsPosts(data):
             
 #     except Exception as ex:
 
-#         return {'Message':str(ex)},400
+#         return {'message':str(ex)},400
 
 
 
@@ -160,9 +160,9 @@ def addComment(data):
             
     except Exception as ex:
 
-        return {'Message':str(ex)},400
+        return {'message':str(ex)},400
 
-    return {'Message':'تم إضافة تعليق بنجاح'},201
+    return {'message':'تم إضافة تعليق بنجاح'},201
 
 
 
@@ -187,7 +187,7 @@ def getPostComments(data):
             
     except Exception as ex:
 
-        return {'Message':str(ex)},400
+        return {'message':str(ex)},400
 
     return {'data':result},201
 
@@ -269,7 +269,7 @@ def getSavedPosts(uid):
             
     except Exception as ex:
 
-        return {'Message':str(ex)},400
+        return {'message':str(ex)},400
 
 
 
@@ -299,11 +299,11 @@ def deletePost(data):
         db.cursor.execute(query)
         db.conn.commit()
 
-        return {'Message':'تم حذف المنشور بنجاح'},200
+        return {'message':'تم حذف المنشور بنجاح'},200
             
     except Exception as ex:
 
-        return {'Message':str(ex)},400
+        return {'message':str(ex)},400
 
     
 
@@ -332,9 +332,9 @@ def deleteComment(data):
             
     except Exception as ex:
 
-        return {'Message':str(ex)},400
+        return {'message':str(ex)},400
 
-    return {'Message':'تم حذف التعليق بنجاح'},200
+    return {'message':'تم حذف التعليق بنجاح'},200
 
 
 
@@ -371,7 +371,7 @@ def getUserPosts(data):
             
     except Exception as ex:
 
-        return {'Message':str(ex)},400
+        return {'message':str(ex)},400
    
 # ==================  report post [POST] =========================
 def reportPost(data):
@@ -382,15 +382,15 @@ def reportPost(data):
         db.cursor.execute(query)
         db.conn.commit()
 
-        return {'Message':'تم تبليغ المنشور الي المسؤولين بنجاح'},200
+        return {'message':'تم تبليغ المنشور الي المسؤولين بنجاح'},200
             
     except Exception as ex:
         if 'U_Report' in str(ex.args[1]):
 
-            return {'Message':"لقد بلغت علي هذا المنشور مسبقا !"},400
+            return {'message':"لقد بلغت علي هذا المنشور مسبقا !"},400
         else:
 
-            return {'Message':str(ex)},400
+            return {'message':str(ex)},400
 
     
 
@@ -422,7 +422,7 @@ def getReportedPosts(uid):
             
     except Exception as ex:
 
-        return {'Message':str(ex)},400
+        return {'message':str(ex)},400
 
 
 # ==================  approve report post [POST] =========================
@@ -449,7 +449,7 @@ def approveReportPost(data):
         db.cursor.execute(query)
         db.conn.commit()
 
-        return {'Message':'تم السماح بالمنشور بنجاح'},200
+        return {'message':'تم السماح بالمنشور بنجاح'},200
             
     except Exception as ex:
        
@@ -485,7 +485,7 @@ def deleteReportPost(data):
         db.cursor.execute(query)
         db.conn.commit()
 
-        return {'Message':'تم حذف المنشور بنجاح'},200
+        return {'message':'تم حذف المنشور بنجاح'},200
             
     except Exception as ex:
        

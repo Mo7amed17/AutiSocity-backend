@@ -11,7 +11,7 @@ from flask_cors import CORS ,cross_origin
 
 
 app = Flask(__name__)
-
+    
 @app.route('/<filename>')
 def get_image(filename):
     return send_from_directory('uploads', filename)
