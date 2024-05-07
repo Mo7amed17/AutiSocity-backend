@@ -51,19 +51,19 @@ def registerDoctor(data,files):
         # query = me.insertQuery(tableName='Users',columnsName=['full_name','email','phone','password','user_type','government_id','profile_status'] ,values=[data['full_name'],data['email'],data['phone'],data['password'],data['user_type'],data['government_id'],data['profile_status']])
         avatarpath = ''
         cvPath = ''
+        
         try:
+            cvPath = getAttachmentPath(file= files['cv'],type=1)
             avatarpath = getAttachmentPath(file= files['avatar'],type=0)
             
-            cvPath = getAttachmentPath(file= files['cv'],type=1)
         except Exception as e:
             print("no avatar or cv was send:", e)
 
 
-        phone_number = phonenumbers.parse(data['phone'])
-
-        print(phone_number)
-
-        print(phonenumbers.is_possible_number(phone_number))
+        try:
+            phone_number = phonenumbers.parse('+2' + data['phone'])
+        except Exception as e:
+            return{'message':'رقم الهاتف غير صالح !'},400
 
 
         
@@ -77,8 +77,8 @@ def registerDoctor(data,files):
              'city' : data['city'],
             #  'specialist':data['specialist'],
             #  'deg_of_specialist_id':data['deg_of_specialist_id'],
-             'attachment':cvPath,
-             'image':avatarpath
+             'attachment':'https://autisociety17.serv00.net/' + str(os.path.basename(cvPath)),
+             'image':'https://autisociety17.serv00.net/' + str(os.path.basename(avatarpath))
         })
 
        
@@ -86,11 +86,12 @@ def registerDoctor(data,files):
             db.cursor.execute(query)
             db.conn.commit()
 
+            if avatarpath != '':
+                 saveAttachment(attachmentFile= files['avatar'],oldAttachPath='' , newAttachPath=avatarpath ) 
             if cvPath != '':
                  saveAttachment(attachmentFile= files['cv'],oldAttachPath='' , newAttachPath=cvPath )
 
-            if avatarpath != '':
-                 saveAttachment(attachmentFile= files['avatar'],oldAttachPath='' , newAttachPath=avatarpath )
+            
            
             
         except Exception as ex:
@@ -126,9 +127,12 @@ def registerPatient(data,files):
 
 
 
-        phone_number = phonenumbers.parse('+2' + data['phone'])
+        try:
+            phone_number = phonenumbers.parse('+2' + data['phone'])
+        except Exception as e:
+            return{'message':'رقم الهاتف غير صالح !'},400
 
-        print(phone_number)
+        
 
         if phonenumbers.is_valid_number(phone_number):
             return{'message': 'Phone number is invalid !'},400
@@ -143,7 +147,7 @@ def registerPatient(data,files):
              'government' : data['government'],
              'city' : data['city'],
              'age':data['age'],
-             'image':avatarpath
+             'image':'https://autisociety17.serv00.net/' + str(os.path.basename(avatarpath))
         })
         # return{'ss':str(query)}
 
@@ -187,7 +191,7 @@ def registerAdmin(data , files):
 
         
 
-        query = me.insertQuery(tableName='users',columnsName=['name','email','phone','password','user_type','image'] , values=[data['name'],data['email'],data['phone'],data['password'],'0',avatarpath])
+        query = me.insertQuery(tableName='users',columnsName=['name','email','phone','password','user_type','image'] , values=[data['name'],data['email'],data['phone'],data['password'],'0','https://autisociety17.serv00.net/' + str(os.path.basename(avatarpath))])
         
 
         try :
@@ -743,7 +747,7 @@ def getAttachmentPath(file,type):
         
             dic = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "uploads", "avatars")
         
-        else:
+        else: # CV
              
              dic = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "uploads", "CVs")
 
