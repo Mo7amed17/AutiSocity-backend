@@ -10,8 +10,8 @@ class myMethods :
     tableName = ""
 
     def message( message , data={}):
-        return jsonify({'Message' : message,
-                'Data' : data})
+        return jsonify({'message' : message,
+                'data' : data})
     
 
 
