@@ -635,7 +635,7 @@ def deleteUser(data):
         print(deletedUserType)
         
         
-        if deletedUserType == 0 and  data['uid'] != str(data['uid']):
+        if deletedUserType == 0 and  data['uid'] != 1:
             return{'message':'Only super admin can delete admins'},400
 
 
