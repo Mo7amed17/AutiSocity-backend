@@ -724,6 +724,7 @@ def profileModel(row , getBasicData = False):
             if row[4] == 'doctor':
                 item_dic["profile_status"] = row[8]
                 item_dic["doctor_id"] = row[9]
+                item_dic["about"] = row[10]
 
             elif row[4] == 'patient':
                 item_dic["age"] = row[8]
