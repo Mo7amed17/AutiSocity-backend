@@ -376,7 +376,7 @@ def getUserPosts(data):
 # ==================  report post [POST] =========================
 def reportPost(data):
 
-    query = me.insertQuery(tableName='Posts_Reports',columnsName=['user_id','post_id','complaint'],values=[data['uid'],data['post_id'],data['user_id']])
+    query = me.insertQuery(tableName='Posts_Reports',columnsName=['user_id','post_id','complaint'],values=[data['uid'],data['post_id'],data['complaint']])
     
     try :
         db.cursor.execute(query)
@@ -422,7 +422,7 @@ def getReportedPosts(uid):
             
     except Exception as ex:
 
-        return {'message':str(ex)},400
+        return {'message':'خطأ بالتسجيل, لا يوجد منشور '},400
 
 
 # ==================  approve report post [POST] =========================
