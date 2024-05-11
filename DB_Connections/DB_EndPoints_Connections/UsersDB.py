@@ -714,10 +714,12 @@ def profileModel(row , getBasicData = False):
         item_dic["email"] = row[2]
         item_dic["image"] = row[3]
         item_dic["user_type"] = row[4]
-        
+
+        if getBasicData == False :
+            item_dic["phone"] = row[5]
 
         if (row[4] == 'doctor' or row[4] == 'patient') and getBasicData == False :
-            item_dic["phone"] = row[5]
+            
 
             item_dic["government"] = row[6]
             item_dic["city"] = row[7]
