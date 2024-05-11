@@ -33,10 +33,33 @@ def addPost(data):
      
     query = me.insertQuery(tableName='Posts',columnsName=['user_id','type','[content]','date'],values=[data['uid'],type,data['content'],datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')])
     
+    query = me.procQuery(procName='insertPost' , valuesDic={
+        'uId' : data['uid'],
+        'type' : type,
+        'content' : data['content'],
+        'date' : datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+    })
     try :
         db.cursor.execute(query)
         db.conn.commit()
-            
+
+
+        result = []
+        
+        for row in db.cursor.fetchall():
+
+            item_dic ={}
+            item_dic["id"] = row[0]
+            item_dic["user_id"] = row[1]
+            item_dic["type"] = row[2]
+            item_dic["content"] = row[3]
+            item_dic["date"] = row[4]
+
+            result.append(item_dic)
+
+
+        
+            return {'message':"تم إضافة منشور بنجاح ",'data':result[0]},201 
     except Exception as ex:
 
         return {'message':str(ex)},400
