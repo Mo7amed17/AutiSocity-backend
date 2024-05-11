@@ -37,7 +37,7 @@ def addPost(data):
         'uId' : data['uid'],
         'type' : type,
         'content' : data['content'],
-        'date' : datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        
     })
     try :
         db.cursor.execute(query)
