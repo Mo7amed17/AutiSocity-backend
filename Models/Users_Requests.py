@@ -170,11 +170,18 @@ def getPatients(token):
 @usersblp.route("/profile",methods=['GET'])
 @me.token_required
 def profile(token):
+
+     userID = 0
+
      request_data = request.get_json()
      if request_data is None or "user_id" not in  request_data :
-          return jsonify({'message':'user_id is missing !'}) ,400
+          
+          userID = token['uid'].split('.')[3]
+          
+     else:
+          userID = request_data['user_id']
 
-     return UsersDB.profile(id=request_data["user_id"])
+     return UsersDB.profile(id=userID)
 
 
 # ================== Update user profile [PUT] =========================

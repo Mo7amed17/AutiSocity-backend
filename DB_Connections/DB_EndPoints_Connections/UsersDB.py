@@ -453,6 +453,7 @@ def getPatients(uid):
 ###############     P R O F I L E     ################
 def profile(id):
 
+
         # query = "SELECT * FROM Users WHERE ID ="+id
 
         # query = me.selectQuery(tableName='Users' , where='id = '+ str(id))
