@@ -5,10 +5,10 @@ database = 'db_aa6e06_autismdb'
 username = 'db_aa6e06_autismdb_admin'
 password = 'Mo7amedatef17'
 
-# server = '.'
-# database = 'AutismDB'
-# username = 'autism'
-# password = '123456'
+server = '.'
+database = 'AutismDB'
+username = 'autism'
+password = '123456'
 
 # بناء سلسلة الاتصال
 connection_string = {
