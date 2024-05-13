@@ -134,8 +134,8 @@ def registerPatient(data,files):
 
         
 
-        if phonenumbers.is_valid_number(phone_number):
-            return{'message': 'Phone number is invalid !'},400
+        # if phonenumbers.is_valid_number(phone_number):
+        #     return{'message': 'Phone number is invalid !'},400
 
 
         # query = me.insertQuery(tableName='users',columnsName=['full_name','email','phone','password','user_type','government_id','profile_status'] , values=[data['full_name'],data['email'],data['phone'],data['password'],data['government_id']])
@@ -542,16 +542,19 @@ def updateUser(userId,data,files,userType):
         return{'message':'id not found !'},400
     
     
-    try:
-        if newImgPath == '':
+    if newImgPath == '':
             avatarpath = None
-        else:
+    else:
             avatarpath ='https://autisociety17.serv00.net/' + str(os.path.basename(newImgPath))
+
+
+    try:
+        
             
 
         
         
-        # return{'s':newImgPath}
+        return{'s': newImgPath}
 
         query = ''
         if userType == 2:  #PATIENT
@@ -567,7 +570,7 @@ def updateUser(userId,data,files,userType):
                 })
             db.cursor.execute(query)
             if newImgPath != '':
-                saveAttachment(attachmentFile=files['avatar'],oldAttachPath=oldImgPath,newAttachPath=avatarpath)
+                saveAttachment(attachmentFile=files['avatar'],oldAttachPath=oldImgPath,newAttachPath=newImgPath)
             else:
                 deleteAttachment(attachmentPath=oldImgPath)
 
@@ -856,7 +859,10 @@ def saveAttachment(attachmentFile,oldAttachPath , newAttachPath):
 
     if oldAttachPath and oldAttachPath != '':
 
-        os.remove(oldAttachPath)
+        try:
+            os.remove(oldAttachPath)
+        except Exception as ex:
+            print(str(ex))
 
 
 
