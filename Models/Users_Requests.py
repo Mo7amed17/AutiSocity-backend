@@ -189,37 +189,40 @@ def profile(token):
 
 # ================== Update user profile [PUT] =========================
 
-@usersblp.route("",methods=['POST'])
+@usersblp.route("/update",methods=['POST'])
 @me.token_required
 def updateUser(token):
 
-     if request.form is None or "type" not in  request.form:
+     # if request.form is None or "type" not in  request.form:
           
-          return jsonify({'message':'enter register type , admin ,  doctor ,  patient'}),400 
+     #      return jsonify({'message':'enter register type , admin ,  doctor ,  patient'}),400 
+
+     usertype = me.getUserTypeByUserID(str(token['uid'].split('.')[3]) )
+
      
       # doctor
-     if request.form['type'] == "doctor": 
+     if usertype == 1: 
      
-          if request.form is None or "name" not in  request.form or "email" not in  request.form or "phone" not in  request.form or "password" not in  request.form  or "government" not in request.form or "city" not in request.form :
+          if request.form is None or "name" not in  request.form  or "phone" not in  request.form or "password" not in  request.form  or "government" not in request.form or "city" not in request.form or "about" not in request.form or "clinicAddress" not in request.form:
                return jsonify({'message':'Input data are missing !'}),400 
      
 
       # patient
-     elif request.form['type'] == "patient": 
+     elif usertype == 2: 
 
-          if request.form is None or "name" not in  request.form or "email" not in  request.form or "phone" not in  request.form or "password" not in  request.form  or "government" not in request.form or "city" not in request.form or "age" not in request.form :
+          if request.form is None or "name" not in  request.form  or "phone" not in  request.form or "password" not in  request.form  or "government" not in request.form or "city" not in request.form or "age" not in request.form or "patient_name" not in request.form:
                return jsonify({'message':'Inputs data are missing !'}) ,400
           
 
      # Admin
-     elif request.form['type'] == "admin":
+     elif usertype == 0:
 
      
-          if request.form is None or "name" not in  request.form or "email" not in  request.form or "phone" not in  request.form or "password" not in  request.form :
+          if request.form is None or "name" not in  request.form or "phone" not in  request.form or "password" not in  request.form :
                return jsonify({'message':'Input data are missing !'}) ,400
 
 
-     return UsersDB.updateUser(userId=str(token['uid'].split('.')[3]) , data=request.form , files=request.files)
+     return UsersDB.updateUser(userId=str(token['uid'].split('.')[3]) , data=request.form , files=request.files , userType=usertype)
 
 # ================== DELETE USER [DELETE] =========================
 

@@ -513,33 +513,109 @@ def profile(id):
         
     
 
-#aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa edit here
+#aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaakaaaaaaaaaaaaaaaaaaaaaaa edit here
 
-def updateUser(userId,data,files):
+def updateUser(userId,data,files,userType):
      
     
 
-    # userType = getUserTypeByUserID(uid=userId)
-
-    oldImgPath = getOldAttachmentPath(userId=userId)
+    oldImgPath = getOldAttachmentPath(userId=userId) # null or value
 
     newImgPath = ''
+    
     try:
-            newImgPath = getAttachmentPath(file= files['avatar'],type=0)
+        newImgPath = getAttachmentPath(file= files['avatar'],type=0)
 
     except Exception as e:
-            print("no avatar was send:", e)
+        print("no avatar was send:", e)
+
+    query = me.selectQuery(columnsName=['password'],tableName='Users',where='id = '+str(userId))
+
+    try:
+        db.cursor.execute(query)
+
+        password = db.cursor.fetchone()[0]
+
+        if data['password'] != password :
+            return {'message':'الرقم السري غير صحيح !'},400
+    except :
+        return{'message':'id not found !'},400
+    
+    
+    try:
+        if newImgPath == '':
+            avatarpath = None
+        else:
+            avatarpath ='https://autisociety17.serv00.net/' + str(os.path.basename(newImgPath))
+            
+
+        
+        
+        # return{'s':newImgPath}
+
+        query = ''
+        if userType == 2:  #PATIENT
+            query = me.procQuery(procName='updatePatient',valuesDic={
+                    'uId' : userId,
+                    'name' : data['name'],
+                    'phone' : data['phone'],
+                    'government' : data['government'],
+                    'city' : data['city'],
+                    'patient_name' : data['patient_name'],
+                    'age' : data['age'],
+                    'image':'' if avatarpath == None else avatarpath
+                })
+            db.cursor.execute(query)
+            if newImgPath != '':
+                saveAttachment(attachmentFile=files['avatar'],oldAttachPath=oldImgPath,newAttachPath=avatarpath)
+            else:
+                deleteAttachment(attachmentPath=oldImgPath)
 
 
-    mainQuery = me.updateQuery(tableName='Users' , valuesDic={
-        "name" : data['name'],
-        "phone":data['phone'],
-        "password":data['password'],
-        "government":data['government'],
-        'city' : data['city'],
-        # "profile_status":data['profile_status'],
-        "image":newImgPath
-    },where='id ='+userId)
+            return{'message':'تم تعديل بيانات المريض بنجاح !'},200
+
+        elif userType == 1:  #DOCTOR
+            query = me.procQuery(procName='updateDoctor',valuesDic={
+                    'uId' : userId,
+                    'name' : data['name'],
+                    'phone' : data['phone'],
+                    'government' : data['government'],
+                    'city' : data['city'],
+                    'about' : data['about'],
+                    'clinicAddress' : data['clinicAddress'],
+                    'image':'' if avatarpath == None else avatarpath
+                })
+            db.cursor.execute(query)
+            if newImgPath != '':
+                saveAttachment(attachmentFile=files['avatar'],oldAttachPath=oldImgPath,newAttachPath=avatarpath)
+
+            return{'message':'تم تعديل بيانات الطبيب بنجاح !'},200
+        
+        elif userType == 0:  #ADMIN
+            query = me.updateQuery(tableName='Users' , valuesDic={
+            "name" : data['name'],
+            "phone":data['phone'],
+            "image":avatarpath
+        },where='id ='+userId)
+            db.cursor.execute(query)
+            if newImgPath != '':
+                saveAttachment(attachmentFile=files['avatar'],oldAttachPath=oldImgPath,newAttachPath=avatarpath)
+
+            return{'message':'تم تعديل بيانات الأدمن  بنجاح !'},200
+    except Exception as ex:
+        
+        if 'full_name_U' in str(ex.args[1]):
+            return {'message':"الأسم موجود بالفعل"},400
+        
+        elif 'email_U' in str(ex.args[1]):
+            return {'message':"البريد الألكتروني موجود بالفعل"},400
+        
+        elif 'phone_U' in str(ex.args[1]):
+            return {'message':"رقم الهاتف موجود بالفعل"},400
+        
+        else:
+            return {'message':str(ex)},400
+    
 
     # try:
 
@@ -583,7 +659,7 @@ def updateUser(userId,data,files):
 
         #     saveAttachment(imgFile=imgFile,oldAttachPath=oldImgPath,newAttachPath=newImgPath)
 
-        #     return{'message':'تم تعديل بيانات الأدمن !'},200
+        #     return{'message':'تم تعديل بيانات الأدمن  بنجاح !'},200
          
     
     
@@ -768,7 +844,7 @@ def getOldAttachmentPath(userId):
 
     db.cursor.execute(query)
 
-    oldImgPath = ''
+    
 
     oldImgPath = db.cursor.fetchone()[0]
 
@@ -791,6 +867,12 @@ def saveAttachment(attachmentFile,oldAttachPath , newAttachPath):
     if fullPath and fullPath != '':
 
        attachmentFile.save(fullPath)
+
+def deleteAttachment(attachmentPath):
+
+    if attachmentPath and attachmentPath != '':
+
+        os.remove(attachmentPath)
 
         
 
