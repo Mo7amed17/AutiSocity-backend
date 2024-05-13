@@ -886,7 +886,7 @@ def deleteAttachment(attachmentPath):
 
         dic = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "uploads")
 
-        fullPath = f'{dic}\{os.path.basename(attachmentPath)}'
+        fullPath = f'{dic}/{os.path.basename(attachmentPath)}'
 
 
         print(fullPath)
