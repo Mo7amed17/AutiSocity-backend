@@ -550,11 +550,7 @@ def updateUser(userId,data,files,userType):
 
     try:
         
-            
-
         
-        
-        return{'s': newImgPath}
 
         query = ''
         if userType == 2:  #PATIENT
@@ -590,7 +586,7 @@ def updateUser(userId,data,files,userType):
                 })
             db.cursor.execute(query)
             if newImgPath != '':
-                saveAttachment(attachmentFile=files['avatar'],oldAttachPath=oldImgPath,newAttachPath=avatarpath)
+                saveAttachment(attachmentFile=files['avatar'],oldAttachPath=oldImgPath,newAttachPath=newImgPath)
 
             return{'message':'تم تعديل بيانات الطبيب بنجاح !'},200
         
@@ -598,11 +594,11 @@ def updateUser(userId,data,files,userType):
             query = me.updateQuery(tableName='Users' , valuesDic={
             "name" : data['name'],
             "phone":data['phone'],
-            "image":avatarpath
+            "image":'' if avatarpath == None else avatarpath
         },where='id ='+userId)
             db.cursor.execute(query)
             if newImgPath != '':
-                saveAttachment(attachmentFile=files['avatar'],oldAttachPath=oldImgPath,newAttachPath=avatarpath)
+                saveAttachment(attachmentFile=files['avatar'],oldAttachPath=oldImgPath,newAttachPath=newImgPath)
 
             return{'message':'تم تعديل بيانات الأدمن  بنجاح !'},200
     except Exception as ex:
@@ -836,6 +832,15 @@ def getAttachmentPath(file,type):
              dic = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "uploads", "CVs")
 
         fullPath = f'{dic}-{uniq_filename}{file.filename}'
+
+        print('111111111111')
+        print(uniq_filename)
+        print('111111111111')
+        print(dic)
+        print('111111111111')
+        print(file.filename)
+
+        print(fullPath)
           
         
 
@@ -856,11 +861,12 @@ def getOldAttachmentPath(userId):
     
 
 def saveAttachment(attachmentFile,oldAttachPath , newAttachPath):
-
+    print('aaaaaa')
     if oldAttachPath and oldAttachPath != '':
+        print('aaa')
 
         try:
-            os.remove(oldAttachPath)
+            deleteAttachment(oldAttachPath)
         except Exception as ex:
             print(str(ex))
 
@@ -878,7 +884,15 @@ def deleteAttachment(attachmentPath):
 
     if attachmentPath and attachmentPath != '':
 
-        os.remove(attachmentPath)
+        dic = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "uploads")
+
+        fullPath = f'{dic}\{os.path.basename(attachmentPath)}'
+
+
+        print(fullPath)
+        os.remove(fullPath)
+
+        print('removed !!!!!!!!!!!!')
 
         
 
