@@ -527,9 +527,12 @@ def updateUser(userId,data,files,userType):
         newImgPath = getAttachmentPath(file= files['avatar'],type=0)
 
     except Exception as e:
+        newImgPath = None
         print("no avatar was send:", e)
 
     query = me.selectQuery(columnsName=['password'],tableName='Users',where='id = '+str(userId))
+
+    
 
     try:
         db.cursor.execute(query)
@@ -542,7 +545,7 @@ def updateUser(userId,data,files,userType):
         return{'message':'id not found !'},400
     
     
-    if newImgPath == '':
+    if newImgPath == '' or newImgPath == None:
             avatarpath = None
     else:
             avatarpath ='https://autisociety17.serv00.net/' + str(os.path.basename(newImgPath))
@@ -554,7 +557,10 @@ def updateUser(userId,data,files,userType):
 
         query = ''
         if userType == 2:  #PATIENT
-            query = me.procQuery(procName='updatePatient',valuesDic={
+
+            if newImgPath == None:
+
+                query = me.procQuery(procName='updatePatient',valuesDic={
                     'uId' : userId,
                     'name' : data['name'],
                     'phone' : data['phone'],
@@ -562,19 +568,47 @@ def updateUser(userId,data,files,userType):
                     'city' : data['city'],
                     'patient_name' : data['patient_name'],
                     'age' : data['age'],
-                    'image':'' if avatarpath == None else avatarpath
                 })
-            db.cursor.execute(query)
-            if newImgPath != '':
-                saveAttachment(attachmentFile=files['avatar'],oldAttachPath=oldImgPath,newAttachPath=newImgPath)
+
             else:
-                deleteAttachment(attachmentPath=oldImgPath)
+                query = me.procQuery(procName='updatePatient',valuesDic={
+                        'uId' : userId,
+                        'name' : data['name'],
+                        'phone' : data['phone'],
+                        'government' : data['government'],
+                        'city' : data['city'],
+                        'patient_name' : data['patient_name'],
+                        'age' : data['age'],
+                        'image':'' if avatarpath == None else avatarpath
+                    })
+        
+            db.cursor.execute(query)
+
+            if newImgPath != None:
+                if newImgPath != '':
+                    saveAttachment(attachmentFile=files['avatar'],oldAttachPath=oldImgPath,newAttachPath=newImgPath)
+                else:
+                    deleteAttachment(attachmentPath=oldImgPath)
 
 
             return{'message':'تم تعديل بيانات المريض بنجاح !'},200
 
         elif userType == 1:  #DOCTOR
-            query = me.procQuery(procName='updateDoctor',valuesDic={
+
+            if newImgPath == None:
+
+                query = me.procQuery(procName='updateDoctor',valuesDic={
+                        'uId' : userId,
+                        'name' : data['name'],
+                        'phone' : data['phone'],
+                        'government' : data['government'],
+                        'city' : data['city'],
+                        'about' : data['about'],
+                        'clinicAddress' : data['clinicAddress'],
+                    })
+            else:
+
+                query = me.procQuery(procName='updateDoctor',valuesDic={
                     'uId' : userId,
                     'name' : data['name'],
                     'phone' : data['phone'],
@@ -584,21 +618,39 @@ def updateUser(userId,data,files,userType):
                     'clinicAddress' : data['clinicAddress'],
                     'image':'' if avatarpath == None else avatarpath
                 })
+            
             db.cursor.execute(query)
-            if newImgPath != '':
-                saveAttachment(attachmentFile=files['avatar'],oldAttachPath=oldImgPath,newAttachPath=newImgPath)
+
+            if newImgPath != None:
+                if newImgPath != '':
+                    saveAttachment(attachmentFile=files['avatar'],oldAttachPath=oldImgPath,newAttachPath=newImgPath)
+                else:
+                    deleteAttachment(attachmentPath=oldImgPath)
 
             return{'message':'تم تعديل بيانات الطبيب بنجاح !'},200
         
         elif userType == 0:  #ADMIN
-            query = me.updateQuery(tableName='Users' , valuesDic={
-            "name" : data['name'],
-            "phone":data['phone'],
-            "image":'' if avatarpath == None else avatarpath
-        },where='id ='+userId)
+
+            if newImgPath != None:
+
+                query = me.updateQuery(tableName='Users' , valuesDic={
+                "name" : data['name'],
+                "phone":data['phone'],
+            },where='id ='+userId)
+                
+            else:
+                query = me.updateQuery(tableName='Users' , valuesDic={
+                "name" : data['name'],
+                "phone":data['phone'],
+                "image":'' if avatarpath == None else avatarpath
+            },where='id ='+userId)
+                
             db.cursor.execute(query)
-            if newImgPath != '':
-                saveAttachment(attachmentFile=files['avatar'],oldAttachPath=oldImgPath,newAttachPath=newImgPath)
+            if newImgPath != None:
+                if newImgPath != '':
+                    saveAttachment(attachmentFile=files['avatar'],oldAttachPath=oldImgPath,newAttachPath=newImgPath)
+                else:
+                    deleteAttachment(attachmentPath=oldImgPath)
 
             return{'message':'تم تعديل بيانات الأدمن  بنجاح !'},200
     except Exception as ex:
@@ -614,81 +666,6 @@ def updateUser(userId,data,files,userType):
         
         else:
             return {'message':str(ex)},400
-    
-
-    # try:
-
-        # if(userType == 1):
-        
-            # query = me.updateQuery(tableName='Doctors' , valuesDic={
-            #         "specialist": data['specialist']
-            # }, where='doctor_id = '+userId)            
-
-
-            # db.cursor.execute(mainQuery)
-            # db.conn.commit()
-
-            
-            # saveAttachment(attachmentFile=imgFile,oldAttachPath=oldImgPath,newAttachPath=newImgPath)
-            
-            # return{'message':'تم تعديل بيانات الطبيب بنجاح !'},200
-        
-        # elif(userType == 2):
-        #     if  'age' not in data or 'patient_name' not in data  :
-        #         return {'message':' age , patient_name are  required !'},400
-            
-        #     query = me.updateQuery(tableName='Patients' , valuesDic={
-        #             "age": data['age'],
-        #             "patient_name": data['patient_name']
-        #     }, where='patient_id = '+userId)
-
-        #     db.cursor.execute(mainQuery)
-        #     db.conn.commit()
-
-        #     db.cursor.execute(query)
-        #     db.conn.commit()
-
-        #     saveAttachment(attachmentFile=imgFile,oldAttachPath=oldImgPath,newAttachPath=newImgPath)
-
-        #     return{'message':'تم تعديل بيانات المريض بنجاح !'},200
-        
-        # else:
-        #     db.cursor.execute(mainQuery)
-        #     db.conn.commit()
-
-        #     saveAttachment(imgFile=imgFile,oldAttachPath=oldImgPath,newAttachPath=newImgPath)
-
-        #     return{'message':'تم تعديل بيانات الأدمن  بنجاح !'},200
-         
-    
-    
-    # except Exception as ex:
-        
-    #     if 'full_name_U' in str(ex.args[1]):
-    #         return {'message':"الأسم موجود بالفعل"},400
-        
-    #     elif 'email_U' in str(ex.args[1]):
-    #         return {'message':"البريد الألكتروني موجود بالفعل"},400
-        
-    #     elif 'phone_U' in str(ex.args[1]):
-    #         return {'message':"رقم الهاتف موجود بالفعل"},400
-        
-    #     else:
-    #         return {'message':str(ex)},400
-    
-    
-    
-
-
-    
-
-
-
-
-     
-
-    # return{'message':userType}
-
 
 
 def deleteUser(data):
@@ -861,9 +838,7 @@ def getOldAttachmentPath(userId):
     
 
 def saveAttachment(attachmentFile,oldAttachPath , newAttachPath):
-    print('aaaaaa')
     if oldAttachPath and oldAttachPath != '':
-        print('aaa')
 
         try:
             deleteAttachment(oldAttachPath)
