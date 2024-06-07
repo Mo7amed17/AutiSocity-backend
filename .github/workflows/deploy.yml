@@ -15,13 +15,9 @@ jobs:
     - name: FTP Deploy
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
-        server: '198.54.115.25'
-        username: origmtie
-        password: 0lNP2i8RLffy
+        server: s2.serv00.com
+        username: f11100_AutiSociety17
+        password: Mo7amedatef17
         protocol: ftp
-        # server: s2.serv00.com
-        # username: f11100_AutiSociety17
-        # password: Mo7amedatef17
-        # protocol: ftp
-        server-dir: /autisociety-api.original-business.com/
+        server-dir: /
         local-dir: ./
