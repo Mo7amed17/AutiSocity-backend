@@ -1,8 +1,8 @@
 import pymssql
 
-server = 'sql5088.site4now.net'
-database = 'db_aa6e06_autismdb'
-username = 'db_aa6e06_autismdb_admin'
+server = 'sql8006.site4now.net'
+database = 'db_aa9adb_autisociety17'
+username = 'db_aa9adb_autisociety17_admin'
 password = 'Mo7amedatef17'
 
 # server = '.'
