@@ -16,7 +16,7 @@ jobs:
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
         server: '198.54.115.25'
-        username: origmtie
+        username: 'origmtie'
         password: 0lNP2i8RLffy
         protocol: ftp
         # server: s2.serv00.com
