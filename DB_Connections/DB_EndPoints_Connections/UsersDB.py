@@ -351,29 +351,29 @@ def getAdmins(uid):
 
     query = me.selectQuery(tableName='vi_Users',columnsName=['id' , 'name' , 'email' ,'image','user_type'] ,where='user_type = \'admin\' AND id <> 1')
     
-    try :
-        db.cursor.execute(query)
+    # try :
+    db.cursor.execute(query)
 
-        result = []
-        
-        for row in db.cursor.fetchall():
-            data=profileModel(row=row)
-            result.append(data[0])
+    result = []
+    
+    for row in db.cursor.fetchall():
+        data=profileModel(row=row, getBasicData=True)
+        result.append(data[0])
 
-        
+    
 
-        if len(result) == 0 :
+    if len(result) == 0 :
 
-            return{'message':'no admins found'},400
-        
-        result.reverse()
-        
-        return{'data':result}
+        return{'message':'no admins found'},400
+    
+    result.reverse()
+    
+    return{'data':result}
 
             
-    except Exception as ex:
+    # except Exception as ex:
 
-        return {'message':str(ex)},400
+    #     return {'message':str(ex)},400
             
 
 ###############      G E T   D O C T O R S     ################
