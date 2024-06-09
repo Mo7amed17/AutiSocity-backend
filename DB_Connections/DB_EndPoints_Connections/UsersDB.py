@@ -29,7 +29,7 @@ def login(data):
         else:
             if result[0]['status'] == 'pending' and result[0]['user_type'] == 'doctor' :
 
-                return me.message(message='في إانتظار موافقة المسؤول !'),400
+                return me.message(message='في إنتظار موافقة المسؤول !'),400
             
             if result[0]['status'] == 'rejected' and result[0]['user_type'] == 'doctor' :
 
@@ -401,7 +401,7 @@ def getDoctors(uid):
 
         if len(result) == 0 :
 
-            return{'message':'no doctors found'},400
+            return{'message':'no doctors found','data':[]},400
         
         result.reverse()
         
@@ -423,7 +423,7 @@ def getPatients(uid):
 
 
 
-    query = me.selectQuery(tableName='vi_Users',columnsName=['id' , 'name' , 'email' ,'image','user_type'] ,where='user_type = \'patient\' AND id <> 1')
+    query = me.selectQuery(tableName='vi_Users',columnsName=['id' , 'name' , 'email' ,'image','user_type'] ,where='user_type = \'patient\'')
     
     try :
         db.cursor.execute(query)
@@ -438,7 +438,43 @@ def getPatients(uid):
 
         if len(result) == 0 :
 
-            return{'message':'no patient found'},400
+            return{'message':'no patient found','data':[]},400
+        
+        result.reverse()
+        
+        return{'data':result}
+
+            
+    except Exception as ex:
+
+        return {'message':str(ex)},400
+
+###############      G E T   D O C T O R S   A N D   P A T I E N T S     ################
+def getUsersList(uid):
+
+    userType = me.getUserTypeByUserID(uid=uid)
+
+    if userType != 0 :
+        return{'message':'Permission denied ,Only admins allowed !'},403
+
+
+
+    query = me.selectQuery(tableName='vi_Users',columnsName=['id' , 'name' , 'email' ,'image','user_type'] ,where='user_type = \'patient\' OR user_type = \'doctor\'')
+    
+    try :
+        db.cursor.execute(query)
+
+        result = []
+        
+        for row in db.cursor.fetchall():
+            data=profileModel(row=row , getBasicData=True)
+            result.append(data[0])
+
+        
+
+        if len(result) == 0 :
+
+            return{'message':'no data found','data':[]},400
         
         result.reverse()
         
@@ -685,10 +721,12 @@ def deleteUser(data):
         db.cursor.execute(query)
         result=db.cursor.fetchall()
         deletedUserType = result[0][0]
+        print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
         print(deletedUserType)
+        print(data['uid'])
         
         
-        if deletedUserType == 0 and  data['uid'] != 1:
+        if deletedUserType == 0 and data['uid'] != '1':
             return{'message':'Only super admin can delete admins'},400
 
 

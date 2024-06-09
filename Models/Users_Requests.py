@@ -165,6 +165,13 @@ def getPatients(token):
      return UsersDB.getPatients(uid=token['uid'].split('.')[3])
 
 
+@usersblp.route("/list",methods=['GET'])
+@me.token_required
+def getUsersList(token):
+
+     return UsersDB.getUsersList(uid=token['uid'].split('.')[3])
+
+
 # ================== GET Current User Data (PROFILE) By Token [GET] =========================
 
 @usersblp.route("/profile",methods=['GET'])
