@@ -6,7 +6,7 @@ username = 'db_aa9b62_autisocietydb_admin'
 password = 'Sonbolmyasp123'
 
 # server = '.'
-# database = 'AutismDB'
+# database = 'AutismDB2'
 # username = 'autism'
 # password = '123456'
 
