@@ -31,7 +31,7 @@ def addPost(data):
         else:
             return{'message':'choose between question , advice and information type'},400
      
-    query = me.insertQuery(tableName='Posts',columnsName=['user_id','type','[content]','date'],values=[data['uid'],type,data['content'],datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')])
+    # query = me.insertQuery(tableName='Posts',columnsName=['user_id','type','[content]','date'],values=[data['uid'],type,data['content'],datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')])
     
     query = me.procQuery(procName='insertPost' , valuesDic={
         'uId' : data['uid'],
@@ -65,8 +65,6 @@ def addPost(data):
         return {'message':str(ex)},400
             
         
-        
-    return {'message':"تم إضافة منشور بنجاح "},201 
 
 # ================== Get Doctors Posts [GET] =========================
 
@@ -171,21 +169,38 @@ def addComment(data):
      
     #query = me.selectQuery(tableName='vi_posts',where='user_type = '+"'"+'patient'+"'")
 
-    query = me.insertQuery(tableName='Comments',columnsName=['user_id','post_id','content','date'],values=[data['uid'],data['post_id'],data['content'],datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')])
+    # query = me.insertQuery(tableName='Comments',columnsName=['user_id','post_id','content','date'],values=[data['uid'],data['post_id'],data['content'],datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')])
 
     # return{'s':query}
-    
-    try :
-        db.cursor.execute(query)
-        db.conn.commit()
 
+
+
+
+    query = me.procQuery(procName='insertComment' , valuesDic={
+        'uId' : data['uid'],
+        'postID' : data['post_id'],
+        'content' : data['content'],
         
-            
-    except Exception as ex:
+    })
+    # try :
+    db.cursor.execute(query)
+    db.conn.commit()
 
-        return {'message':str(ex)},400
 
-    return {'message':'تم إضافة تعليق بنجاح'},201
+    result = []
+    
+    for row in db.cursor.fetchall():
+
+        data = commentModel(data=row , isAddComment=True)
+
+        result.append(data)
+
+
+    
+        return {'message':"تم إضافة تعليق بنجاح ",'data':result[0]},201 
+    # except Exception as ex:
+
+    #     return {'message':str(ex)},400
 
 
 
@@ -205,7 +220,11 @@ def getPostComments(data):
     try :
         db.cursor.execute(query)
 
-        result = commentModel(db.cursor.fetchall())
+        result = []
+
+        for row in db.cursor.fetchall():
+            data=commentModel(data=row)
+            result.append(data)
         
             
     except Exception as ex:
@@ -618,21 +637,22 @@ def reportedPostsModel(data):
 
 # Comment Model
 
-def commentModel(data):
+def commentModel(data , isAddComment = False):
 
-        result = []
+        # result = []
         
-        for row in data:
+        # for row in data:
 
-            item_dic ={}
-            item_dic["id"] = row[0]
-            item_dic["content"] = row[3]
-            item_dic["date"] = row[4]
-            item_dic["is_my_comment"] = row[5]
-            item_dic["name"] = row[6]
-            item_dic["image"] = row[7]
-           
-            
-            result.append(item_dic)
+        item_dic ={}
+        item_dic["id"] = data[0]
+        item_dic["content"] = data[1]
+        item_dic["date"] = data[2]
+        if isAddComment != True:
+            item_dic["is_my_comment"] = data[3]
+            item_dic["name"] = data[4]
+            item_dic["image"] = data[5]
+        
+        
+        # result.append(item_dic)
 
-        return result
+        return item_dic

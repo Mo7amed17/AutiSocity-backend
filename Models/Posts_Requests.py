@@ -127,7 +127,7 @@ def deletePost(token):
     request_data['uid'] = token['uid'].split('.')[3]
     return PostsDB.deletePost(data=request_data)
 
-@postsblp.route("/comments",methods=['DELETE'])
+@postsblp.route("/comment",methods=['DELETE'])
 @me.token_required
 def deleteComment(token):
 
