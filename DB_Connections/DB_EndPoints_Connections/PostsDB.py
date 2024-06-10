@@ -212,7 +212,7 @@ def getPostComments(data):
 
         return {'message':str(ex)},400
 
-    return {'data':result},201
+    return {'data':result},200
 
 
 
@@ -629,6 +629,8 @@ def commentModel(data):
             item_dic["content"] = row[3]
             item_dic["date"] = row[4]
             item_dic["is_my_comment"] = row[5]
+            item_dic["name"] = row[6]
+            item_dic["image"] = row[7]
            
             
             result.append(item_dic)
