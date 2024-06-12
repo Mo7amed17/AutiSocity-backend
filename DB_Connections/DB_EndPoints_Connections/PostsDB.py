@@ -362,7 +362,7 @@ def deleteComment(data):
     # return{'ss':query}
 
     if len(result) == 0 :
-        return{'message':'لا يمكن حذف التعليق لعد وجودة او لعدم وجود صلاحية بذلك'},400
+        return{'message':'لا يمكن حذف التعليق لعدم وجودة او لعدم وجود صلاحية بذلك'},400
 
     query = me.deleteQuery(tableName='Comments',where='id = '+str(data['comment_id']))
 

@@ -489,11 +489,6 @@ def getUsersList(uid):
 ###############     P R O F I L E     ################
 def profile(id):
 
-
-        # query = "SELECT * FROM Users WHERE ID ="+id
-
-        # query = me.selectQuery(tableName='Users' , where='id = '+ str(id))
-
         query = me.procQuery(procName='getUserProfile',valuesDic={
              'u_id':str(id)
         })
@@ -749,6 +744,77 @@ def deleteUser(data):
         
 
 
+def getMessengers(uid):
+
+    query = me.procQuery(procName='getMessengers',valuesDic={
+        'user_id':uid,
+    })
+    
+    try :
+        db.cursor.execute(query)
+
+        result=messageModel(data=db.cursor.fetchall())
+            
+        
+            
+    except Exception as ex:
+
+        return {'message':str(ex)},400
+
+    return {'data':result},200
+
+
+def getMessages(data):
+
+    query = me.procQuery(procName='getUserMessages',valuesDic={
+        'user_id':data['uid'],
+        'receiver_id':data['receiver_id'],
+    })
+
+    try :
+        db.cursor.execute(query)
+
+        result=messageModel(data=db.cursor.fetchall(),isGetMessage=True)
+            
+        
+            
+    except Exception as ex:
+
+        return {'message':str(ex)},400
+
+    return {'data':result},200
+
+
+
+# ==================  like a post [POST] =========================
+
+def addMessage(data):
+
+    
+    # query = me.insertQuery(tableName='Messages',columnsName=['from_user_id','to_user_id','message','date'],values=[int(data['uid']) , int(data['reveiver_id']) , data['message']])
+
+    query = me.procQuery(procName='insertMessage',valuesDic={
+        'from_user_id':data['uid'],
+        'to_user_id':data['receiver_id'],
+        'message':data['message'],
+    })
+
+    try :
+        db.cursor.execute(query)
+        db.conn.commit()
+        return{'message':'تم إرسال الرسالة بنجاح !'},200
+            
+    except Exception as ex:
+      
+      return {'message':str(ex)},400
+
+
+
+
+
+
+
+
 # def addClinic(data):
 
         
@@ -788,7 +854,26 @@ def deleteUser(data):
 
 
 
+def messageModel(data , isGetMessage = False):
 
+        result = []
+        
+        
+        for row in data:
+
+            item_dic ={}
+            item_dic["ID"] = row[0]
+            item_dic["message"] = row[1]
+            item_dic["date"] = row[2]
+            item_dic["name"] = row[3]
+            item_dic["image"] = row[4]
+            
+            if isGetMessage == True :
+                item_dic["is_my_message"] = row[5]
+
+            result.append(item_dic)
+
+        return result
 
 
 

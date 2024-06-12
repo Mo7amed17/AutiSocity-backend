@@ -244,3 +244,36 @@ def deleteUser(token):
      request_data['uid'] = token['uid'].split('.')[3]
 
      return UsersDB.deleteUser(data=request_data)
+
+
+@usersblp.route("/messengers",methods=['GET'])
+@me.token_required
+def getMessengers(token):
+
+     return UsersDB.getMessengers(uid=token['uid'].split('.')[3])
+
+
+@usersblp.route("/messages",methods=['GET'])
+@me.token_required
+def getMessages(token):
+
+     request_data = request.get_json()
+     if request_data is None or "receiver_id" not in  request_data :
+          return jsonify({'message':'receiver_id is missing !'}) ,400
+
+     request_data['uid'] = token['uid'].split('.')[3]
+
+     return UsersDB.getMessages(data=request_data)
+
+
+@usersblp.route("/messages",methods=['POST'])
+@me.token_required
+def addMessage(token):
+
+     request_data = request.get_json()
+     if request_data is None or "receiver_id" not in  request_data or "message" not in  request_data :
+          return jsonify({'message':'receiver_id or message is missing !'}) ,400
+
+     request_data['uid'] = token['uid'].split('.')[3]
+
+     return UsersDB.addMessage(data=request_data)
