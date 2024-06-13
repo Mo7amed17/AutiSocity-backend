@@ -862,7 +862,7 @@ def messageModel(data , isGetMessage = False):
         for row in data:
 
             item_dic ={}
-            item_dic["ID"] = row[0]
+            item_dic["id"] = row[0]
             item_dic["message"] = row[1]
             item_dic["date"] = row[2]
             item_dic["name"] = row[3]
@@ -870,6 +870,8 @@ def messageModel(data , isGetMessage = False):
             
             if isGetMessage == True :
                 item_dic["is_my_message"] = row[5]
+            else:
+                item_dic["uId"] = row[5]
 
             result.append(item_dic)
 
