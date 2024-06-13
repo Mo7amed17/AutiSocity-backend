@@ -17,7 +17,7 @@ jobs:
       with:
         server: s2.serv00.com
         username: f11100_AutiSociety17
-        password: Mo7amedatef17
+        password: Sonbolserv00
         protocol: ftp
         server-dir: /
         local-dir: ./
