@@ -44,4 +44,4 @@ if __name__ == '__main__':
     # app.run(debug=False,host='0.0.0.0')
     app.debug = True
     # app.run()
-    socketio.run(app=app , host='localhost',allow_unsafe_werkzeug=True)
+    socketio.run(app=app)
