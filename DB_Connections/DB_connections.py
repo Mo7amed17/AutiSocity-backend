@@ -2,7 +2,7 @@ import pymssql
 # import pyodbc
 
 
-server = 'sql6028.site4now.net'
+server = '45.58.159.145'
 database = 'db_aa9b62_autisocietydb'
 username = 'db_aa9b62_autisocietydb_admin'
 password = 'Sonbolmyasp123'
@@ -13,6 +13,7 @@ connection_string = {
     'user': username,
     'password': password,
     'database': database,
+    'port' : 1433 ,
     'autocommit': True  # يمكنك تعيين هذا على True إذا كنت ترغب في تمكين التعامل مع البيانات بشكل تلقائي
 }
 
