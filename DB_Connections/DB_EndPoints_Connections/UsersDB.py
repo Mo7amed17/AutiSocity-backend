@@ -16,30 +16,33 @@ def login(data):
 
         query = me.selectQuery(tableName='vi_Users',where="email = '"+data['email']+"' AND password = '"+data['password']+"'")
         
+        try:
         
-        
-        db.cursor.execute(query)
+            db.cursor.execute(query)
 
-        result = me.usersModel(data=db.cursor.fetchall())        
-        
-        if len(result) == 0 :
+            result = me.usersModel(data=db.cursor.fetchall())        
             
-            return   me.message(message="بيانات الدخول غير صحيحة !"),400
-        
-        else:
-            if result[0]['status'] == 'pending' and result[0]['user_type'] == 'doctor' :
+            if len(result) == 0 :
+                
+                return   me.message(message="بيانات الدخول غير صحيحة !"),400
+            
+            else:
+                if result[0]['status'] == 'pending' and result[0]['user_type'] == 'doctor' :
 
-                return me.message(message='في إنتظار موافقة المسؤول !'),400
-            
-            if result[0]['status'] == 'rejected' and result[0]['user_type'] == 'doctor' :
+                    return me.message(message='في إنتظار موافقة المسؤول !'),400
+                
+                if result[0]['status'] == 'rejected' and result[0]['user_type'] == 'doctor' :
 
-                return me.message(message='تم رفض دخولك الي الموقع لعدم موافقة المسؤول !'),400
-            
-            token_text =  str(datetime.datetime.now().time().hour) + '.' + str(datetime.datetime.now().time().minute) +'.' + str(datetime.datetime.now().time().second)+'.' + str(result[0]["id"]) +'.' + str(datetime.datetime.now().time().microsecond)
-            
-            token = jwt.encode({'uid':token_text , 'exp':datetime.datetime.utcnow() + datetime.timedelta(weeks=9999)},"654321" )
-            # result[0].pop("id")
-            return ({'message':'تم تسجيل الدخول بنجاح','token':token,'data':result[0]}),200
+                    return me.message(message='تم رفض دخولك الي الموقع لعدم موافقة المسؤول !'),400
+                
+                token_text =  str(datetime.datetime.now().time().hour) + '.' + str(datetime.datetime.now().time().minute) +'.' + str(datetime.datetime.now().time().second)+'.' + str(result[0]["id"]) +'.' + str(datetime.datetime.now().time().microsecond)
+                
+                token = jwt.encode({'uid':token_text , 'exp':datetime.datetime.utcnow() + datetime.timedelta(weeks=9999)},"654321" )
+                # result[0].pop("id")
+                return ({'message':'تم تسجيل الدخول بنجاح','token':token,'data':result[0]}),200
+        except Exception as e:
+            print(e)
+
 
 
 
