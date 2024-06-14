@@ -182,10 +182,9 @@ def profile(token):
 
      try:
           request_data = request.get_json()
-          if request_data is None or "user_id" not in  request_data :
+          if request_data is None or "user_id" not in  request_data:
                
                userID = token['uid'].split('.')[3]
-               
           else:
                userID = request_data['user_id']
      except:
