@@ -11,7 +11,7 @@ connection_string = {
     'user': username,
     'password': password,
     'database': database,
-    'autocommit': True  # يمكنك تعيين هذا على True إذا كنت ترغب في تمكين التعامل مع البيانات بشكل تلقائي
+    'autocommit': True
 }
 
 class LinkDatabase:
@@ -23,16 +23,19 @@ class LinkDatabase:
 
     def connect(self):
         try:
+            print("Attempting to connect to database...")
             self.conn = pymssql.connect(**connection_string)
             self.cursor = self.conn.cursor()
-            print("Connected")
+            print("Connected to database successfully.")
         except Exception as e:
-            print("Database Error:", e)
+            print("Database connection error:", e)
 
     def close(self):
         if self.cursor:
+            print("Closing cursor...")
             self.cursor.close()
         if self.conn:
+            print("Closing connection...")
             self.conn.close()
 
 linkDB = LinkDatabase()
