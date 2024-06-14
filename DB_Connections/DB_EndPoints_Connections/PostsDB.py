@@ -4,7 +4,7 @@ from components import myMethods as me
 import jwt
 import datetime
 
-
+cursor = db.cursor()
 
 
 # ================== Add Post [POST] =========================
@@ -41,13 +41,13 @@ def addPost(data):
         
     })
     try :
-        db.cursor.execute(query)
+        cursor.execute(query)
         db.conn.commit()
 
 
         result = []
         
-        for row in db.cursor.fetchall():
+        for row in cursor.fetchall():
 
             item_dic ={}
             item_dic["id"] = row[0]
@@ -81,10 +81,10 @@ def getDoctorsPosts(data):
     # return{'s':query}
     
     try :
-        db.cursor.execute(query)
+        cursor.execute(query)
 
 
-        result = postModel(data=db.cursor.fetchall())
+        result = postModel(data=cursor.fetchall())
 
         if len(result) == 0 :
             
@@ -113,10 +113,10 @@ def getPatientsPosts(data):
     
     
     try :
-        db.cursor.execute(query)
+        cursor.execute(query)
 
 
-        result = postModel(data=db.cursor.fetchall())
+        result = postModel(data=cursor.fetchall())
 
         if len(result) == 0 :
             
@@ -145,10 +145,10 @@ def getPatientsPosts(data):
     
     
 #     try :
-#         db.cursor.execute(query)
+#         cursor.execute(query)
 
 
-#         result = postModel(data=db.cursor.fetchall())
+#         result = postModel(data=cursor.fetchall())
 
 #         if len(result) == 0 :
             
@@ -184,13 +184,13 @@ def addComment(data):
         
     })
     # try :
-    db.cursor.execute(query)
+    cursor.execute(query)
     db.conn.commit()
 
 
     result = []
     
-    for row in db.cursor.fetchall():
+    for row in cursor.fetchall():
 
         data = commentModel(data=row , isAddComment=True)
 
@@ -219,11 +219,11 @@ def getPostComments(data):
     # return{'s':query}
     
     try :
-        db.cursor.execute(query)
+        cursor.execute(query)
 
         result = []
 
-        for row in db.cursor.fetchall():
+        for row in cursor.fetchall():
             data=commentModel(data=row)
             result.append(data)
         
@@ -242,7 +242,7 @@ def savePost(data):
     query = me.insertQuery(tableName='Saved_Posts',columnsName=['user_id','post_id'],values=[data['uid'],data['post_id']])
     
     try :
-        db.cursor.execute(query)
+        cursor.execute(query)
         db.conn.commit()
 
         
@@ -261,8 +261,8 @@ def savePost(data):
 def unsavePost(data):
 
     query = me.selectQuery(tableName='Saved_Posts',where='post_id = '+str(data['post_id']) + ' AND user_id = '+str(data['uid']))
-    db.cursor.execute(query)
-    result=db.cursor.fetchall()
+    cursor.execute(query)
+    result=cursor.fetchall()
 
     if(len(result) == 0):
         return{'message':'cannot unsave a post that you did not saved it before !'},400
@@ -271,7 +271,7 @@ def unsavePost(data):
     
     query = me.deleteQuery(tableName='Saved_Posts',where='post_id = '+str(data['post_id']) + ' AND user_id = '+str(data['uid']))
     try :
-        db.cursor.execute(query)
+        cursor.execute(query)
         db.conn.commit()
         return{'message':'تم إزالة المنشور من المحفوظات بنجاح !'},200
 
@@ -297,10 +297,10 @@ def getSavedPosts(uid):
     # return{'s':query}
     
     try :
-        db.cursor.execute(query)
+        cursor.execute(query)
 
 
-        result = postModel(data=db.cursor.fetchall())
+        result = postModel(data=cursor.fetchall())
 
         if len(result) == 0 :
             
@@ -327,8 +327,8 @@ def deletePost(data):
     if userType != 0:
         query = me.selectQuery(tableName='Posts',where='id = '+str(data['post_id']) + ' AND user_id = '+str(data['uid']))
 
-        db.cursor.execute(query)
-        result=db.cursor.fetchall()
+        cursor.execute(query)
+        result=cursor.fetchall()
         if len(result) == 0 :
             return{'message':'لا يمكن حذف المنشور لعدم وجودة او لعدم وجود صلاحية بذلك'},400
 
@@ -339,7 +339,7 @@ def deletePost(data):
     query = me.deleteQuery(tableName='Posts',where='id = '+str(data['post_id']))
     # return{'s':query}
     try :
-        db.cursor.execute(query)
+        cursor.execute(query)
         db.conn.commit()
 
         return {'message':'تم حذف المنشور بنجاح'},200
@@ -357,8 +357,8 @@ def deleteComment(data):
     # check if it is my cooment to delete
     query = me.selectQuery(tableName='Comments',where='id = '+str(data['comment_id']) + ' AND user_id = '+str(data['uid']))
 
-    db.cursor.execute(query)
-    result=db.cursor.fetchall()
+    cursor.execute(query)
+    result=cursor.fetchall()
 
     # return{'ss':query}
 
@@ -368,7 +368,7 @@ def deleteComment(data):
     query = me.deleteQuery(tableName='Comments',where='id = '+str(data['comment_id']))
 
     try :
-        db.cursor.execute(query)
+        cursor.execute(query)
         db.conn.commit()
 
         
@@ -386,9 +386,9 @@ def getUserPosts(data):
 
     query  = me.procQuery(procName='getUserTypeByUid',valuesDic={"userId":data['uid']})
 
-    db.cursor.execute(query)
+    cursor.execute(query)
 
-    userType = db.cursor.fetchone()[0]
+    userType = cursor.fetchone()[0]
 
     
 
@@ -398,11 +398,11 @@ def getUserPosts(data):
     })
 
     try :
-        db.cursor.execute(query)
+        cursor.execute(query)
         db.conn.commit()
 
         
-        result = postModel(data=db.cursor.fetchall())
+        result = postModel(data=cursor.fetchall())
 
         if len(result) == 0 :
             
@@ -422,7 +422,7 @@ def reportPost(data):
     query = me.insertQuery(tableName='Posts_Reports',columnsName=['user_id','post_id','complaint'],values=[data['uid'],data['post_id'],data['complaint']])
     
     try :
-        db.cursor.execute(query)
+        cursor.execute(query)
         db.conn.commit()
 
         return {'message':'تم تبليغ المنشور الي المسؤولين بنجاح'},200
@@ -448,9 +448,9 @@ def getReportedPosts(uid):
     query = me.selectQuery(tableName='vi_ReportedPosts', orderby='date,DESC')
     
     try :
-        db.cursor.execute(query)
+        cursor.execute(query)
         
-        result = reportedPostsModel(data=db.cursor.fetchall())
+        result = reportedPostsModel(data=cursor.fetchall())
 
         if len(result) == 0 :
             
@@ -478,8 +478,8 @@ def approveReportPost(data):
 
     
     query = me.selectQuery(tableName='Posts_Reports',where='id = '+str(data['report_id']))
-    db.cursor.execute(query)
-    result=db.cursor.fetchall()
+    cursor.execute(query)
+    result=cursor.fetchall()
 
     if len(result) == 0 :
 
@@ -489,7 +489,7 @@ def approveReportPost(data):
     
     try :
     
-        db.cursor.execute(query)
+        cursor.execute(query)
         db.conn.commit()
 
         return {'message':'تم السماح بالمنشور بنجاح'},200
@@ -511,8 +511,8 @@ def deleteReportPost(data):
 
     
     query = me.selectQuery(tableName='Posts_Reports',columnsName=['post_id'],where='id = '+str(data['report_id']))
-    db.cursor.execute(query)
-    result=db.cursor.fetchall()
+    cursor.execute(query)
+    result=cursor.fetchall()
     
 
     if len(result) == 0 :
@@ -525,7 +525,7 @@ def deleteReportPost(data):
     
     try :
     
-        db.cursor.execute(query)
+        cursor.execute(query)
         db.conn.commit()
 
         return {'message':'تم حذف المنشور بنجاح'},200
@@ -543,7 +543,7 @@ def likePost(data):
     
     query = me.insertQuery(tableName='Post_Likes',columnsName=['post_id','user_id'],values=[int(data['post_id']) , int(data['uid'])])
     try :
-        db.cursor.execute(query)
+        cursor.execute(query)
         db.conn.commit()
         return{'message':'تم عمل لايك بنجاح !'},200
             
@@ -558,8 +558,8 @@ def likePost(data):
 def unlikePost(data):
 
     query = me.selectQuery(tableName='Post_Likes',where='post_id = '+str(data['post_id']) + ' AND user_id = '+str(data['uid']))
-    db.cursor.execute(query)
-    result=db.cursor.fetchall()
+    cursor.execute(query)
+    result=cursor.fetchall()
 
     if(len(result) == 0):
         return{'message':'cannot unlike a post that you did not liked it before !'},400
@@ -568,7 +568,7 @@ def unlikePost(data):
     
     query = me.deleteQuery(tableName='Post_Likes',where='post_id = '+str(data['post_id']) + ' AND user_id = '+str(data['uid']))
     try :
-        db.cursor.execute(query)
+        cursor.execute(query)
         db.conn.commit()
         return{'message':'تم حذف الايك بنجاح !'},200
             

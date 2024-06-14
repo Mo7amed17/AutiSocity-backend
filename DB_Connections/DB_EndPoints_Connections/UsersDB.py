@@ -11,29 +11,31 @@ import phonenumbers
 
     ###############    L O G I N     ################
     
+cursor = db.cursor()
+
 def login(data):
         
 
         query = me.selectQuery(tableName='vi_Users',where="email = '"+data['email']+"' AND password = '"+data['password']+"'")
         
         try:
-            print('1')
 
             print(query)
         
-            db.cursor.execute(query)
+            cursor.execute(query)
 
-            print('2')
-
-            result = me.usersModel(data=db.cursor.fetchall())  
-
+            
+            
+            result = me.usersModel(data=cursor.fetchall())  
+            
+            
             print(result)
 
-            print('3')
+            
 
             if len(result) == 0 :
 
-                print('4')
+                
                 
                 return   me.message(message="بيانات الدخول غير صحيحة !"),400
             
@@ -41,18 +43,16 @@ def login(data):
             
             else:
 
-                print('5')
-
                 if result[0]['status'] == 'pending' and result[0]['user_type'] == 'doctor' :
 
                     return me.message(message='في إنتظار موافقة المسؤول !'),400
                 
+                
+                
                 if result[0]['status'] == 'rejected' and result[0]['user_type'] == 'doctor' :
 
                     return me.message(message='تم رفض دخولك الي الموقع لعدم موافقة المسؤول !'),400
-                
                 token_text =  str(datetime.datetime.now().time().hour) + '.' + str(datetime.datetime.now().time().minute) +'.' + str(datetime.datetime.now().time().second)+'.' + str(result[0]["id"]) +'.' + str(datetime.datetime.now().time().microsecond)
-                
                 token = jwt.encode({'uid':token_text , 'exp':datetime.datetime.utcnow() + datetime.timedelta(weeks=9999)},"654321" )
                 # result[0].pop("id")
                 return ({'message':'تم تسجيل الدخول بنجاح','token':token,'data':result[0]}),200
@@ -102,7 +102,7 @@ def registerDoctor(data,files):
 
        
         try :
-            db.cursor.execute(query)
+            cursor.execute(query)
             db.conn.commit()
 
             if avatarpath != '':
@@ -171,7 +171,7 @@ def registerPatient(data,files):
         # return{'ss':str(query)}
 
         try :
-            db.cursor.execute(query)
+            cursor.execute(query)
             db.conn.commit()
 
             if avatarpath != '':
@@ -214,7 +214,7 @@ def registerAdmin(data , files):
         
 
         try :
-            db.cursor.execute(query)
+            cursor.execute(query)
             db.conn.commit()
 
             if avatarpath != '':
@@ -267,9 +267,9 @@ def pendingDoctors(uid):
     
 
     try :
-        db.cursor.execute(query)
+        cursor.execute(query)
 
-        result = me.usersModel(data=db.cursor.fetchall())
+        result = me.usersModel(data=cursor.fetchall())
 
         return{'data':result}
 
@@ -293,8 +293,8 @@ def confirmDoctor(docID , uid):
     query = me.selectQuery(tableName='Doctors' , columnsName=['status'],where=whereCond)
 
     try :
-        db.cursor.execute(query)
-        data=db.cursor.fetchall()
+        cursor.execute(query)
+        data=cursor.fetchall()
 
         if len(data) == 0 :
 
@@ -307,7 +307,7 @@ def confirmDoctor(docID , uid):
 
         query = me.updateQuery(tableName='Doctors',valuesDic={'status':'1'},where='doctor_id = '+"'"+ str(docID) + "'")
 
-        db.cursor.execute(query)
+        cursor.execute(query)
         db.conn.commit()
             
     except Exception as ex:
@@ -333,8 +333,8 @@ def rejectDoctor(docID , uid):
     query = me.selectQuery(tableName='Doctors' , columnsName=['status'],where=whereCond)
 
     try :
-        db.cursor.execute(query)
-        data=db.cursor.fetchall()
+        cursor.execute(query)
+        data=cursor.fetchall()
 
         if len(data) == 0 :
 
@@ -346,7 +346,7 @@ def rejectDoctor(docID , uid):
 
         query = me.updateQuery(tableName='Doctors',valuesDic={'status':'0'},where='doctor_id = '+"'"+ str(docID) + "'")
     
-        db.cursor.execute(query)
+        cursor.execute(query)
         db.conn.commit()
             
     except Exception as ex:
@@ -371,11 +371,11 @@ def getAdmins(uid):
     query = me.selectQuery(tableName='vi_Users',columnsName=['id' , 'name' , 'email' ,'image','user_type'] ,where='user_type = \'admin\' AND id <> 1')
     
     # try :
-    db.cursor.execute(query)
+    cursor.execute(query)
 
     result = []
     
-    for row in db.cursor.fetchall():
+    for row in cursor.fetchall():
         data=profileModel(row=row, getBasicData=True)
         result.append(data[0])
 
@@ -408,11 +408,11 @@ def getDoctors(uid):
     query = me.selectQuery(tableName='vi_Users',columnsName=['id' , 'name' , 'email' ,'image','user_type'] ,where='user_type = \'doctor\'')
     
     try :
-        db.cursor.execute(query)
+        cursor.execute(query)
 
         result = []
         
-        for row in db.cursor.fetchall():
+        for row in cursor.fetchall():
             data=profileModel(row=row , getBasicData=True)
             result.append(data[0])
 
@@ -445,11 +445,11 @@ def getPatients(uid):
     query = me.selectQuery(tableName='vi_Users',columnsName=['id' , 'name' , 'email' ,'image','user_type'] ,where='user_type = \'patient\'')
     
     try :
-        db.cursor.execute(query)
+        cursor.execute(query)
 
         result = []
         
-        for row in db.cursor.fetchall():
+        for row in cursor.fetchall():
             data=profileModel(row=row , getBasicData=True)
             result.append(data[0])
 
@@ -481,11 +481,11 @@ def getUsersList(uid):
     query = me.selectQuery(tableName='vi_Users',columnsName=['id' , 'name' , 'email' ,'image','user_type'] ,where='user_type = \'patient\' OR user_type = \'doctor\'')
     
     try :
-        db.cursor.execute(query)
+        cursor.execute(query)
 
         result = []
         
-        for row in db.cursor.fetchall():
+        for row in cursor.fetchall():
             data=profileModel(row=row , getBasicData=True)
             result.append(data[0])
 
@@ -516,9 +516,9 @@ def profile(id):
         # return{'sss':query}
         result = []
         
-        db.cursor.execute(query)
+        cursor.execute(query)
         # result["message"] = "data retrieved succesfully"
-        result = profileModel(row=db.cursor.fetchone())
+        result = profileModel(row=cursor.fetchone())
         
         if len(result) == 0 :
             
@@ -532,11 +532,11 @@ def profile(id):
             
                 result[0].pop("doctor_id")
 
-                db.cursor.execute(query2)
+                cursor.execute(query2)
 
                 clinic_dic = {}
 
-                for row in db.cursor.fetchall():
+                for row in cursor.fetchall():
                     
                     clinic_dic['address'] = row[0]
 
@@ -585,9 +585,9 @@ def updateUser(userId,data,files,userType):
     
 
     try:
-        db.cursor.execute(query)
+        cursor.execute(query)
 
-        password = db.cursor.fetchone()[0]
+        password = cursor.fetchone()[0]
 
         if data['password'] != password :
             return {'message':'الرقم السري غير صحيح !'},400
@@ -632,7 +632,7 @@ def updateUser(userId,data,files,userType):
                         'image':'' if avatarpath == None else avatarpath
                     })
         
-            db.cursor.execute(query)
+            cursor.execute(query)
 
             if newImgPath != None:
                 if newImgPath != '':
@@ -669,7 +669,7 @@ def updateUser(userId,data,files,userType):
                     'image':'' if avatarpath == None else avatarpath
                 })
             
-            db.cursor.execute(query)
+            cursor.execute(query)
 
             if newImgPath != None:
                 if newImgPath != '':
@@ -695,7 +695,7 @@ def updateUser(userId,data,files,userType):
                 "image":'' if avatarpath == None else avatarpath
             },where='id ='+userId)
                 
-            db.cursor.execute(query)
+            cursor.execute(query)
             if newImgPath != None:
                 if newImgPath != '':
                     saveAttachment(attachmentFile=files['avatar'],oldAttachPath=oldImgPath,newAttachPath=newImgPath)
@@ -732,8 +732,8 @@ def deleteUser(data):
     try :
     
         query = me.selectQuery(tableName='Users',columnsName=['user_type'],where='id = '+str(data['user_id']))
-        db.cursor.execute(query)
-        result=db.cursor.fetchall()
+        cursor.execute(query)
+        result=cursor.fetchall()
         deletedUserType = result[0][0]
         print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
         print(deletedUserType)
@@ -745,7 +745,7 @@ def deleteUser(data):
 
 
         query = me.deleteQuery(tableName='Users',where='id = '+str(data['user_id']))
-        db.cursor.execute(query)
+        cursor.execute(query)
         db.conn.commit()
 
         if deletedUserType == 0 :
@@ -770,9 +770,9 @@ def getMessengers(uid):
     })
     
     try :
-        db.cursor.execute(query)
+        cursor.execute(query)
 
-        result=messageModel(data=db.cursor.fetchall())
+        result=messageModel(data=cursor.fetchall())
             
         
             
@@ -791,9 +791,9 @@ def getMessages(data):
     })
 
     try :
-        db.cursor.execute(query)
+        cursor.execute(query)
 
-        result=messageModel(data=db.cursor.fetchall(),isGetMessage=True)
+        result=messageModel(data=cursor.fetchall(),isGetMessage=True)
             
         
             
@@ -819,7 +819,7 @@ def addMessage(data):
     })
 
     try :
-        db.cursor.execute(query)
+        cursor.execute(query)
         db.conn.commit()
         return{'message':'تم إرسال الرسالة بنجاح !'},200
             
@@ -842,7 +842,7 @@ def addMessage(data):
 #         # return{'s':query}
 
 #         try :
-#             db.cursor.execute(query)
+#             cursor.execute(query)
 #             db.conn.commit()
             
 #         except Exception as ex:
@@ -858,7 +858,7 @@ def addMessage(data):
 #         query = me.selectQuery(tableName='Clinics',columnsName=['address'],where='doctor_id ='+str(data['uid']))
 
 #         try :
-#             db.cursor.execute(query)
+#             cursor.execute(query)
 #             db.conn.commit()
             
 #         except Exception as ex:
@@ -971,11 +971,11 @@ def getAttachmentPath(file,type):
 def getOldAttachmentPath(userId):
     query = me.selectQuery(tableName='Users' , columnsName=['image'],where='id = ' +userId)
 
-    db.cursor.execute(query)
+    cursor.execute(query)
 
     
 
-    oldImgPath = db.cursor.fetchone()[0]
+    oldImgPath = cursor.fetchone()[0]
 
     return oldImgPath
 

@@ -18,27 +18,31 @@ connection_string = {
 
 # connection_string = 'DRIVER={SQL Server};SERVER=' + server + ';DATABASE=' + database + ';UID=' + username + ';PWD=' + password
 
+conn = ''
 
-class LinkDatabase:
+def LinkDatabase():
     
-    def __init__(self):
-        self.conn = None
-        self.cursor = None
-        self.connect()
+    # def __init__(self):
+    #     self.conn = None
+    #     self.cursor = None
+    #     self.connect()
 
-    def connect(self):
-        try:
-            # self.conn = pyodbc.connect(connection_string)
-            self.conn = pymssql.connect(**connection_string)
-            self.cursor = self.conn.cursor()
-            print("Connected")
-        except Exception as e:
-            print("Database Error:", e)
+    # def connect(self):
+    try:
+        # self.conn = pyodbc.connect(connection_string)
+        conn = pymssql.connect(**connection_string)
+        # cursor = self.conn.cursor()
+        print("Connected")
 
-    def close(self):
-        if self.cursor:
-            self.cursor.close()
-        if self.conn:
-            self.conn.close()
+        return conn
+    
+    except Exception as e:
+        print("Database Error:", e)
+
+    # def close(self):
+    #     if self.cursor:
+    #         self.cursor.close()
+    #     if self.conn:
+    #         self.conn.close()
 
 linkDB = LinkDatabase()
