@@ -1,9 +1,7 @@
-import imp
-import os
-import sys
+import sys, os
 
+base_path = "/home/origmtie/virtualenv/autisociety-api.original-business.com/3.9/lib/python3.9/site-packages"
 
-sys.path.insert(0, os.path.dirname(__file__))
+sys.path.append(base_path)
 
-wsgi = imp.load_source('wsgi', 'application.py')
-application = wsgi.passenger_wsgi
+from application import app as application
