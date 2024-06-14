@@ -5,37 +5,29 @@ database = 'db_aa9b62_autisocietydb'
 username = 'db_aa9b62_autisocietydb_admin'
 password = 'Sonbolmyasp123'
 
+# server = '.'
+# database = 'AutismDB2'
+# username = 'autism'
+# password = '123456'
+
 # بناء سلسلة الاتصال
 connection_string = {
     'server': server,
     'user': username,
     'password': password,
     'database': database,
-    'autocommit': True
+    'autocommit': True  # يمكنك تعيين هذا على True إذا كنت ترغب في تمكين التعامل مع البيانات بشكل تلقائي
 }
 
 class LinkDatabase:
     
     def __init__(self):
-        self.conn = None
-        self.cursor = None
-        self.connect()
-
-    def connect(self):
         try:
-            print("Attempting to connect to database...")
             self.conn = pymssql.connect(**connection_string)
             self.cursor = self.conn.cursor()
-            print("Connected to database successfully.")
+            print("Connected")
+            
         except Exception as e:
-            print("Database connection error:", e)
-
-    def close(self):
-        if self.cursor:
-            print("Closing cursor...")
-            self.cursor.close()
-        if self.conn:
-            print("Closing connection...")
-            self.conn.close()
+            print("Database Error:", e)
 
 linkDB = LinkDatabase()
