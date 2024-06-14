@@ -15,9 +15,10 @@ jobs:
     - name: FTP Deploy
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
-        server: s2.serv00.com
-        username: f11100_AutiSociety17
-        password: Sonbolserv00
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USER }}
+        password: ${{ secrets.FTP_PASS }}
         protocol: ftp
-        server-dir: /
+        server-dir: /autisociety-api.original-business.com/
         local-dir: ./
+        exclude: .git*, .env, .github, uploads/*.key
