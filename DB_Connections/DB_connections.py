@@ -13,6 +13,7 @@ connection_string = {
     'user': username,
     'password': password,
     'database': database,
+    'port' : 1433 ,
     'autocommit': True  # يمكنك تعيين هذا على True إذا كنت ترغب في تمكين التعامل مع البيانات بشكل تلقائي
 }
 
