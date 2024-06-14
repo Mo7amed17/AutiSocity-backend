@@ -518,9 +518,12 @@ def profile(id):
         result = []
         
         db.cursor.execute(query)
+        
         # result["message"] = "data retrieved succesfully"
-        if(db.cursor.fetchone() != None):
-            result = profileModel(row=db.cursor.fetchone())
+        data = db.cursor.fetchone()
+        if(data != None):
+            
+            result = profileModel(row=data)
         
         if len(result) == 0 :
             
