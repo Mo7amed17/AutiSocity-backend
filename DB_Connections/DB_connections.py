@@ -2,7 +2,7 @@ import pymssql
 # import pyodbc
 
 
-server = '45.58.159.145'
+server = 'sql6028.site4now.net'
 database = 'db_aa9b62_autisocietydb'
 username = 'db_aa9b62_autisocietydb_admin'
 password = 'Sonbolmyasp123'
