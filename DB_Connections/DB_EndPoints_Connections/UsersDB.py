@@ -17,16 +17,32 @@ def login(data):
         query = me.selectQuery(tableName='vi_Users',where="email = '"+data['email']+"' AND password = '"+data['password']+"'")
         
         try:
+            print('1')
+
+            print(query)
         
             db.cursor.execute(query)
 
-            result = me.usersModel(data=db.cursor.fetchall())        
-            
+            print('2')
+
+            result = me.usersModel(data=db.cursor.fetchall())  
+
+            print(result)
+
+            print('3')
+
             if len(result) == 0 :
+
+                print('4')
                 
                 return   me.message(message="بيانات الدخول غير صحيحة !"),400
             
+        
+            
             else:
+
+                print('5')
+
                 if result[0]['status'] == 'pending' and result[0]['user_type'] == 'doctor' :
 
                     return me.message(message='في إنتظار موافقة المسؤول !'),400
