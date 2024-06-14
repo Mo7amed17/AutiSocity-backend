@@ -1,7 +1,9 @@
-import sys, os
+import imp
+import os
+import sys
 
-base_path = "/usr/home/AutiSociety17/.local/lib/python3.10/site-packages"
 
-sys.path.append(base_path)
+sys.path.insert(0, os.path.dirname(__file__))
 
-from application import app as application
+wsgi = imp.load_source('wsgi', 'application.py')
+application = wsgi.passenger_wsgi
