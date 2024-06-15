@@ -86,13 +86,13 @@ def getDoctorsPosts(data):
 
         result = postModel(data=db.cursor.fetchall())
 
-        if len(result) == 0 :
+        # if len(result) == 0 :
             
-            return   me.message(message="لا يوجد بيانات !"),200
+        #     return   me.message(message="لا يوجد بيانات !"),200
         
-        else:
+        # else:
 
-            return {'data':result},200
+        return {'data':result},200
             
     except Exception as ex:
 
@@ -118,13 +118,13 @@ def getPatientsPosts(data):
 
         result = postModel(data=db.cursor.fetchall())
 
-        if len(result) == 0 :
+        # if len(result) == 0 :
             
-            return   me.message(message="لا يوجد بيانات !"),200
+        #     return   me.message(message="لا يوجد بيانات !"),200
         
-        else:
+        # else:
 
-            return {'data':result},200
+        return {'data':result},200
             
     except Exception as ex:
 
@@ -302,13 +302,13 @@ def getSavedPosts(uid):
 
         result = postModel(data=db.cursor.fetchall())
 
-        if len(result) == 0 :
+        # if len(result) == 0 :
             
-            return   me.message(message="لا يوجد بيانات !"),200
+        #     return   me.message(message="لا يوجد بيانات !"),200
         
-        else:
+        # else:
 
-            return {'data':result},200
+        return {'data':result},200
             
     except Exception as ex:
 
@@ -404,13 +404,13 @@ def getUserPosts(data):
         
         result = postModel(data=db.cursor.fetchall())
 
-        if len(result) == 0 :
+        # if len(result) == 0 :
             
-            return   me.message(message="لا يوجد بيانات !"),200
+            # return   me.message(message="لا يوجد بيانات !"),200
         
-        else:
+        # else:
 
-            return {'data':result},200
+        return {'data':result},200
             
     except Exception as ex:
 
@@ -454,12 +454,12 @@ def getReportedPosts(uid):
 
         if len(result) == 0 :
             
-            return   me.message(message="لا يوجد بيانات !"),200
-        
-        else:
             result.reverse()
+        
+        
+           
 
-            return {'data':result},200
+        return {'data':result},200
 
         
             

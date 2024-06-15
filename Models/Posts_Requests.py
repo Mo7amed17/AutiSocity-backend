@@ -12,7 +12,7 @@ def addPost(token):
     
     request_data = request.get_json()
     if request_data is None or "content" not in  request_data :
-          return jsonify({'message':'data is missing !'}) ,400
+          return jsonify({'message':'content is missing !'}) ,400
 
     request_data['uid'] = token['uid'].split('.')[3]
 
@@ -65,7 +65,7 @@ def addComment(token):
      
     request_data = request.get_json()
     if request_data is None or "post_id" not in  request_data or "content" not in  request_data :
-          return jsonify({'message':'data is missing !'}) ,400
+          return jsonify({'message':'post_id,content are missing !'}) ,400
     
     request_data['uid'] = token['uid'].split('.')[3]
     return PostsDB.addComment(data=request_data)
@@ -78,7 +78,7 @@ def getPostComments(token):
      
     request_data = request.get_json()
     if request_data is None or "post_id" not in  request_data :
-          return jsonify({'message':'data is missing !'}) ,400
+          return jsonify({'message':'post_id is missing !'}) ,400
     
     request_data['uid'] = token['uid'].split('.')[3]
     return PostsDB.getPostComments(data=request_data)

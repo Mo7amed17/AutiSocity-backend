@@ -84,7 +84,7 @@ def autiTest():
      if request_data is None  or len(request_data) != 15:
           print(len(request_data))
           
-          return jsonify({'message':'Input data are missing !'}) ,400
+          return jsonify({'message':'list of length = 15 is missing !'}) ,400
 
 
      return UsersDB.autiTest(request_data)
