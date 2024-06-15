@@ -15,23 +15,16 @@ import phonenumbers
 
 def login(data):
         
+       
 
         query = me.selectQuery(tableName='vi_Users',where="email = '"+data['email']+"' AND password = '"+data['password']+"'")
         
         try:
-            print('1')
 
-            print(query)
         
             db.cursor.execute(query)
 
-            
-            
             result = me.usersModel(data=db.cursor.fetchall())  
-            
-            
-            print(result)
-
             
 
             if len(result) == 0 :
@@ -97,8 +90,8 @@ def registerDoctor(data,files):
              'city' : data['city'],
             #  'specialist':data['specialist'],
             #  'deg_of_specialist_id':data['deg_of_specialist_id'],
-             'attachment':'https://autisociety17.serv00.net/' + str(os.path.basename(cvPath)),
-             'image':'https://autisociety17.serv00.net/' + str(os.path.basename(avatarpath))
+             'attachment':cvPath,
+             'image':avatarpath
         })
 
        
@@ -382,13 +375,13 @@ def getAdmins(uid):
 
     
 
-    if len(result) == 0 :
+    # if len(result) == 0 :
 
-        return{'message':'no admins found'},400
+    #     return{'message':'no admins found'},400
     
     result.reverse()
     
-    return{'data':result}
+    return{'data':result},200
 
             
     # except Exception as ex:
@@ -419,13 +412,13 @@ def getDoctors(uid):
 
         
 
-        if len(result) == 0 :
+        # if len(result) == 0 :
 
-            return{'message':'no doctors found','data':[]},400
+            # return{'message':'no doctors found','data':[]},400
         
         result.reverse()
         
-        return{'data':result}
+        return{'data':result},200
 
             
     except Exception as ex:
@@ -456,13 +449,13 @@ def getPatients(uid):
 
         
 
-        if len(result) == 0 :
+        # if len(result) == 0 :
 
-            return{'message':'no patient found','data':[]},400
+        #     return{'message':'no patient found','data':[]},400
         
         result.reverse()
         
-        return{'data':result}
+        return{'data':result},200
 
             
     except Exception as ex:
@@ -492,13 +485,13 @@ def getUsersList(uid):
 
         
 
-        if len(result) == 0 :
+        # if len(result) == 0 :
 
-            return{'message':'no data found','data':[]},400
+        #     return{'message':'no data found','data':[]},400
         
         result.reverse()
         
-        return{'data':result}
+        return{'data':result},200
 
             
     except Exception as ex:
@@ -527,7 +520,7 @@ def profile(id):
         
         if len(result) == 0 :
             
-            return   me.message(message="لا يوجد بيانات !"),200
+            return   {'message':"لا يوجد بيانات !",'data':[]},200
         else:
             
             clnicsResult = []
@@ -603,7 +596,10 @@ def updateUser(userId,data,files,userType):
     if newImgPath == '' or newImgPath == None:
             avatarpath = None
     else:
-            avatarpath ='https://autisociety17.serv00.net/' + str(os.path.basename(newImgPath))
+            # avatarpath = str(os.path.basename(newImgPath))
+            avatarpath = newImgPath
+
+            
 
 
     try:
@@ -641,6 +637,7 @@ def updateUser(userId,data,files,userType):
 
             if newImgPath != None:
                 if newImgPath != '':
+                
                     saveAttachment(attachmentFile=files['avatar'],oldAttachPath=oldImgPath,newAttachPath=newImgPath)
                 else:
                     deleteAttachment(attachmentPath=oldImgPath)
@@ -740,9 +737,7 @@ def deleteUser(data):
         db.cursor.execute(query)
         result=db.cursor.fetchall()
         deletedUserType = result[0][0]
-        print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
-        print(deletedUserType)
-        print(data['uid'])
+        
         
         
         if deletedUserType == 0 and data['uid'] != '1':
@@ -826,11 +821,12 @@ def addMessage(data):
     try :
         db.cursor.execute(query)
         db.conn.commit()
-        return{'message':'تم إرسال الرسالة بنجاح !'},200
+        return{'message':True}
+        # return{'message':'تم إرسال الرسالة بنجاح !'},200
             
     except Exception as ex:
       
-      return {'message':str(ex)},400
+      return {'message':False}
 
 
 
@@ -889,13 +885,16 @@ def messageModel(data , isGetMessage = False):
             item_dic["id"] = row[0]
             item_dic["message"] = row[1]
             item_dic["date"] = row[2]
-            item_dic["name"] = row[3]
-            item_dic["image"] = row[4]
+            
             
             if isGetMessage == True :
+                item_dic["name"] = row[3]
+                item_dic["image"] = row[4]
                 item_dic["is_my_message"] = row[5]
             else:
-                item_dic["uId"] = row[5]
+                item_dic["uId"] = row[3]
+                item_dic["name"] = row[4]
+                item_dic["image"] = row[5]
 
             result.append(item_dic)
 
@@ -957,6 +956,10 @@ def getAttachmentPath(file,type):
              
              dic = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "uploads", "CVs")
 
+        dic.replace("\\\\","\\")
+
+        print(dic)
+                    
         fullPath = f'{dic}-{uniq_filename}{file.filename}'
 
         print('111111111111')
