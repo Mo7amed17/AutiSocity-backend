@@ -40,7 +40,7 @@ def register():
                return{'message':'cv is required !'},400
      
           if request.form is None or "name" not in  request.form or "email" not in  request.form or "phone" not in  request.form or "password" not in  request.form  or "government" not in request.form or "city" not in request.form :
-               return jsonify({'message':'Input data are missing !'}),400 
+               return jsonify({'message':'enter name , email , phone ,  password ,  government , city'}),400 
 
 
           return UsersDB.registerDoctor(data= request.form, files=request.files)
@@ -53,7 +53,7 @@ def register():
 
      
           if request.form is None or "name" not in  request.form or "email" not in  request.form or "phone" not in  request.form or "password" not in  request.form  or "government" not in request.form or "city" not in request.form or "age" not in request.form :
-               return jsonify({'message':'Inputs data are missing !'}) ,400
+               return jsonify({'message':'enter name , email , phone ,  password ,  government , city , age'}) ,400
 
 
           return UsersDB.registerPatient(data=request.form , files= request.files)
@@ -66,7 +66,7 @@ def register():
 
      
           if request.form is None or "name" not in  request.form or "email" not in  request.form or "phone" not in  request.form or "password" not in  request.form :
-               return jsonify({'message':'Input data are missing !'}) ,400
+               return jsonify({'message':'enter name , email , phone ,  password '}) ,400
      
           return UsersDB.registerAdmin(data=request.form , files=request.files)
      
