@@ -160,7 +160,7 @@ def registerPatient(data,files):
              'government' : data['government'],
              'city' : data['city'],
              'age':data['age'],
-             'image':'https://autisociety17.serv00.net/' + str(os.path.basename(avatarpath))
+             'image':avatarpath
         })
         # return{'ss':str(query)}
 
@@ -204,7 +204,7 @@ def registerAdmin(data , files):
 
         
 
-        query = me.insertQuery(tableName='users',columnsName=['name','email','phone','password','user_type','image'] , values=[data['name'],data['email'],data['phone'],data['password'],'0','https://autisociety17.serv00.net/' + str(os.path.basename(avatarpath))])
+        query = me.insertQuery(tableName='users',columnsName=['name','email','phone','password','user_type','image'] , values=[data['name'],data['email'],data['phone'],data['password'],'0',avatarpath])
         
 
         try :
