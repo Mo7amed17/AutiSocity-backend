@@ -16,10 +16,6 @@ connection_string = {
     'port' : 1433 ,
     'autocommit': True  # يمكنك تعيين هذا على True إذا كنت ترغب في تمكين التعامل مع البيانات بشكل تلقائي
 }
-
-# connection_string = 'DRIVER={SQL Server};SERVER=' + server + ';DATABASE=' + database + ';UID=' + username + ';PWD=' + password
-
-
 class LinkDatabase:
     
     def __init__(self):

@@ -73,6 +73,7 @@ def register():
      else:
           return jsonify({'message':'enter  admin ,  doctor , patient ... not ' + request.form['type']}),400 
 
+
 # ================== Autism Test [POST] =========================
 
 @usersblp.route("/test",methods=['POST'])
@@ -228,8 +229,21 @@ def updateUser(token):
                return jsonify({'message':'Input data are missing !'}) ,400
 
 
-     return UsersDB.updateUser(userId=str(token['uid'].split('.')[3]) , data=request.form , files=request.files , userType=usertype)
+     return UsersDB.updateUserData(userId=str(token['uid'].split('.')[3]) , data=request.form , files=request.files , userType=usertype)
 
+@usersblp.route("/update/password",methods=['POST'])
+@me.token_required
+def updateUserPassword(token):
+
+     request_data = request.get_json()
+
+     if request_data is None or "old_password" not in  request_data or "new_password" not in  request_data:
+          
+          return jsonify({'message':'old_password or new_password is missing !'}) ,400
+     
+     request_data['uid'] = token['uid'].split('.')[3]
+
+     return UsersDB.updateUserPassword(data=request_data)
 # ================== DELETE USER [DELETE] =========================
 
 @usersblp.route("",methods=['DELETE'])

@@ -12,7 +12,6 @@ users = {}
 def handle_connect():
     print("Client connected!")
 
-
 @socketio.on("addUserToSocket")
 def addUserToSocket(uId):
 
@@ -20,25 +19,11 @@ def addUserToSocket(uId):
 
     users[uId] = socketio
 
-    print(users)
-
-
 @socketio.on("sendMessage")
 def handle_sendMessage(data):
-
-    # print("Send Messageee" + str(data))
-
     returnValue = UsersDB.addMessage(
-        data=
-        {
-            'uid':data['myID'],
-            'receiver_id':data['receiverID'],
-            'message':data['message']
-        }
+        data={'uid':data['myID'],'receiver_id':data['receiverID'],'message':data['message']}   
     )
-
-    print('ssssss')
-    print(returnValue)
 
     if returnValue['message'] == False:
         socketio.emit('response', {'status':False})
@@ -47,19 +32,10 @@ def handle_sendMessage(data):
 
             users[data['receiverID']].emit(
                 'response',
-                {
-                    'status':True,
-                    'message':data['message'],
-                    'isMyMessage':False
-                },
+                {'status':True,'message':data['message'],'isMyMessage':False},
                 to=data['receiverID'])
 
-        socketio.emit('response', 
-                    {
-                        'status':True,
-                        'message':data['message'],
-                    'isMyMessage':True
-                    })
+        socketio.emit('response', {'status':True,'message':data['message'],'isMyMessage':True})
     
 
 

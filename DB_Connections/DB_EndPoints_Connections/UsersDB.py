@@ -9,49 +9,39 @@ import phonenumbers
 
 #========================== REGISTERATION & LOGIN ==================================
 
-    ###############    L O G I N     ################
+    
     
 
-
+###############    L O G I N     ################
 def login(data):
-        
-       
 
-        query = me.selectQuery(tableName='vi_Users',where="email = '"+data['email']+"' AND password = '"+data['password']+"'")
-        
-        try:
+    query = me.selectQuery(tableName='vi_Users',where="email = '"+data['email']+"' AND password = '"+data['password']+"'")
+    
+    try:
+        db.cursor.execute(query)
 
+        result = me.usersModel(data=db.cursor.fetchall())  
         
-            db.cursor.execute(query)
+        if len(result) == 0 :
+            return   me.message(message="بيانات الدخول غير صحيحة !"),400
+        
+        else:
 
-            result = me.usersModel(data=db.cursor.fetchall())  
+            if result[0]['status'] == 'pending' and result[0]['user_type'] == 'doctor' :
+
+                return me.message(message='في إنتظار موافقة المسؤول !'),400
             
+            if result[0]['status'] == 'rejected' and result[0]['user_type'] == 'doctor' :
 
-            if len(result) == 0 :
-
-                
-                
-                return   me.message(message="بيانات الدخول غير صحيحة !"),400
+                return me.message(message='تم رفض دخولك الي الموقع لعدم موافقة المسؤول !'),400
             
-        
-            
-            else:
+            token_text =  str(datetime.datetime.now().time().hour) + '.' + str(datetime.datetime.now().time().minute) +'.' + str(datetime.datetime.now().time().second)+'.' + str(result[0]["id"]) +'.' + str(datetime.datetime.now().time().microsecond)
 
-                if result[0]['status'] == 'pending' and result[0]['user_type'] == 'doctor' :
-
-                    return me.message(message='في إنتظار موافقة المسؤول !'),400
-                
-                
-                
-                if result[0]['status'] == 'rejected' and result[0]['user_type'] == 'doctor' :
-
-                    return me.message(message='تم رفض دخولك الي الموقع لعدم موافقة المسؤول !'),400
-                token_text =  str(datetime.datetime.now().time().hour) + '.' + str(datetime.datetime.now().time().minute) +'.' + str(datetime.datetime.now().time().second)+'.' + str(result[0]["id"]) +'.' + str(datetime.datetime.now().time().microsecond)
-                token = jwt.encode({'uid':token_text , 'exp':datetime.datetime.utcnow() + datetime.timedelta(weeks=9999)},"654321" )
-                # result[0].pop("id")
-                return ({'message':'تم تسجيل الدخول بنجاح','token':token,'data':result[0]}),200
-        except Exception as e:
-            print(e)
+            token = jwt.encode({'uid':token_text , 'exp':datetime.datetime.utcnow() + datetime.timedelta(weeks=2)},"654321" )
+            return ({'message':'تم تسجيل الدخول بنجاح','token':token,'data':result[0]}),200
+    except Exception as e:
+        print(e)
+        return{'message':'حدث خطأ اثناء تسجيل الدخول'}
 
 
 
@@ -235,8 +225,6 @@ def registerAdmin(data , files):
 
 ###############     A U T I S M   T E S T    ################
 def autiTest(data):
-     
-    print()
      
     return {"result":str(doML(inputData=data))}
 
@@ -563,7 +551,7 @@ def profile(id):
 
 #aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaakaaaaaaaaaaaaaaaaaaaaaaa edit here
 
-def updateUser(userId,data,files,userType):
+def updateUserData(userId,data,files,userType):
      
     
 
@@ -718,6 +706,41 @@ def updateUser(userId,data,files,userType):
         
         else:
             return {'message':str(ex)},400
+
+
+
+def updateUserPassword(data):
+     
+
+
+    query = me.selectQuery(columnsName=['password'],tableName='Users',where='id = '+str(data['uid']))
+
+    
+
+    try:
+        db.cursor.execute(query)
+
+        password = db.cursor.fetchone()[0]
+
+        if data['old_password'] != password :
+            return {'message':'الرقم السري غير صحيح !'},400
+    except :
+        return{'message':'id not found !'},400
+
+    
+    query = me.updateQuery(tableName='Users',valuesDic={'password':data['new_password']},where='id = '+"'"+ str(data['uid']) + "'")
+
+    try:
+        db.cursor.execute(query)
+        db.conn.commit()
+
+        return {'message':'تم تعديل الرقم السري بنجاح'},200
+
+    except Exception as ex:
+
+        return {'message':str(ex)},400
+        
+        
 
 
 def deleteUser(data):
