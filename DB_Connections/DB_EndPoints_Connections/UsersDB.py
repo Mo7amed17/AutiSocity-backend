@@ -694,16 +694,16 @@ def updateUserData(userId,data,files,userType):
             return{'message':'تم تعديل بيانات الأدمن  بنجاح !'},200
     except Exception as ex:
         
-        if 'full_name_U' in str(ex.args[1]):
-            return {'message':"الأسم موجود بالفعل"},400
+        # if 'full_name_U' in str(ex.args[1]):
+        #     return {'message':"الأسم موجود بالفعل"},400
         
-        elif 'email_U' in str(ex.args[1]):
-            return {'message':"البريد الألكتروني موجود بالفعل"},400
+        # elif 'email_U' in str(ex.args[1]):
+        #     return {'message':"البريد الألكتروني موجود بالفعل"},400
         
-        elif 'phone_U' in str(ex.args[1]):
-            return {'message':"رقم الهاتف موجود بالفعل"},400
+        # elif 'phone_U' in str(ex.args[1]):
+        #     return {'message':"رقم الهاتف موجود بالفعل"},400
         
-        else:
+        # else:
             return {'message':str(ex)},400
 
 
@@ -1005,7 +1005,7 @@ def getAttachmentPath(file,type):
 
         if type == 0 : # avatar image
         
-            dic = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "uploads", "avatars")
+            dic =  os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "uploads", "avatars")
         
         else: # CV
              
@@ -1013,12 +1013,16 @@ def getAttachmentPath(file,type):
 
         dic.replace("\\\\","\\")
 
-        print(dic)
+        dic = r'https://autisociety-api.original-business.com/uploads/'
+
+        # dir = r'https://autisociety-api.original-business.com/uploads/' +uniq_filename +  file.filename
+
+        print(dir)
                     
-        fullPath = f'{dic}-{uniq_filename}{file.filename}'
+        fullPath = f'{dic}{uniq_filename}{file.filename}'
 
         print('111111111111')
-        print(uniq_filename)
+        print(fullPath)
         print('111111111111')
         print(dic)
         print('111111111111')
@@ -1028,7 +1032,7 @@ def getAttachmentPath(file,type):
           
         
 
-    return fullPath
+    return dir
 
 
 def getOldAttachmentPath(userId):
