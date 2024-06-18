@@ -528,9 +528,9 @@ def profile(id):
 
                     clnicsResult.append(clinic_dic)
 
-            if len(clnicsResult) != 0:
+            # if len(clnicsResult) != 0:
                  
-                 result[0]['clinics'] = clnicsResult
+                result[0]['clinics'] = clnicsResult
 
             # result[0].pop("user_type")
             
@@ -538,18 +538,7 @@ def profile(id):
             
 
 
-# def saveAttachment(file , path):
 
-#     if path != '':
-          
-#         file.save(f'{path}')
-
-
-
-        
-    
-
-#aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaakaaaaaaaaaaaaaaaaaaaaaaa edit here
 
 def updateUserData(userId,data,files,userType):
      
@@ -566,19 +555,17 @@ def updateUserData(userId,data,files,userType):
         newImgPath = None
         print("no avatar was send:", e)
 
-    query = me.selectQuery(columnsName=['password'],tableName='Users',where='id = '+str(userId))
-
     
 
-    try:
-        db.cursor.execute(query)
+    # try:
+    #     db.cursor.execute(query)
 
-        password = db.cursor.fetchone()[0]
+    #     password = db.cursor.fetchone()[0]
 
-        if data['password'] != password :
-            return {'message':'الرقم السري غير صحيح !'},400
-    except :
-        return{'message':'id not found !'},400
+    #     if data['password'] != password :
+    #         return {'message':'الرقم السري غير صحيح !'},400
+    # except :
+    #     return{'message':'id not found !'},400
     
     
     if newImgPath == '' or newImgPath == None:
@@ -603,6 +590,7 @@ def updateUserData(userId,data,files,userType):
                     'uId' : userId,
                     'name' : data['name'],
                     'phone' : data['phone'],
+                    'email' : data['email'],
                     'government' : data['government'],
                     'city' : data['city'],
                     'patient_name' : data['patient_name'],
@@ -614,6 +602,7 @@ def updateUserData(userId,data,files,userType):
                         'uId' : userId,
                         'name' : data['name'],
                         'phone' : data['phone'],
+                        'email' : data['email'],
                         'government' : data['government'],
                         'city' : data['city'],
                         'patient_name' : data['patient_name'],
@@ -641,6 +630,7 @@ def updateUserData(userId,data,files,userType):
                         'uId' : userId,
                         'name' : data['name'],
                         'phone' : data['phone'],
+                        'email' : data['email'],
                         'government' : data['government'],
                         'city' : data['city'],
                         'about' : data['about'],
@@ -652,6 +642,7 @@ def updateUserData(userId,data,files,userType):
                     'uId' : userId,
                     'name' : data['name'],
                     'phone' : data['phone'],
+                    'email' : data['email'],
                     'government' : data['government'],
                     'city' : data['city'],
                     'about' : data['about'],
@@ -676,12 +667,14 @@ def updateUserData(userId,data,files,userType):
                 query = me.updateQuery(tableName='Users' , valuesDic={
                 "name" : data['name'],
                 "phone":data['phone'],
+                'email' : data['email'],
             },where='id ='+userId)
                 
             else:
                 query = me.updateQuery(tableName='Users' , valuesDic={
                 "name" : data['name'],
                 "phone":data['phone'],
+                'email' : data['email'],
                 "image":'' if avatarpath == None else avatarpath
             },where='id ='+userId)
                 
@@ -708,6 +701,38 @@ def updateUserData(userId,data,files,userType):
             return {'message':str(ex)},400
 
 
+
+def changeProfileStauts(data):
+     
+
+
+    query = me.selectQuery(columnsName=['profile_status'],tableName='Users',where='id = '+str(data['uid']))
+
+    
+
+    try:
+        db.cursor.execute(query)
+
+        profile_status = db.cursor.fetchone()[0]
+
+       
+    except :
+        return{'message':'id not found !'},400
+
+    
+    query = me.updateQuery(tableName='Users',valuesDic={'profile_status':str(not profile_status)},where='id = '+"'"+ str(data['uid']) + "'")
+
+    try:
+        db.cursor.execute(query)
+        db.conn.commit()
+
+        return {'message':'تم تغيير صلاحية الوصول الي الملف الشخصي بنجاح'},200
+
+    except Exception as ex:
+
+        return {'message':str(ex)},400
+        
+        
 
 def updateUserPassword(data):
      
@@ -946,16 +971,17 @@ def profileModel(row , getBasicData = False):
 
             item_dic["government"] = row[6]
             item_dic["city"] = row[7]
+            item_dic["profile_status"] = row[8]
             
             if row[4] == 'doctor':
-                item_dic["profile_status"] = row[8]
+                
                 item_dic["doctor_id"] = row[9]
                 item_dic["about"] = row[10]
                 item_dic["clinicAddress"] = row[11]
 
             elif row[4] == 'patient':
-                item_dic["age"] = row[8]
-                item_dic["patient_name"] = row[9]
+                item_dic["age"] = row[9]
+                item_dic["patient_name"] = row[10]
 
             
             

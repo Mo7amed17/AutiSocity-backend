@@ -14,8 +14,8 @@ jobs:
     - name: FTP Deploy
       uses: SamKirkland/FTP-Deploy-Action@v4.3.4
       with:
-        server: s2.serv00.com
-        username: f11100_AutiSociety17
+        server: s4.serv00.com
+        username: f8480_main
         password: Sonbolserv00
         protocol: ftp
         server-dir: /

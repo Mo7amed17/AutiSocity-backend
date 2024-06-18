@@ -210,23 +210,23 @@ def updateUser(token):
       # doctor
      if usertype == 1: 
      
-          if request.form is None or "name" not in  request.form  or "phone" not in  request.form or "password" not in  request.form  or "government" not in request.form or "city" not in request.form or "about" not in request.form or "clinicAddress" not in request.form:
-               return jsonify({'message':'Input data are missing !'}),400 
+          if request.form is None or "name" not in  request.form  or "phone" not in  request.form or "email" not in  request.form  or "government" not in request.form or "city" not in request.form or "about" not in request.form or "clinicAddress" not in request.form:
+               return jsonify({'message':'name,phone,email,government,city,about,clinicAddress are missing !'}),400 
      
 
       # patient
      elif usertype == 2: 
 
-          if request.form is None or "name" not in  request.form  or "phone" not in  request.form or "password" not in  request.form  or "government" not in request.form or "city" not in request.form or "age" not in request.form or "patient_name" not in request.form:
-               return jsonify({'message':'Inputs data are missing !'}) ,400
+          if request.form is None or "name" not in  request.form  or "phone" not in  request.form or "email" not in  request.form or "government" not in request.form or "city" not in request.form or "age" not in request.form or "patient_name" not in request.form:
+               return jsonify({'message':'name ,phone , email,government,city,age,patient_name  are missing !'}) ,400
           
 
      # Admin
      elif usertype == 0:
 
      
-          if request.form is None or "name" not in  request.form or "phone" not in  request.form or "password" not in  request.form :
-               return jsonify({'message':'Input data are missing !'}) ,400
+          if request.form is None or "name" not in  request.form or "phone" not in  request.form or "email" not in  request.form  :
+               return jsonify({'message':'name ,phone , email  are missing !'}) ,400
 
 
      return UsersDB.updateUserData(userId=str(token['uid'].split('.')[3]) , data=request.form , files=request.files , userType=usertype)
@@ -244,6 +244,17 @@ def updateUserPassword(token):
      request_data['uid'] = token['uid'].split('.')[3]
 
      return UsersDB.updateUserPassword(data=request_data)
+
+
+@usersblp.route("/update/profile_status",methods=['POST'])
+@me.token_required
+def changeProfileStauts(token):
+
+     request_data = {}
+     
+     request_data['uid'] = token['uid'].split('.')[3]
+
+     return UsersDB.changeProfileStauts(data=request_data)
 # ================== DELETE USER [DELETE] =========================
 
 @usersblp.route("",methods=['DELETE'])
