@@ -556,6 +556,9 @@ def updateUserData(userId,data,files,userType):
         print("no avatar was send:", e)
 
     
+    
+
+    
 
     # try:
     #     db.cursor.execute(query)
@@ -574,7 +577,10 @@ def updateUserData(userId,data,files,userType):
             # avatarpath = str(os.path.basename(newImgPath))
             avatarpath = newImgPath
 
-            
+        
+    # print('img pathhhhhhhhhhhhhhh')
+    # print(avatarpath)
+    # print(newImgPath)
 
 
     try:
@@ -662,13 +668,13 @@ def updateUserData(userId,data,files,userType):
         
         elif userType == 0:  #ADMIN
 
-            if newImgPath != None:
+            if newImgPath == None:
 
                 query = me.updateQuery(tableName='Users' , valuesDic={
                 "name" : data['name'],
                 "phone":data['phone'],
                 'email' : data['email'],
-            },where='id ='+userId)
+                },where='id ='+userId)
                 
             else:
                 query = me.updateQuery(tableName='Users' , valuesDic={
@@ -676,7 +682,7 @@ def updateUserData(userId,data,files,userType):
                 "phone":data['phone'],
                 'email' : data['email'],
                 "image":'' if avatarpath == None else avatarpath
-            },where='id ='+userId)
+                },where='id ='+userId)
                 
             db.cursor.execute(query)
             if newImgPath != None:
