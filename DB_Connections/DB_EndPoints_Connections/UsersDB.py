@@ -885,6 +885,48 @@ def addMessage(data):
 
 
 
+def search(data):
+     
+    whereQuery = 'name like \'%'+data['name'] + '%\''
+
+    if("country" in data):
+        
+        whereQuery += ' and city = \'' + data['country']+ '\''
+
+    if("government" in data):
+        
+        whereQuery += ' and government = \'' + data['government']+ '\''
+
+    
+
+
+    
+    
+
+
+    query = me.selectQuery(columnsName=['id','name','city','government'],tableName='Users',where=whereQuery)
+
+    
+    # return{'aa':query}
+    try:
+        db.cursor.execute(query)
+
+        result =searchModel(db.cursor.fetchall()) 
+
+       
+
+
+    
+  
+        # db.cursor.execute(query)
+        # db.conn.commit()
+
+        return{'data':result}
+
+    except Exception as ex:
+
+        return {'message':str(ex)},400
+
 
 
 
@@ -994,6 +1036,28 @@ def profileModel(row , getBasicData = False):
         result.append(item_dic)
 
         return result
+
+
+
+def searchModel(data):
+
+        result = []
+        
+        for row in data:
+        
+
+            item_dic ={}
+            item_dic["id"] = row[0]
+            item_dic["name"] = row[1]
+            item_dic["country"] = row[2]
+            item_dic["government"] = row[3]
+            
+
+                
+            result.append(item_dic)
+
+        return result
+
 
 def getAttachmentPath(file,type):
 

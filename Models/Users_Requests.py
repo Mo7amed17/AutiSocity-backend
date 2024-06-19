@@ -301,3 +301,16 @@ def addMessage(token):
      request_data['uid'] = token['uid'].split('.')[3]
 
      return UsersDB.addMessage(data=request_data)
+
+
+@usersblp.route("/search",methods=['POST'])
+@me.token_required
+def search(token):
+
+     request_data = request.get_json()
+     if request_data is None or "name" not in  request_data:
+          return jsonify({'message':'name is missing !'}) ,400
+
+     request_data['uid'] = token['uid'].split('.')[3]
+
+     return UsersDB.search(data=request_data)
