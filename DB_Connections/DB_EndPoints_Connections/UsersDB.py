@@ -1078,7 +1078,7 @@ def getAttachmentPath(file,type):
 
         dic.replace("\\\\","\\")
 
-        dic = r'https://autisociety-api.original-business.com/uploads/'
+        
 
         # dir = r'https://autisociety-api.original-business.com/uploads/' +uniq_filename +  file.filename
 
@@ -1097,7 +1097,7 @@ def getAttachmentPath(file,type):
           
         
 
-    return dir
+    return fullPath
 
 
 def getOldAttachmentPath(userId):
