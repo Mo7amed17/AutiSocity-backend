@@ -6,11 +6,12 @@ import datetime
 from ML.LR3 import doML
 import os
 import phonenumbers
+# import constants 
 
 #========================== REGISTERATION & LOGIN ==================================
 
     
-    
+baseURL = 'http://127.0.0.1:5000/'
 
 ###############    L O G I N     ################
 def login(data):
@@ -55,9 +56,12 @@ def registerDoctor(data,files):
         avatarpath = ''
         cvPath = ''
         
+        
         try:
             cvPath = getAttachmentPath(file= files['cv'],type=1)
             avatarpath = getAttachmentPath(file= files['avatar'],type=0)
+
+            return{'aa':cvPath}
             
         except Exception as e:
             print("no avatar or cv was send:", e)
@@ -578,8 +582,8 @@ def updateUserData(userId,data,files,userType):
             avatarpath = newImgPath
 
         
-    # print('img pathhhhhhhhhhhhhhh')
-    # print(avatarpath)
+    print('img pahhhhhhhhhhhhhhh')
+    print(avatarpath)
     # print(newImgPath)
 
 
@@ -620,6 +624,7 @@ def updateUserData(userId,data,files,userType):
 
             if newImgPath != None:
                 if newImgPath != '':
+                    print('save avatar here')
                 
                     saveAttachment(attachmentFile=files['avatar'],oldAttachPath=oldImgPath,newAttachPath=newImgPath)
                 else:
@@ -1070,30 +1075,43 @@ def getAttachmentPath(file,type):
 
         if type == 0 : # avatar image
         
-            dic =  os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "uploads", "avatars")
+            # dic =  os.path.join('http://127.0.0.1:5000/uploads/', "uploads", "avatars")
+            dic = baseURL
         
         else: # CV
              
-             dic = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "uploads", "CVs")
+            #  dic = os.path.join('http://127.0.0.1:5000/uploads/', "uploads", "CVs") 
 
-        dic.replace("\\\\","\\")
+             dic = baseURL
 
         
 
-        # dir = r'https://autisociety-api.original-business.com/uploads/' +uniq_filename +  file.filename
+        # dic = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "uploads", "CVs") 
+        
+        
 
-        print(dir)
+        
+
+        # dir ='http://127.0.0.1:5000/uploads/'+uniq_filename +  file.filename
+
+        # return{'ss':dir}
+
+        # print(dir)
                     
         fullPath = f'{dic}{uniq_filename}{file.filename}'
 
-        print('111111111111')
-        print(fullPath)
-        print('111111111111')
-        print(dic)
-        print('111111111111')
-        print(file.filename)
+        fullPath.replace("\\\\","\\")
 
+        fullPath.replace("\\","/")
+
+        # print('1111111s25111')
+        # print(fullPath)
+        print('11111111111')
         print(fullPath)
+        print('111111111111')
+        # print(file.filename)
+
+        #
           
         
 
@@ -1114,6 +1132,13 @@ def getOldAttachmentPath(userId):
     
 
 def saveAttachment(attachmentFile,oldAttachPath , newAttachPath):
+
+
+    print('save')
+    print(oldAttachPath)
+    print(newAttachPath)
+    print('save')
+
     if oldAttachPath and oldAttachPath != '':
 
         try:
@@ -1128,19 +1153,23 @@ def saveAttachment(attachmentFile,oldAttachPath , newAttachPath):
     fullPath = newAttachPath
 
     if fullPath and fullPath != '':
+       
+        dic = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "uploads")
 
-       attachmentFile.save(fullPath)
+        
+        print(dic)
+        attachmentFile.save(dic+'\\' + os.path.basename(fullPath))
 
 def deleteAttachment(attachmentPath):
+    
+
 
     if attachmentPath and attachmentPath != '':
 
         dic = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "uploads")
 
-        fullPath = f'{dic}/{os.path.basename(attachmentPath)}'
+        fullPath = f'{dic}\{os.path.basename(attachmentPath)}'
 
-
-        print(fullPath)
         os.remove(fullPath)
 
         print('removed !!!!!!!!!!!!')
