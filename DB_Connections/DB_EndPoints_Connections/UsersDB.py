@@ -904,7 +904,7 @@ def search(data):
     
 
 
-    query = me.selectQuery(columnsName=['id','name','city','government'],tableName='Users',where=whereQuery)
+    query = me.selectQuery(columnsName=['id','name','city','government','image'],tableName='Users',where=whereQuery)
 
     
     # return{'aa':query}
@@ -1051,6 +1051,7 @@ def searchModel(data):
             item_dic["name"] = row[1]
             item_dic["country"] = row[2]
             item_dic["government"] = row[3]
+            item_dic["image"] = row[4]
             
 
                 
