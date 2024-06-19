@@ -609,6 +609,7 @@ def updateUserData(userId,data,files,userType):
                     'city' : data['city'],
                     'patient_name' : data['patient_name'],
                     'age' : data['age'],
+                    'image':''
                 })
 
             else:
@@ -650,6 +651,7 @@ def updateUserData(userId,data,files,userType):
                         'city' : data['city'],
                         'about' : data['about'],
                         'clinicAddress' : data['clinicAddress'],
+                        'image':''
                     })
             else:
 
@@ -683,6 +685,7 @@ def updateUserData(userId,data,files,userType):
                 "name" : data['name'],
                 "phone":data['phone'],
                 'email' : data['email'],
+                'image':''
                 },where='id ='+userId)
                 
             else:
