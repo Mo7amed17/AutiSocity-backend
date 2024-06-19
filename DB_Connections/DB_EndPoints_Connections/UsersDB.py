@@ -61,10 +61,14 @@ def registerDoctor(data,files):
             cvPath = getAttachmentPath(file= files['cv'],type=1)
             avatarpath = getAttachmentPath(file= files['avatar'],type=0)
 
-            return{'aa':cvPath}
+            
             
         except Exception as e:
             print("no avatar or cv was send:", e)
+
+        print('avatarpath')
+        print(avatarpath)
+        print('avatarpath')
 
 
         try:
