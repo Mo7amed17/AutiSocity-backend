@@ -97,16 +97,16 @@ def savePost(token):
     return PostsDB.savePost(data=request_data)
 
 # ==================  unSave a post [POST] =========================
-@postsblp.route("/unsavePost",methods=['POST'])
-@me.token_required
-def unsavePost(token):
+# @postsblp.route("/unsavePost",methods=['POST'])
+# @me.token_required
+# def unsavePost(token):
      
-    request_data = request.get_json()
-    if request_data is None or "post_id" not in  request_data :
-          return jsonify({'message':'post_id is missing !'}) ,400
+#     request_data = request.get_json()
+#     if request_data is None or "post_id" not in  request_data :
+#           return jsonify({'message':'post_id is missing !'}) ,400
     
-    request_data['uid'] = token['uid'].split('.')[3]
-    return PostsDB.unsavePost(data=request_data)
+#     request_data['uid'] = token['uid'].split('.')[3]
+#     return PostsDB.unsavePost(data=request_data)
 
 # ==================  GET SAVED posts [GET] =========================
 @postsblp.route("/savedPosts",methods=['GET'])

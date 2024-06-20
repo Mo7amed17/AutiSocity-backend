@@ -528,19 +528,19 @@ def profile(id):
             result = profileModel(row=data)
         
 
-            query2 = me.selectQuery(tableName='profile_Images' , columnsName=['image'] , where= 'user_id = '+result[0]['id'])
-            db.cursor.execute(query2)
+            # query2 = me.selectQuery(tableName='profile_Images' , columnsName=['image'] , where= 'user_id = '+result[0]['id'])
+            # db.cursor.execute(query2)
 
-            imagesResult = []
+            # imagesResult = []
 
-            for row in db.cursor.fetchall():
+            # for row in db.cursor.fetchall():
 
-                item_dic ={}
-                item_dic["image"] = row[0]
+            #     item_dic ={}
+            #     item_dic["image"] = row[0]
 
-                imagesResult.append(item_dic)
+            #     imagesResult.append(item_dic)
             
-            result[0]['images'] = imagesResult
+            # result[0]['images'] = imagesResult
         
 
 

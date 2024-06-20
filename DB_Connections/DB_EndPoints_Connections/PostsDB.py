@@ -239,53 +239,83 @@ def getPostComments(data):
 # ==================  save post [POST] =========================
 def savePost(data):
 
-    query = me.insertQuery(tableName='Saved_Posts',columnsName=['user_id','post_id'],values=[data['uid'],data['post_id']])
+
+    query  = me.selectQuery(tableName='Saved_Posts' , columnsName=['id'] ,where= 'post_id = '+str(data['post_id']) + ' and user_id = '+str(data['uid']))
+
     
-    try :
+    db.cursor.execute(query)
+
+    result = db.cursor.fetchone()
+    
+
+    if(result):
+        query = me.selectQuery(tableName='Saved_Posts',where='post_id = '+str(data['post_id']) + ' AND user_id = '+str(data['uid']))
         db.cursor.execute(query)
-        db.conn.commit()
+        result=db.cursor.fetchall()
+
+        if(len(result) == 0):
+            return{'message':'cannot unsave a post that you did not saved it before !'},400
+
 
         
+        query = me.deleteQuery(tableName='Saved_Posts',where='post_id = '+str(data['post_id']) + ' AND user_id = '+str(data['uid']))
+        try :
+            db.cursor.execute(query)
+            db.conn.commit()
+            return{'message':'تم إزالة المنشور من المحفوظات بنجاح !'},200
             
-    except Exception as ex:
+        except Exception as ex:
+            
+            if 'U_SavedPost' in str(ex.args[1]):
+                return {'message':'تم حفظ هذا المنشور من قبل !'},400
+
+            return {'message':'No post found with this id !'},400
+
+    else:
+
+        query = me.insertQuery(tableName='Saved_Posts',columnsName=['user_id','post_id'],values=[data['uid'],data['post_id']])
         
-        if 'U_SavedPost' in str(ex.args[1]):
-            return {'message':'تم حفظ هذا المنشور من قبل !'},400
+        try :
+            db.cursor.execute(query)
+            db.conn.commit()
 
-        return {'message':'No post found with this id !'},400
-        return {'message':str(ex)},400
+            
+                
+        except Exception as ex:
+            
+            if 'U_SavedPost' in str(ex.args[1]):
+                return {'message':'تم حفظ هذا المنشور من قبل !'},400
 
-    return {'message':'تم حفظ المنشور بنجاح'},200
+            return {'message':'No post found with this id !'},400
+
+        return {'message':'تم حفظ المنشور بنجاح'},200
         
 # ==================  unsave post [POST] =========================
-def unsavePost(data):
+# def unsavePost(data):
 
-    query = me.selectQuery(tableName='Saved_Posts',where='post_id = '+str(data['post_id']) + ' AND user_id = '+str(data['uid']))
-    db.cursor.execute(query)
-    result=db.cursor.fetchall()
+#     query = me.selectQuery(tableName='Saved_Posts',where='post_id = '+str(data['post_id']) + ' AND user_id = '+str(data['uid']))
+#     db.cursor.execute(query)
+#     result=db.cursor.fetchall()
 
-    if(len(result) == 0):
-        return{'message':'cannot unsave a post that you did not saved it before !'},400
+#     if(len(result) == 0):
+#         return{'message':'cannot unsave a post that you did not saved it before !'},400
 
 
     
-    query = me.deleteQuery(tableName='Saved_Posts',where='post_id = '+str(data['post_id']) + ' AND user_id = '+str(data['uid']))
-    try :
-        db.cursor.execute(query)
-        db.conn.commit()
-        return{'message':'تم إزالة المنشور من المحفوظات بنجاح !'},200
+#     query = me.deleteQuery(tableName='Saved_Posts',where='post_id = '+str(data['post_id']) + ' AND user_id = '+str(data['uid']))
+#     try :
+#         db.cursor.execute(query)
+#         db.conn.commit()
+#         return{'message':'تم إزالة المنشور من المحفوظات بنجاح !'},200
 
         
             
-    except Exception as ex:
+    # except Exception as ex:
         
-        if 'U_SavedPost' in str(ex.args[1]):
-            return {'message':'تم حفظ هذا المنشور من قبل !'},400
+    #     if 'U_SavedPost' in str(ex.args[1]):
+    #         return {'message':'تم حفظ هذا المنشور من قبل !'},400
 
-        return {'message':'No post found with this id !'},400
-        return {'message':str(ex)},400
-
-    return {'message':'تم حفظ المنشور بنجاح'},200
+    #     return {'message':'No post found with this id !'},400
 
 
 def getSavedPosts(uid):
