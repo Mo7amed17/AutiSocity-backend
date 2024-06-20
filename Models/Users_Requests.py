@@ -82,7 +82,11 @@ def autiTest():
      
      request_data = request.get_json()
      
-     if request_data is None  or len(request_data) != 15:
+     if request_data is None  or 'data' not in request_data:
+          return jsonify({'message':'data is missing !'}) ,400
+
+
+     if len(request_data['data']) != 15:
           print(len(request_data))
           
           return jsonify({'message':'list of length = 15 is missing !'}) ,400
@@ -314,3 +318,14 @@ def search(token):
      request_data['uid'] = token['uid'].split('.')[3]
 
      return UsersDB.search(data=request_data)
+
+@usersblp.route("/image",methods=['POST'])
+@me.token_required
+def image(token):
+     
+     if 'image' not in request.files or str(request.files['image'].filename) == '':
+               return{'message':'image is required !'},400
+
+      
+
+     return UsersDB.addImages(uid=token['uid'].split('.')[3] , image=request.files['image'])

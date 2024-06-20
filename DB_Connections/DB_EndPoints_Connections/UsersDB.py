@@ -233,8 +233,21 @@ def registerAdmin(data , files):
 
 ###############     A U T I S M   T E S T    ################
 def autiTest(data):
+
+    result = str(doML(inputData=data['data']))
+
+    if('user_id' in data):
+        query = me.insertQuery(tableName='patients',columnsName=['test_result'] , values=[result])
+        try :
+            db.cursor.execute(query)
+            db.conn.commit()
+            
+        except Exception as ex:
+                print(str(ex))
+                # return {'message':str(ex)},400
+
      
-    return {"result":str(doML(inputData=data))}
+    return {"result":result}
 
 
 
@@ -514,32 +527,28 @@ def profile(id):
             
             result = profileModel(row=data)
         
+
+            query2 = me.selectQuery(tableName='profile_Images' , columnsName=['image'] , where= 'user_id = '+result[0]['id'])
+            db.cursor.execute(query2)
+
+            imagesResult = []
+
+            for row in db.cursor.fetchall():
+
+                item_dic ={}
+                item_dic["image"] = row[0]
+
+                imagesResult.append(item_dic)
+            
+            result[0]['images'] = imagesResult
+        
+
+
+
         if len(result) == 0 :
             
             return   {'message':"لا يوجد بيانات !",'data':[]},200
         else:
-            
-            clnicsResult = []
-
-            if result[0]['user_type'] == 'doctor':
-                query2 = me.selectQuery(tableName='Clinics',columnsName=['address'],where='doctor_id = '+str(result[0]['doctor_id']))
-            
-                result[0].pop("doctor_id")
-
-                db.cursor.execute(query2)
-
-                clinic_dic = {}
-
-                for row in db.cursor.fetchall():
-                    
-                    clinic_dic['address'] = row[0]
-
-                    clnicsResult.append(clinic_dic)
-
-            # if len(clnicsResult) != 0:
-                 
-                result[0]['clinics'] = clnicsResult
-
             # result[0].pop("user_type")
             
             return {'message':'تم إسترجاع البيانات بنجاح !','data':result[0]}
@@ -899,7 +908,7 @@ def addMessage(data):
 
 def search(data):
      
-    whereQuery = 'name like \'%'+data['name'] + '%\''
+    whereQuery = 'name like \'%'+data['name'] + '%\' AND id <> '+ str(data['uid'])
 
     if("country" in data):
         
@@ -908,12 +917,6 @@ def search(data):
     if("government" in data):
         
         whereQuery += ' and government = \'' + data['government']+ '\''
-
-    
-
-
-    
-    
 
 
     query = me.selectQuery(columnsName=['id','name','city','government','image'],tableName='Users',where=whereQuery)
@@ -925,13 +928,6 @@ def search(data):
 
         result =searchModel(db.cursor.fetchall()) 
 
-       
-
-
-    
-  
-        # db.cursor.execute(query)
-        # db.conn.commit()
 
         return{'data':result}
 
@@ -939,6 +935,30 @@ def search(data):
 
         return {'message':str(ex)},400
 
+
+
+def addImages(uid,image):
+
+    avatarpath = ''
+    
+    avatarpath = getAttachmentPath(file= image ,type=0)
+    
+
+
+    query = me.insertQuery(tableName='profile_Images',columnsName=['patient_id','image'] , values=[uid,avatarpath])
+
+    
+    # return{'aa':query}
+    try:
+        db.cursor.execute(query)
+        db.conn.commit()
+
+
+        return{'data':'تم غضافة الصورة بنجاح'},200
+
+    except Exception as ex:
+
+        return {'message':str(ex)},400
 
 
 
@@ -1042,6 +1062,7 @@ def profileModel(row , getBasicData = False):
             elif row[4] == 'patient':
                 item_dic["age"] = row[9]
                 item_dic["patient_name"] = row[10]
+                item_dic["test_result"] = row[11]
 
             
             

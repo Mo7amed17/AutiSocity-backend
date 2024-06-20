@@ -202,16 +202,16 @@ def likePost(token):
 
     return PostsDB.likePost(data = request_data)
 
-@postsblp.route("/unlike",methods=['POST'])
-@me.token_required
-def unlikePost(token):
+# @postsblp.route("/unlike",methods=['POST'])
+# @me.token_required
+# def unlikePost(token):
         
-    request_data = request.get_json()
+#     request_data = request.get_json()
 
-    if request_data is None or "post_id" not in  request_data:
-        return jsonify({'message':'post_id is missing !'}) ,400
+#     if request_data is None or "post_id" not in  request_data:
+#         return jsonify({'message':'post_id is missing !'}) ,400
     
-    request_data['uid'] = token['uid'].split('.')[3]
+#     request_data['uid'] = token['uid'].split('.')[3]
 
 
-    return PostsDB.unlikePost(data = request_data)
+#     return PostsDB.unlikePost(data = request_data)

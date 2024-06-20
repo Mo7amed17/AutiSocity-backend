@@ -539,42 +539,66 @@ def deleteReportPost(data):
 # ==================  like a post [POST] =========================
 
 def likePost(data):
+   
+    query  = me.selectQuery(tableName='Post_Likes' , columnsName=['id'] ,where= 'post_id = '+str(data['post_id']) + ' and user_id = '+str(data['uid']))
 
     
-    query = me.insertQuery(tableName='Post_Likes',columnsName=['post_id','user_id'],values=[int(data['post_id']) , int(data['uid'])])
-    try :
-        db.cursor.execute(query)
-        db.conn.commit()
-        return{'message':'تم عمل لايك بنجاح !'},200
-            
-    except Exception as ex:
-        if 'U_Like' in str(ex.args[1]):
-            return {'message':'تم عمل لايك لهذا المنشور من قبل !'},400
-        else:
+    db.cursor.execute(query)
+
+    result = db.cursor.fetchone()
+    
+
+    if(result):
+
+        query = me.deleteQuery(tableName='Post_Likes',where='post_id = '+str(data['post_id']) + ' AND user_id = '+str(data['uid']))
+        try :
+            db.cursor.execute(query)
+            db.conn.commit()
+            return{'message':'تم حذف الايك بنجاح !'},200
+                
+        except Exception as ex:
+       
             return {'message':str(ex)},400
+        
+    else:
+        
+
+
+    
+        query = me.insertQuery(tableName='Post_Likes',columnsName=['post_id','user_id'],values=[int(data['post_id']) , int(data['uid'])])
+        try :
+            db.cursor.execute(query)
+            db.conn.commit()
+            return{'message':'تم عمل لايك بنجاح !'},200
+                
+        except Exception as ex:
+            if 'U_Like' in str(ex.args[1]):
+                return {'message':'تم عمل لايك لهذا المنشور من قبل !'},400
+            else:
+                return {'message':str(ex)},400
     
 
 # ==================  unlike a post [POST] =========================
-def unlikePost(data):
+# def unlikePost(data):
 
-    query = me.selectQuery(tableName='Post_Likes',where='post_id = '+str(data['post_id']) + ' AND user_id = '+str(data['uid']))
-    db.cursor.execute(query)
-    result=db.cursor.fetchall()
+#     query = me.selectQuery(tableName='Post_Likes',where='post_id = '+str(data['post_id']) + ' AND user_id = '+str(data['uid']))
+#     db.cursor.execute(query)
+#     result=db.cursor.fetchall()
 
-    if(len(result) == 0):
-        return{'message':'cannot unlike a post that you did not liked it before !'},400
+#     if(len(result) == 0):
+#         return{'message':'cannot unlike a post that you did not liked it before !'},400
 
 
     
-    query = me.deleteQuery(tableName='Post_Likes',where='post_id = '+str(data['post_id']) + ' AND user_id = '+str(data['uid']))
-    try :
-        db.cursor.execute(query)
-        db.conn.commit()
-        return{'message':'تم حذف الايك بنجاح !'},200
+#     query = me.deleteQuery(tableName='Post_Likes',where='post_id = '+str(data['post_id']) + ' AND user_id = '+str(data['uid']))
+#     try :
+#         db.cursor.execute(query)
+#         db.conn.commit()
+#         return{'message':'تم حذف الايك بنجاح !'},200
             
-    except Exception as ex:
+#     except Exception as ex:
        
-        return {'message':str(ex)},400
+#         return {'message':str(ex)},400
 
 
 
