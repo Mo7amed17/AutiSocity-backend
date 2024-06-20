@@ -72,7 +72,7 @@ def addComment(token):
 
 
 # ================== get a post comments [GET] =========================
-@postsblp.route("/comment",methods=['GET'])
+@postsblp.route("/comment",methods=['PUT'])
 @me.token_required
 def getPostComments(token):
      
@@ -93,7 +93,7 @@ def getOnepost(token):
           return jsonify({'message':'post_id is missing !'}) ,400
     
     request_data['uid'] = token['uid'].split('.')[3]
-    
+
     return PostsDB.getOnePost(data=request_data)
 
 
