@@ -75,7 +75,8 @@ def getDoctorsPosts(data):
 
     query = me.procQuery(procName='getAllPosts' , valuesDic={
         'user_id' : data['uid'],
-        'posts_type' : '1'
+        'posts_type' : '1',
+        'post_id' : 0
     })
 
     # return{'s':query}
@@ -107,7 +108,8 @@ def getPatientsPosts(data):
 
     query = me.procQuery(procName='getAllPosts' , valuesDic={
         'user_id' : data['uid'],
-        'posts_type' : '0'
+        'posts_type' : '0',
+        'post_id' : 0
     })
 
     
@@ -131,6 +133,36 @@ def getPatientsPosts(data):
         return {'message':str(ex)},400
     
 
+def getOnePost(data):
+     
+    # query = me.selectQuery(tableName='vi_posts',where='user_type = '+"'"+'patient'+"'")
+
+    query = me.procQuery(procName='getAllPosts' , valuesDic={
+        'user_id' : data['uid'],
+        'posts_type' : '0',
+        'post_id' : data['post_id']
+    })
+
+    
+    
+    try :
+        db.cursor.execute(query)
+
+
+        result = postModel(data=db.cursor.fetchall())
+
+        # if len(result) == 0 :
+            
+        #     return   me.message(message="لا يوجد بيانات !"),200
+        
+        # else:
+
+        return {'data':result[0]},200
+            
+    except Exception as ex:
+
+        return {'message':str(ex)},400
+    
 # ================== Get User Posts [GET] =========================
 
 # def getuserPosts(data):
