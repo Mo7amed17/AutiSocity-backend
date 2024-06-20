@@ -72,7 +72,7 @@ def addComment(token):
 
 
 # ================== get a post comments [GET] =========================
-@postsblp.route("/comment",methods=['GET'])
+@postsblp.route("/comment",methods=['PUT'])
 @me.token_required
 def getPostComments(token):
      
@@ -82,6 +82,7 @@ def getPostComments(token):
     
     request_data['uid'] = token['uid'].split('.')[3]
     return PostsDB.getPostComments(data=request_data)
+
 
 
 # ==================  save a post [POST] =========================
