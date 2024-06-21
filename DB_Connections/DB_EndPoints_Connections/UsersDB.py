@@ -11,7 +11,7 @@ import phonenumbers
 #========================== REGISTERATION & LOGIN ==================================
 
     
-baseURL = 'http://127.0.0.1:5000/'
+baseURL = 'http://192.168.1.50:5000/'
 
 ###############    L O G I N     ################
 def login(data):
