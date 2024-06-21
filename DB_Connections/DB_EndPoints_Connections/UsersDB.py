@@ -183,23 +183,39 @@ def registerPatient(data,files):
         except Exception as e:
             return{'message':'رقم الهاتف غير صالح !'},400
 
-        
+
 
         # if phonenumbers.is_valid_number(phone_number):
         #     return{'message': 'Phone number is invalid !'},400
 
 
         # query = me.insertQuery(tableName='users',columnsName=['full_name','email','phone','password','user_type','government_id','profile_status'] , values=[data['full_name'],data['email'],data['phone'],data['password'],data['government_id']])
-        query = me.procQuery(procName='AddNewPatient',valuesDic={
-             'name' : data['name'],
-             'phone' : data['phone'],
-             'email' : data['email'],
-             'password' : data['password'],
-             'government' : data['government'],
-             'city' : data['city'],
-             'age':data['age'],
-             'image':avatarpath
-        })
+
+
+        if 'test_Result' in data:
+            query = me.procQuery(procName='AddNewPatient',valuesDic={
+                'name' : data['name'],
+                'phone' : data['phone'],
+                'email' : data['email'],
+                'password' : data['password'],
+                'government' : data['government'],
+                'city' : data['city'],
+                'age':data['age'],
+                'image':avatarpath,
+                'test_Result':data['test_Result'],
+            })
+        else:
+             query = me.procQuery(procName='AddNewPatient',valuesDic={
+                'name' : data['name'],
+                'phone' : data['phone'],
+                'email' : data['email'],
+                'password' : data['password'],
+                'government' : data['government'],
+                'city' : data['city'],
+                'age':data['age'],
+                'image':avatarpath,
+                })
+
         # return{'ss':str(query)}
 
         try :
@@ -818,16 +834,16 @@ def updateUserData(userId,data,files,userType):
 
     except Exception as ex:
         
-        # if 'full_name_U' in str(ex.args[1]):
-        #     return {'message':"الأسم موجود بالفعل"},400
+        if 'full_name_U' in str(ex.args[1]):
+            return {'message':"الأسم موجود بالفعل"},400
         
-        # elif 'email_U' in str(ex.args[1]):
-        #     return {'message':"البريد الألكتروني موجود بالفعل"},400
+        elif 'email_U' in str(ex.args[1]):
+            return {'message':"البريد الألكتروني موجود بالفعل"},400
         
-        # elif 'phone_U' in str(ex.args[1]):
-        #     return {'message':"رقم الهاتف موجود بالفعل"},400
+        elif 'phone_U' in str(ex.args[1]):
+            return {'message':"رقم الهاتف موجود بالفعل"},400
         
-        # else:
+        else:
             return {'message':str(ex)},400
 
 
