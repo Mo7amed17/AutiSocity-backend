@@ -16,9 +16,9 @@ baseURL = 'http://192.168.1.50:5000/'
 ###############    L O G I N     ################
 def login(data):
 
-        query = me.selectQuery(tableName='vi_Users',where="email = '"+data['email']+"' AND password = '"+data['password']+"'")
+    query = me.selectQuery(tableName='vi_Users',where="email = '"+data['email']+"' AND password = '"+data['password']+"'")
     
-    # try:
+    try:
         db.cursor.execute(query)
 
         result = []
@@ -80,9 +80,9 @@ def login(data):
 
             token = jwt.encode({'uid':token_text , 'exp':datetime.datetime.utcnow() + datetime.timedelta(weeks=2)},"654321" )
             return ({'message':'تم تسجيل الدخول بنجاح','token':token,'data':result[0]}),200
-    # except Exception as e:
-    #     print(e)
-    #     return{'message':'حدث خطأ اثناء تسجيل الدخول'}
+    except Exception as e:
+        print(e)
+        return{'message':'حدث خطأ اثناء تسجيل الدخول'}
 
 
 
@@ -599,18 +599,37 @@ def profile(id):
 
 def updateUserData(userId,data,files,userType):
      
+
+    req_img_path = None
+
+    oldImgPath = '' # null or value
+
+    if 'avatar' not in files:
+        #delete
+        req_img_path = None
+        oldImgPath = getOldAttachmentPath(userId=userId)
+
+    elif files['avatar'].filename == '':
+        #keep
+        req_img_path = ''
+    else:
+        #update
+        oldImgPath = getOldAttachmentPath(userId=userId)
+        req_img_path = getAttachmentPath(file= files['avatar'],type=0)
+
+
+    
+    # return{'s':'s'}
     
 
-    oldImgPath = getOldAttachmentPath(userId=userId) # null or value
-
-    newImgPath = ''
+    # newImgPath = ''
     
-    try:
-        newImgPath = getAttachmentPath(file= files['avatar'],type=0)
+    # try:
+    #     newImgPath = getAttachmentPath(file= files['avatar'],type=0)
 
-    except Exception as e:
-        newImgPath = None
-        print("no avatar was send:", e)
+    # except Exception as e:
+    #     newImgPath = None
+    #     print("no avatar was send:", e)
 
     
     
@@ -628,26 +647,40 @@ def updateUserData(userId,data,files,userType):
     #     return{'message':'id not found !'},400
     
     
-    if newImgPath == '' or newImgPath == None:
-            avatarpath = None
-    else:
-            # avatarpath = str(os.path.basename(newImgPath))
-            avatarpath = newImgPath
+    # if newImgPath == '' or newImgPath == None:
+    #         avatarpath = None
+    # else:
+    #         # avatarpath = str(os.path.basename(newImgPath))
+    #         avatarpath = newImgPath
 
         
-    print('img pahhhhhhhhhhhhhhh')
-    print(avatarpath)
+    # print('img pahhhhhhhhhhhhhhh')
+    # print(avatarpath)
     # print(newImgPath)
 
 
     try:
+
+        def saveDeleteImage():
+                if req_img_path == None:
+                    
+                    deleteAttachment(attachmentPath=oldImgPath)
+                
+                    
+                elif req_img_path != '':
+                    
+
+                    saveAttachment(attachmentFile=files['avatar'],oldAttachPath=oldImgPath,newAttachPath=req_img_path)
+        
+    
         
         
 
         query = ''
         if userType == 2:  #PATIENT
 
-            if newImgPath == None:
+            if req_img_path == None:
+                #delete
 
                 query = me.procQuery(procName='updatePatient',valuesDic={
                     'uId' : userId,
@@ -658,10 +691,12 @@ def updateUserData(userId,data,files,userType):
                     'city' : data['city'],
                     'patient_name' : data['patient_name'],
                     'age' : data['age'],
+                    'image':''
                     
                 })
 
-            else:
+            elif req_img_path == '':
+                #keep
                 query = me.procQuery(procName='updatePatient',valuesDic={
                         'uId' : userId,
                         'name' : data['name'],
@@ -671,25 +706,33 @@ def updateUserData(userId,data,files,userType):
                         'city' : data['city'],
                         'patient_name' : data['patient_name'],
                         'age' : data['age'],
-                        'image':'' if avatarpath == None else avatarpath
+                        
+                    })
+                
+            else:
+                #update
+                query = me.procQuery(procName='updatePatient',valuesDic={
+                        'uId' : userId,
+                        'name' : data['name'],
+                        'phone' : data['phone'],
+                        'email' : data['email'],
+                        'government' : data['government'],
+                        'city' : data['city'],
+                        'patient_name' : data['patient_name'],
+                        'age' : data['age'],
+                        'image':req_img_path
+                        
                     })
         
             db.cursor.execute(query)
-
-            if newImgPath != None:
-                if newImgPath != '':
-                    print('save avatar here')
                 
-                    saveAttachment(attachmentFile=files['avatar'],oldAttachPath=oldImgPath,newAttachPath=newImgPath)
-                else:
-                    deleteAttachment(attachmentPath=oldImgPath)
-
+            saveDeleteImage()
 
             return{'message':'تم تعديل بيانات المريض بنجاح !'},200
 
         elif userType == 1:  #DOCTOR
 
-            if newImgPath == None:
+            if req_img_path == None:
 
                 query = me.procQuery(procName='updateDoctor',valuesDic={
                         'uId' : userId,
@@ -700,8 +743,22 @@ def updateUserData(userId,data,files,userType):
                         'city' : data['city'],
                         'about' : data['about'],
                         'clinicAddress' : data['clinicAddress'],
+                        'image':''
                         
                     })
+            elif req_img_path == '':
+
+                query = me.procQuery(procName='updateDoctor',valuesDic={
+                    'uId' : userId,
+                    'name' : data['name'],
+                    'phone' : data['phone'],
+                    'email' : data['email'],
+                    'government' : data['government'],
+                    'city' : data['city'],
+                    'about' : data['about'],
+                    'clinicAddress' : data['clinicAddress']
+                    })
+
             else:
 
                 query = me.procQuery(procName='updateDoctor',valuesDic={
@@ -713,46 +770,49 @@ def updateUserData(userId,data,files,userType):
                     'city' : data['city'],
                     'about' : data['about'],
                     'clinicAddress' : data['clinicAddress'],
-                    'image':'' if avatarpath == None else avatarpath
+                    'image':req_img_path
                 })
             
             db.cursor.execute(query)
 
-            if newImgPath != None:
-                if newImgPath != '':
-                    saveAttachment(attachmentFile=files['avatar'],oldAttachPath=oldImgPath,newAttachPath=newImgPath)
-                else:
-                    deleteAttachment(attachmentPath=oldImgPath)
+            saveDeleteImage()
 
             return{'message':'تم تعديل بيانات الطبيب بنجاح !'},200
         
         elif userType == 0:  #ADMIN
 
-            if newImgPath == None:
+            if req_img_path == None:
 
                 query = me.updateQuery(tableName='Users' , valuesDic={
                 "name" : data['name'],
                 "phone":data['phone'],
                 'email' : data['email'],
-                
+                "image":''
                 },where='id ='+userId)
                 
+            elif req_img_path == '':
+                query = me.updateQuery(tableName='Users' , valuesDic={
+                "name" : data['name'],
+                "phone":data['phone'],
+                'email' : data['email'],
+                },where='id ='+userId)
+            
             else:
                 query = me.updateQuery(tableName='Users' , valuesDic={
                 "name" : data['name'],
                 "phone":data['phone'],
                 'email' : data['email'],
-                "image":'' if avatarpath == None else avatarpath
+                'image':req_img_path
                 },where='id ='+userId)
                 
             db.cursor.execute(query)
-            if newImgPath != None:
-                if newImgPath != '':
-                    saveAttachment(attachmentFile=files['avatar'],oldAttachPath=oldImgPath,newAttachPath=newImgPath)
-                else:
-                    deleteAttachment(attachmentPath=oldImgPath)
+
+            saveDeleteImage()
 
             return{'message':'تم تعديل بيانات الأدمن  بنجاح !'},200
+
+
+
     except Exception as ex:
         
         # if 'full_name_U' in str(ex.args[1]):
@@ -1174,9 +1234,9 @@ def getAttachmentPath(file,type):
 
         # print('1111111s25111')
         # print(fullPath)
-        print('11111111111')
-        print(fullPath)
-        print('111111111111')
+        # print('11111111111')
+        # print(fullPath)
+        # print('111111111111')
         # print(file.filename)
 
         #
@@ -1231,12 +1291,19 @@ def saveAttachment(attachmentFile,oldAttachPath , newAttachPath):
 def deleteAttachment(attachmentPath):
     
 
+    print('removeeeee')
+    print(attachmentPath)
+    print('removeeeee')
 
     if attachmentPath and attachmentPath != '':
 
         dic = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "uploads")
 
         fullPath = f'{dic}\{os.path.basename(attachmentPath)}'
+
+        print('fullPath')
+        print(fullPath)
+        print('fullPath')
 
         os.remove(fullPath)
 
