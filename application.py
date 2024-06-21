@@ -31,4 +31,4 @@ socketio.init_app(app=app)
 if __name__ == '__main__':
     # app.run(debug=False,host='0.0.0.0')
     
-    socketio.run(app=app , debug=True)
+    socketio.run(app=app , debug=True,host='0.0.0.0')
