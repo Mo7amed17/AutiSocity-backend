@@ -276,8 +276,11 @@ def autiTest(data):
 
     result = str(doML(inputData=data['data']))
 
-    if('user_id' in data):
-        query = me.insertQuery(tableName='patients',columnsName=['test_result'] , values=[result])
+    if('user_id' in data and result != None):
+
+        # return{'sss':'ssss'}
+        # query = me.updateQuery(tableName='Patients',columnsName=['test_result'] , values=[result])
+        query = me.updateQuery(tableName='Patients',valuesDic={'test_result':result},where='patient_id = '+str(data['user_id']))
         try :
             db.cursor.execute(query)
             db.conn.commit()
