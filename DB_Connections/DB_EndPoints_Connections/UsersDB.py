@@ -16,10 +16,12 @@ baseURL = 'http://192.168.1.50:5000/'
 ###############    L O G I N     ################
 def login(data):
 
-    query = me.selectQuery(tableName='vi_Users',where="email = '"+data['email']+"' AND password = '"+data['password']+"'")
+        query = me.selectQuery(tableName='vi_Users',where="email = '"+data['email']+"' AND password = '"+data['password']+"'")
     
-    try:
+    # try:
         db.cursor.execute(query)
+
+        result = []
 
         result = me.usersModel(data=db.cursor.fetchall())  
         
@@ -27,13 +29,42 @@ def login(data):
             return   me.message(message="بيانات الدخول غير صحيحة !"),400
         
         else:
+
             if result[0]['user_type'] == 'doctor':
 
-                query = me.selectQuery(tableName='Doctors',columnsName=['about'],where="doctor_id = " + str(result[0]['id']))
+                query = me.selectQuery(tableName='Doctors',columnsName=['about','clinicAddress'],where="doctor_id = " + str(result[0]['id']))
 
                 db.cursor.execute(query)
-            
-                result[0]['about'] = db.cursor.fetchone()[0]
+
+                for row in db.cursor.fetchall():
+                    item_dic ={}
+                    item_dic['about'] = row[0]
+                    item_dic['clinicAddress'] = row[1]
+
+
+                print(item_dic)
+
+                result[0]['about'] = item_dic['about']
+                result[0]['clinicAddress'] = item_dic['clinicAddress']
+
+            elif result[0]['user_type'] == 'patient':
+
+                query = me.selectQuery(tableName='Patients',columnsName=['age','patient_name','test_result'],where="patient_id = " + str(result[0]['id']))
+
+                db.cursor.execute(query)
+
+                for row in db.cursor.fetchall():
+                    item_dic ={}
+                    item_dic['age'] = row[0]
+                    item_dic['patient_name'] = row[1]
+                    item_dic['test_result'] = row[2]
+
+
+                print(item_dic)
+
+                result[0]['age'] = item_dic['age']
+                result[0]['patient_name'] = item_dic['patient_name']
+                result[0]['test_result'] = item_dic['test_result']
 
             
 
@@ -49,9 +80,9 @@ def login(data):
 
             token = jwt.encode({'uid':token_text , 'exp':datetime.datetime.utcnow() + datetime.timedelta(weeks=2)},"654321" )
             return ({'message':'تم تسجيل الدخول بنجاح','token':token,'data':result[0]}),200
-    except Exception as e:
-        print(e)
-        return{'message':'حدث خطأ اثناء تسجيل الدخول'}
+    # except Exception as e:
+    #     print(e)
+    #     return{'message':'حدث خطأ اثناء تسجيل الدخول'}
 
 
 
@@ -627,7 +658,7 @@ def updateUserData(userId,data,files,userType):
                     'city' : data['city'],
                     'patient_name' : data['patient_name'],
                     'age' : data['age'],
-                    'image':''
+                    
                 })
 
             else:
@@ -669,7 +700,7 @@ def updateUserData(userId,data,files,userType):
                         'city' : data['city'],
                         'about' : data['about'],
                         'clinicAddress' : data['clinicAddress'],
-                        'image':''
+                        
                     })
             else:
 
@@ -703,7 +734,7 @@ def updateUserData(userId,data,files,userType):
                 "name" : data['name'],
                 "phone":data['phone'],
                 'email' : data['email'],
-                'image':''
+                
                 },where='id ='+userId)
                 
             else:

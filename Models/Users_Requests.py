@@ -179,7 +179,7 @@ def getUsersList(token):
 
 # ================== GET Current User Data (PROFILE) By Token [GET] =========================
 
-@usersblp.route("/profile",methods=['GET'])
+@usersblp.route("/profile",methods=['PUT'])
 @me.token_required
 def profile(token):
 
