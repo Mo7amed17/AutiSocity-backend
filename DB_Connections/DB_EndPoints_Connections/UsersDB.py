@@ -27,6 +27,15 @@ def login(data):
             return   me.message(message="بيانات الدخول غير صحيحة !"),400
         
         else:
+            if result[0]['user_type'] == 'doctor':
+
+                query = me.selectQuery(tableName='Doctors',columnsName=['about'],where="doctor_id = " + str(result[0]['id']))
+
+                db.cursor.execute(query)
+            
+                result[0]['about'] = db.cursor.fetchone()[0]
+
+            
 
             if result[0]['status'] == 'pending' and result[0]['user_type'] == 'doctor' :
 

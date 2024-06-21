@@ -134,6 +134,8 @@ class myMethods :
             item_dic["user_type"] = row[4]
             item_dic["status"] = row[5]
             item_dic["image"] = row[6] if  len(str(row[6])) > 0  else None
+            item_dic["country"] = row[9]
+            item_dic["government"] = row[10]
 
             if item_dic["user_type"] == 'doctor':
                 item_dic["cv"] = row[7]
