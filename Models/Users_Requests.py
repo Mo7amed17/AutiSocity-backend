@@ -283,7 +283,7 @@ def getMessengers(token):
      return UsersDB.getMessengers(uid=token['uid'].split('.')[3])
 
 
-@usersblp.route("/messages",methods=['GET'])
+@usersblp.route("/messages",methods=['PUT'])
 @me.token_required
 def getMessages(token):
 
@@ -296,17 +296,17 @@ def getMessages(token):
      return UsersDB.getMessages(data=request_data)
 
 
-@usersblp.route("/messages",methods=['POST'])
-@me.token_required
-def addMessage(token):
+# @usersblp.route("/messages",methods=['POST'])
+# @me.token_required
+# def addMessage(token):
 
-     request_data = request.get_json()
-     if request_data is None or "receiver_id" not in  request_data or "message" not in  request_data :
-          return jsonify({'message':'receiver_id or message is missing !'}) ,400
+#      request_data = request.get_json()
+#      if request_data is None or "receiver_id" not in  request_data or "message" not in  request_data :
+#           return jsonify({'message':'receiver_id or message is missing !'}) ,400
 
-     request_data['uid'] = token['uid'].split('.')[3]
+#      request_data['uid'] = token['uid'].split('.')[3]
 
-     return UsersDB.addMessage(data=request_data)
+#      return UsersDB.addMessage(data=request_data)
 
 
 @usersblp.route("/search",methods=['POST'])
