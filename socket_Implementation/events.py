@@ -17,25 +17,46 @@ def addUserToSocket(uId):
 
     print("addUserToSocket => " + str(uId))
 
-    users[uId] = socketio
+    users[uId] = request.sid
 
 @socketio.on("sendMessage")
 def handle_sendMessage(data):
+    print('users')
+    print(users)
+    
     returnValue = UsersDB.addMessage(
         data={'uid':data['myID'],'receiver_id':data['receiverID'],'message':data['message']}   
     )
 
     if returnValue['message'] == False:
+        print('error message')
+        
         socketio.emit('response', {'status':False})
+
     else:
         if data['receiverID'] in users:
+            print('send to receiverID')
 
-            users[data['receiverID']].emit(
+            if 'messengerData' in data :
+                data['messengerData']['uId'] = data['myID']
+                print(data)
+
+
+                socketio.emit(
+                    'response',
+                    {'status':True,'message':data['message'],'isMyMessage':False,'messengerData':data['messengerData']},to=users[data['receiverID']])
+            else:
+
+                socketio.emit(
                 'response',
-                {'status':True,'message':data['message'],'isMyMessage':False},
-                to=data['receiverID'])
-
-        socketio.emit('response', {'status':True,'message':data['message'],'isMyMessage':True})
+                {'status':True,'message':data['message'],'isMyMessage':False},to=users[data['receiverID']])
+                
+        print('send to Meee')
+        print(users[data['myID']])
+        if 'messengerData' in data :
+            socketio.emit('response', {'status':True,'message':data['message'],'isMyMessage':True,'messengerData':data['messengerData']},to=request.sid)
+        else:
+            socketio.emit('response', {'status':True,'message':data['message'],'isMyMessage':True},to=request.sid)
     
 
 

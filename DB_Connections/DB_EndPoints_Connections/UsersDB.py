@@ -1027,7 +1027,7 @@ def addMessage(data):
 
 def search(data):
      
-    whereQuery = 'name like \'%'+data['name'] + '%\' AND id <> '+ str(data['uid'])
+    whereQuery = 'name like \'%'+data['name'] + '%\' AND id <> '+ str(data['uid'] + ' AND user_type <> 0')
 
     if("country" in data):
         
