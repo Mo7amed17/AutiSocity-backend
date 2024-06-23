@@ -1133,8 +1133,8 @@ def messageModel(data , isGetMessage = False):
             item_dic["message"] = row[1]
             item_dic["date"] = row[2]
             item_dic["is_my_message"] = row[3]
-            item_dic["name"] = row[5]   
-            item_dic["image"] = row[6]
+            item_dic["name"] = row[4]   
+            item_dic["image"] = row[5]
                 
             
                 
