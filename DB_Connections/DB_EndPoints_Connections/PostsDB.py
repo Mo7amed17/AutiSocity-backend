@@ -42,7 +42,7 @@ def addPost(data):
     })
     try :
         db.cursor.execute(query)
-        db.conn.commit()
+        # db.conn.commit()
 
 
         result = []
@@ -62,7 +62,9 @@ def addPost(data):
         
             return {'message':"تم إضافة منشور بنجاح ",'data':result[0]},201 
     except Exception as ex:
-
+        print('ssssssssssssssssssss')
+        print(str(ex))
+        print('ssssssssssssssssssss')
         return {'message':str(ex)},400
             
         
@@ -217,7 +219,7 @@ def addComment(data):
     })
     # try :
     db.cursor.execute(query)
-    db.conn.commit()
+    # db.conn.commit()
 
 
     result = []
@@ -495,7 +497,7 @@ def reportPost(data):
             return {'message':"لقد بلغت علي هذا المنشور مسبقا !"},400
         else:
 
-            return {'message':str(ex)},400
+            return {'message':'لا يوجد بوست بهذا ال ip'},400
 
     
 

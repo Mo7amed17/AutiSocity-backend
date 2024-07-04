@@ -1,5 +1,5 @@
-import pymssql
-# import pyodbc
+# import pymssql
+import pyodbc
 
 
 # server = 'sql6028.site4now.net'
@@ -7,48 +7,36 @@ import pymssql
 # username = 'db_aa9b62_autisocietydb_admin'
 # password = 'Sonbolmyasp123'
 
-# server = 'DESKTOP-T7CCNDN\MSSQLSERVER01'
-# database = 'AutismDBNew'
-# username = 'auti'
-# password = '123456'
-
-server = '.'
-database = 'AutismDB'
-username = 'autism'
-password = '123456'
-
-#AutismDBNew
+server = 'DESKTOP-T7CCNDN\MSSQLSERVER01'
+database = 'AutismDB3'
+username = 'salam'
+password = '0123'
 
 # بناء سلسلة الاتصال
 connection_string = {
-    # 'Integrated_Security':True,
-    'server': 'DESKTOP-T7CCNDN\MSSQLSERVER01',
-    'user': 'auti',
-    'password': '123456',
-    'database': 'AutismDBNew',
-    
+    'server': server,
+    'user': username,
+    'password': password,
+    'database': database,
     # 'port' : 1433 ,
-    # 'autocommit': True,  # يمكنك تعيين هذا على True إذا كنت ترغب في تمكين التعامل مع البيانات بشكل تلقائي
-    
+    # 'autocommit': True  # يمكنك تعيين هذا على True إذا كنت ترغب في تمكين التعامل مع البيانات بشكل تلقائي
 }
-print(connection_string)
-
-connection_string['server'] = connection_string['server'].replace('\\\\','\\')
-print(connection_string)
-# conn = pymssql.connect(server = 'DESKTOP-T7CCNDN\MSSQLSERVER01', database = 'AutismDBNew')
-
 class LinkDatabase:
     
     def __init__(self):
         self.conn = None
         self.cursor = None
+        # print(pyodbc.drivers())
         self.connect()
 
     def connect(self):
         try:
+            self.conn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER=DESKTOP-T7CCNDN\MSSQLSERVER01;DATABASE=AutismDB3;UID=salam;PWD=0123')
+
             # self.conn = pyodbc.connect(connection_string)
-            self.conn = pymssql.connect(server='DESKTOP-T7CCNDN\MSSQLSERVER01',database='AutismDBNew',user='auti',password='123456')
-            # self.conn = pymssql.connect(server='.\\SQLEXPRESS2',database='BookingSystemDB',user='sa',password='123')
+            # self.conn = pymssql.connect(**connection_string)
+            # self.conn = pymssql.connect(server=r'.\MSSQLSERVER01:1433', 
+            #            user=r'salam', password=r'0123', database=r'AutismDB3')
             self.cursor = self.conn.cursor()
             print("Connected")
         except Exception as e:

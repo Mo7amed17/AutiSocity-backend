@@ -1,7 +1,16 @@
-import sys, os
+# This file contains the WSGI configuration required to serve up your
+# web application at http://<your-username>.pythonanywhere.com/
+# It works by setting the variable 'application' to a WSGI handler of some
+# description.
+#
+# The below has been auto-generated for your Flask project
 
-base_path = "/home/origmtie/virtualenv/autisociety-api.original-business.com/3.9/lib/python3.9/site-packages"
+import sys
 
-sys.path.append(base_path)
+# add your project directory to the sys.path
+project_home = '/home/AutiSociety2002/mysite'
+if project_home not in sys.path:
+    sys.path = [project_home] + sys.path
 
-from application import app as application
+# import flask app but need to call it "application" for WSGI to work
+from application import app as application  # noqa

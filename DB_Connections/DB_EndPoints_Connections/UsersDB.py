@@ -11,14 +11,14 @@ import phonenumbers
 #========================== REGISTERATION & LOGIN ==================================
 
     
-baseURL = 'http://192.168.1.50:5000/'
+baseURL = 'http://192.168.237.148:5000/'
 
 ###############    L O G I N     ################
 def login(data):
 
-    query = me.selectQuery(tableName='vi_Users',where="email = '"+data['email']+"' AND password = '"+data['password']+"'")
+        query   = me.selectQuery(tableName='vi_Users',where="email = '"+data['email']+"' AND password = '"+data['password']+"'")
     
-    try:
+    # try:
         db.cursor.execute(query)
 
         result = []
@@ -42,7 +42,7 @@ def login(data):
                     item_dic['clinicAddress'] = row[1]
 
 
-                print(item_dic)
+                
 
                 result[0]['about'] = item_dic['about']
                 result[0]['clinicAddress'] = item_dic['clinicAddress']
@@ -60,7 +60,7 @@ def login(data):
                     item_dic['test_result'] = row[2]
 
 
-                print(item_dic)
+                
 
                 result[0]['age'] = item_dic['age']
                 result[0]['patient_name'] = item_dic['patient_name']
@@ -80,9 +80,9 @@ def login(data):
 
             token = jwt.encode({'uid':token_text , 'exp':datetime.datetime.utcnow() + datetime.timedelta(weeks=2)},"654321" )
             return ({'message':'تم تسجيل الدخول بنجاح','token':token,'data':result[0]}),200
-    except Exception as e:
-        print(e)
-        return{'message':'حدث خطأ اثناء تسجيل الدخول'}
+    # except Exception as e:
+    #     print(e)
+    #     return{'message':'حدث خطأ اثناء تسجيل الدخول'},400
 
 
 
@@ -106,9 +106,9 @@ def registerDoctor(data,files):
         except Exception as e:
             print("no avatar or cv was send:", e)
 
-        print('avatarpath')
-        print(avatarpath)
-        print('avatarpath')
+        # print('avatarpath')
+        # print(avatarpath)
+        # print('avatarpath')
 
 
         try:
@@ -303,7 +303,7 @@ def autiTest(data):
             
         except Exception as ex:
                 print(str(ex))
-                # return {'message':str(ex)},400
+                return {'message':str(ex)},400
 
      
     return {"result":result}
@@ -1282,8 +1282,8 @@ def saveAttachment(attachmentFile,oldAttachPath , newAttachPath):
 
 
     print('save')
-    print(oldAttachPath)
-    print(newAttachPath)
+    # print(oldAttachPath)
+    # print(newAttachPath)
     print('save')
 
     if oldAttachPath and oldAttachPath != '':
@@ -1304,14 +1304,14 @@ def saveAttachment(attachmentFile,oldAttachPath , newAttachPath):
         dic = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "uploads")
 
         
-        print(dic)
+        # print(dic)
         attachmentFile.save(dic+'\\' + os.path.basename(fullPath))
 
 def deleteAttachment(attachmentPath):
     
 
     print('removeeeee')
-    print(attachmentPath)
+    # print(attachmentPath)
     print('removeeeee')
 
     if attachmentPath and attachmentPath != '':
@@ -1321,7 +1321,7 @@ def deleteAttachment(attachmentPath):
         fullPath = f'{dic}\{os.path.basename(attachmentPath)}'
 
         print('fullPath')
-        print(fullPath)
+        # print(fullPath)
         print('fullPath')
 
         os.remove(fullPath)
