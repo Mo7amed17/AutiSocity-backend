@@ -13,9 +13,9 @@ from socket_Implementation.events import socketio
 
 app = Flask(__name__)
     
-@app.route('/<filename>')
-def get_image(filename):
-    return send_from_directory('uploads', filename) 
+# @app.route('/<filename>')
+# def get_image(filename):
+#     return send_from_directory('uploads', filename) 
 
 CORS(app)
 
